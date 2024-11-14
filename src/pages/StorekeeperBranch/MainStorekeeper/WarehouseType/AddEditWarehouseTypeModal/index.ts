@@ -1,0 +1,1 @@
+export {AddEditWarehouseTypeModal} from './AddEditWarehouseTypeModal';

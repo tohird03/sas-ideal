@@ -1,0 +1,13 @@
+.sale {
+  &__sale-btns-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__sale-btns {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+}

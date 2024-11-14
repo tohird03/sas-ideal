@@ -1,0 +1,1 @@
+export {SinglePromotion} from './SinglePromotion';

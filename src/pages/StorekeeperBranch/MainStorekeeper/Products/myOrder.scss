@@ -1,0 +1,58 @@
+.mainstorekeeper-myorder__header,
+.mainstorekeeper-myorder__header__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mainstorekeeper-myorder__header {
+  margin-bottom: 20px;
+
+  .mainstorekeeper-myorder__header__actions {
+    gap: 20px;
+  }
+}
+
+.main-st__product-filter-wrapper {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.main-st__product-filter-select {
+  width: 200px;
+}
+
+
+@media only screen and (max-width: 800px) {
+
+  .mainstorekeeper-myorder__header,
+  .mainstorekeeper-myorder__header__actions {
+    flex-direction: column;
+    width: 100%;
+  }
+}
+
+.main-st__product-col-warepper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.main-st__product-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.main-st__product-text {
+  margin: 0;
+}
+
+.main-st__action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}

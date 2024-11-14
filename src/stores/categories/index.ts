@@ -1,0 +1,1 @@
+export {categoriesStore} from './categories';

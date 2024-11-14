@@ -1,0 +1,1 @@
+export {CompositeTable} from './CompositeTable';

@@ -1,0 +1,1 @@
+export {FlightProduct} from './FlightProduct';

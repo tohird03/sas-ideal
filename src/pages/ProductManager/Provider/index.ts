@@ -1,0 +1,1 @@
+export {ManagerProvider} from './ManagerProvider';

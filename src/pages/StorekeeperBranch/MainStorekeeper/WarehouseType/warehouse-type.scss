@@ -1,0 +1,33 @@
+.warehouse-type__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.warehouse-type__filter {
+    display: flex;
+    flex-direction: row;
+}
+
+.warehouse-type__search {
+    width: 250px;
+    margin-right: 10px;
+}
+
+@media only screen and (max-width: 800px) {
+    .warehouse-type__head {
+        flex-direction: column;
+    }
+
+    .warehouse-type__filter {
+        display: flex;
+        flex-direction: column;
+        gap: 15px !important;
+        width: 100%;
+    }
+
+    .warehouse-type__search {
+        width: 100%;
+    }
+}

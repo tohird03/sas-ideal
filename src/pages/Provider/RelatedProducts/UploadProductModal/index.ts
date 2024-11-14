@@ -1,0 +1,1 @@
+export {UploadProductModal} from './UploadProductModal';

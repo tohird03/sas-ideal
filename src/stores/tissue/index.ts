@@ -1,0 +1,1 @@
+export {tissueStore} from './tissue';

@@ -1,0 +1,1 @@
+export {ProductManagerCategory} from './Category';

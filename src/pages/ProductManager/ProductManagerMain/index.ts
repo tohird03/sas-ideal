@@ -1,0 +1,1 @@
+export {ProductManagerMain} from './ProductManagerMain';

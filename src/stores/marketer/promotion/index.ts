@@ -1,0 +1,1 @@
+export {promotionStore} from './promotion';

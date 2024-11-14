@@ -1,0 +1,33 @@
+.product-manager__tissuecolor_head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.product-manager__tissuecolor_filter {
+  display: flex;
+  flex-direction: row;
+}
+
+.product-manager__tissuecolor_search {
+  width: 250px;
+  margin-right: 10px;
+}
+
+@media only screen and (max-width: 800px) {
+  .product-manager__tissuecolor_head {
+    flex-direction: column;
+  }
+
+  .product-manager__tissuecolor_filter {
+    display: flex;
+    flex-direction: column;
+    gap: 15px !important;
+    width: 100%;
+  }
+
+  .product-manager__tissuecolor_search {
+    width: 100%;
+  }
+}

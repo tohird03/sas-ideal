@@ -1,0 +1,38 @@
+.reward__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.reward__filter-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.reward__search {
+    width: 250px;
+}
+
+.reward__filter {
+    width: 300px;
+}
+
+@media only screen and (max-width: 800px) {
+    .reward__head {
+        flex-direction: column;
+    }
+
+    .reward__filter {
+        display: flex;
+        flex-direction: column;
+        gap: 15px !important;
+        width: 100%;
+    }
+
+    .reward__search {
+        width: 100%;
+    }
+}

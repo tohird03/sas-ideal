@@ -1,0 +1,1 @@
+export {ClientInfoModal} from './ClientInfoModal';

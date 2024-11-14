@@ -1,0 +1,47 @@
+.cashbox__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.cashbox__filter {
+  display: flex;
+  flex-direction: row;
+}
+
+.cashbox__search {
+  width: 250px;
+  margin-right: 10px;
+}
+
+@media only screen and (max-width: 800px) {
+  .cashbox__head {
+    flex-direction: column;
+  }
+
+  .cashbox__filter {
+    display: flex;
+    flex-direction: column;
+    gap: 15px !important;
+    width: 100%;
+  }
+
+  .cashbox__search {
+    width: 100%;
+  }
+}
+
+.cashbox {
+  &__table-cashier {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 0;
+  }
+
+  &__table-paragraph {
+    margin: 0 !important;
+  }
+}

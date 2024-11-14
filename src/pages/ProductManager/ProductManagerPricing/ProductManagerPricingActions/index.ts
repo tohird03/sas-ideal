@@ -1,0 +1,1 @@
+export {ProductManagerPricingActions} from './ProductManagerPricingActions';

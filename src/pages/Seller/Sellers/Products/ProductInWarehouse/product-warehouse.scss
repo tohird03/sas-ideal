@@ -1,0 +1,38 @@
+.warehouse-product__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.warehouse-product__filter-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.warehouse-product__search {
+  width: 250px;
+}
+
+.warehouse-product__filter {
+  width: 300px;
+}
+
+@media only screen and (max-width: 800px) {
+  .warehouse-product__head {
+    flex-direction: column;
+  }
+
+  .warehouse-product__filter {
+    display: flex;
+    flex-direction: column;
+    gap: 15px !important;
+    width: 100%;
+  }
+
+  .warehouse-product__search {
+    width: 100%;
+  }
+}

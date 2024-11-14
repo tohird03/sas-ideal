@@ -1,0 +1,1 @@
+export {companysStore} from './companys';

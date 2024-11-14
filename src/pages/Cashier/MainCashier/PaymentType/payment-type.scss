@@ -1,0 +1,33 @@
+.payment-type__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.payment-type__filter {
+    display: flex;
+    flex-direction: row;
+}
+
+.payment-type__search {
+    width: 250px;
+    margin-right: 10px;
+}
+
+@media only screen and (max-width: 800px) {
+    .payment-type__head {
+        flex-direction: column;
+    }
+
+    .payment-type__filter {
+        display: flex;
+        flex-direction: column;
+        gap: 15px !important;
+        width: 100%;
+    }
+
+    .payment-type__search {
+        width: 100%;
+    }
+}

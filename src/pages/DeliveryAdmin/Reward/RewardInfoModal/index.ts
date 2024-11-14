@@ -1,0 +1,1 @@
+export {RewardInfoModal} from './RewardInfoModal';

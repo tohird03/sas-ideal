@@ -1,0 +1,1 @@
+export {CombinationTable} from './CombinationTable';

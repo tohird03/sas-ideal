@@ -1,0 +1,58 @@
+.about-visited-clients__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.about-visited-clients__filter-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.about-visited-clients__search {
+  width: 250px;
+}
+
+.about-visited-clients__filter {
+  width: 300px;
+}
+
+@media only screen and (max-width: 800px) {
+  .about-visited-clients__head {
+    flex-direction: column;
+  }
+
+  .about-visited-clients__filter {
+    display: flex;
+    flex-direction: column;
+    gap: 15px !important;
+    width: 100%;
+  }
+
+  .about-visited-clients__search {
+    width: 100%;
+  }
+}
+
+.name__recommend {
+  &-wrapper {
+    position: relative;
+  }
+
+  &-list {
+    position: absolute;
+    z-index: 1000;
+    background: white;
+    width: 100%;
+    cursor: pointer;
+  }
+
+  &-list-item {
+    &:hover {
+      background-color: antiquewhite;
+    }
+  }
+}

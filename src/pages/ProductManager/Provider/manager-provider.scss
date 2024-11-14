@@ -1,0 +1,16 @@
+.provider-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.provider-filter__wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.provider-filter__search {
+  width: 250px;
+}
+

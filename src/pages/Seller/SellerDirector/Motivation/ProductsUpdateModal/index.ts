@@ -1,0 +1,1 @@
+export {ProductsUpdateModal} from './ProductsUpdateModal';

@@ -1,0 +1,1 @@
+export {ProductManagerMainSetsTable} from './ProductManagerMainSetsTable';

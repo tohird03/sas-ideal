@@ -1,0 +1,1 @@
+export {AddEditPaymentTypeModal} from './AddEditPaymentTypeModal';

@@ -1,0 +1,1 @@
+export {ProductManagerModel} from './Model';

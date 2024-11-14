@@ -1,0 +1,48 @@
+.changes {
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__filters {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &__search {
+    width: 250px;
+  }
+
+  &__change-product-request-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__change-product-request {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 400px;
+  }
+
+  &__change-reject-button {
+    background-color: red;
+  }
+
+  &__add-product-request-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__add-product-buttons-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+}

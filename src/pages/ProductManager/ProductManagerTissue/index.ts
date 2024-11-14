@@ -1,0 +1,1 @@
+export {ProductManagerTissue} from './ProductManagerTissue';

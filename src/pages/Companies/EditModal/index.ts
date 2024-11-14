@@ -1,0 +1,1 @@
+export {CompanysDynamicModal} from './EditModal';

@@ -1,0 +1,1 @@
+export {cashboxStore} from './cashbox';

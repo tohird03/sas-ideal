@@ -1,0 +1,38 @@
+.new-product__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.new-product__filter-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.new-product__search {
+  width: 250px;
+}
+
+.new-product__filter {
+  width: 300px;
+}
+
+@media only screen and (max-width: 800px) {
+  .new-product__head {
+    flex-direction: column;
+  }
+
+  .new-product__filter {
+    display: flex;
+    flex-direction: column;
+    gap: 15px !important;
+    width: 100%;
+  }
+
+  .new-product__search {
+    width: 100%;
+  }
+}

@@ -1,0 +1,1 @@
+export {cashboxApi} from './cashbox';
