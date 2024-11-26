@@ -1,4 +1,4 @@
-export interface IStaff {
+export interface IMyProfile {
   id: number;
   photo: string;
   firstName: string;

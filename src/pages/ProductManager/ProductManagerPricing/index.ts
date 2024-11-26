@@ -1,1 +1,0 @@
-export {ProductManagerPricing} from './ProductManagerPricing';

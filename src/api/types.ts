@@ -7,9 +7,10 @@ type TError = {
 };
 
 export interface IResponse<TBody> {
-  success: boolean;
+  totalCount: number;
+  pageNumber: number;
+  pageSize: number;
   data: TBody;
-  error: TError;
 }
 
 export interface IOneElement {

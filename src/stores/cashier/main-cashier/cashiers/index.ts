@@ -1,1 +1,0 @@
-export {cashierUserStore} from './cashier';

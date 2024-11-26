@@ -1,1 +1,0 @@
-export {CreateProductMinPriceModal} from './CreateProductMinPriceModal';

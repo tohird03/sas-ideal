@@ -1,1 +1,0 @@
-export {AssignPerModal} from './AssignPerModal';

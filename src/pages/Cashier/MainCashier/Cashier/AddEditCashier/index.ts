@@ -1,1 +1,0 @@
-export {AddEditCashier} from './AddEditCashier';

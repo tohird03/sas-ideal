@@ -1,1 +1,0 @@
-export {CompositeTable} from './CompositeTable';

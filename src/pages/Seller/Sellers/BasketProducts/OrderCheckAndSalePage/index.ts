@@ -1,1 +1,0 @@
-export {OrderCheckAndSalePage} from './OrderCheckAndSalePage';

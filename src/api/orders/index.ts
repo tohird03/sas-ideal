@@ -1,1 +1,0 @@
-export {ordersApi} from './orders';

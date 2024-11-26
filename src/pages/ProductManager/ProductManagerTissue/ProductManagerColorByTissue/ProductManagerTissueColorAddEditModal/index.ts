@@ -1,1 +1,0 @@
-export {ProductManagerTissueColorAddEditModal} from './ProductManagerTissueColorAddEditModal';

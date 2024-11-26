@@ -1,1 +1,0 @@
-export {Carusel} from './Carusel';

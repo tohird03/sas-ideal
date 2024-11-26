@@ -1,1 +1,0 @@
-export {cashierApi} from './cashier';

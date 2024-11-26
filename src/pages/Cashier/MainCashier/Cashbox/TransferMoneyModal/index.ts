@@ -1,1 +1,0 @@
-export {TransferMoneyModal} from './TransferMoneyModal';

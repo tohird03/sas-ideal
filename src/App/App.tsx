@@ -28,7 +28,7 @@ export const App: FC = observer(() => {
       <Provider {...stores}>
         <ConfigProvider csp={{nonce: 'woodline'}} theme={AntdTheme}>
           <HashRouter>
-            <Router isAuth />
+            <Router isAuth={authStore.isAuth} />
           </HashRouter>
         </ConfigProvider>
       </Provider>

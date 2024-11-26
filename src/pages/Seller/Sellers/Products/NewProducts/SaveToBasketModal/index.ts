@@ -1,1 +1,0 @@
-export {SaveToBasketModal} from './SaveToBasketModal';

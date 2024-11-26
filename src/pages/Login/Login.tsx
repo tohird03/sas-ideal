@@ -20,7 +20,6 @@ export const Login = observer(() => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [, setAccessToken] = useLocalStorage<TokenType['accessToken']>('accessToken', '');
-  const [, setRefreshToken] = useLocalStorage<TokenType['refreshToken']>('refreshToken', '');
 
   const handleSubmit = (values: ILoginForm) => {
     setLoading(true);
@@ -28,8 +27,7 @@ export const Login = observer(() => {
       .then(res => {
         if (res?.data) {
           setAccessToken(res.data?.accessToken);
-          setRefreshToken(res.data?.refreshToken);
-          navigate(ROUTES.dashboard);
+          navigate(ROUTES.workers);
           addNotification('Success login');
           authStore.getProfile();
         }
@@ -52,7 +50,7 @@ export const Login = observer(() => {
           className={cn('login__form')}
         >
           <Form.Item
-            name="username"
+            name="phone"
             label="Username"
             rules={[{required: true}]}
           >

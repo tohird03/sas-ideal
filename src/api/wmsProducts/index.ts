@@ -1,1 +1,0 @@
-export {wmsProductsApi} from './wmsProducts';

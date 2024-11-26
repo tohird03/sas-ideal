@@ -1,1 +1,0 @@
-export {RelatedProducts} from './RelatedProducts';

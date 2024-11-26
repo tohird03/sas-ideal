@@ -1,23 +1,19 @@
-'use client';
-
 import './logout.scss';
 
-import React, {useState} from 'react';
-import {useNavigate} from 'react-router-dom';
-import {observer} from 'mobx-react';
-import {LogoutOutlined} from '@ant-design/icons';
-import {Modal, Typography} from 'antd';
-import {useLocalStorage} from 'usehooks-ts';
-import {ROUTES} from '@/constants';
-import {resetStores, useStores} from '@/stores';
-import {TokenType} from '@/stores/auth';
-import {logOutDictionary} from './dictionary';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { observer } from 'mobx-react';
+import { LogoutOutlined } from '@ant-design/icons';
+import { Modal, Typography } from 'antd';
+import { useLocalStorage } from 'usehooks-ts';
+import { ROUTES } from '@/constants';
+import { resetStores, useStores } from '@/stores';
+import { TokenType } from '@/stores/auth';
+import { logOutDictionary } from './dictionary';
 
 export const LogOut: React.FC = observer(() => {
   const [, setAccessToken] = useLocalStorage<TokenType['accessToken']>('accessToken', '');
-  const [refreshToken, setRefreshToken] = useLocalStorage<TokenType['refreshToken']>('refreshToken', '');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const {authStore} = useStores();
   const navigate = useNavigate();
 
   const showModal = () => {
@@ -25,14 +21,10 @@ export const LogOut: React.FC = observer(() => {
   };
 
   const handleOk = () => {
-    authStore.logout(refreshToken)
-      .then(() => {
-        resetStores();
-        setAccessToken('');
-        setRefreshToken('');
-        setIsModalOpen(false);
-        navigate(ROUTES.signIn);
-      });
+    resetStores();
+    setAccessToken('');
+    setIsModalOpen(false);
+    navigate(ROUTES.signIn);
   };
 
   const handleCancel = () => {

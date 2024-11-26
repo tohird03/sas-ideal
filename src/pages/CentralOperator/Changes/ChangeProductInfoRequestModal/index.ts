@@ -1,1 +1,0 @@
-export {ChangeProductInfoRequestModal} from './ChangeProductInfoRequestModal';

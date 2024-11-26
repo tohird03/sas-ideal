@@ -1,1 +1,0 @@
-export {NewProducts} from './NewProducts';

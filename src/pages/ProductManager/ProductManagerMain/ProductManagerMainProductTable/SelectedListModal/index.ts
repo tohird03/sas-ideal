@@ -1,1 +1,0 @@
-export {ProductManagerMainProductSelectedModal} from './SelectedListModal';

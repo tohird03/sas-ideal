@@ -1,1 +1,0 @@
-export {pmProductListStore} from './pmProduct';

@@ -1,1 +1,0 @@
-export {courierStores} from './courier';

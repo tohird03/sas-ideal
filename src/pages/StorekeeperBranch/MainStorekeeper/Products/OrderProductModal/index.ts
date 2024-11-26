@@ -1,1 +1,0 @@
-export {OrderProductModal} from './OrderProductModal';

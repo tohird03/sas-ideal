@@ -22,7 +22,7 @@ const items: MenuProps['items'] = [
   },
   {
     key: '2',
-    label: <Link to={ROUTES.dashboard}>Мой профайл</Link>,
+    label: <Link to={ROUTES.workers}>Мой профайл</Link>,
   },
 ];
 

@@ -1,1 +1,0 @@
-export {sellerProductsApi} from './sellerProducts';

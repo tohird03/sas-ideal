@@ -1,1 +1,0 @@
-export {SinglePromotionProductsFilterModal} from './SinglePromotionProductsFilterModal';

@@ -1,1 +1,0 @@
-export {tissueApi} from './tissue';

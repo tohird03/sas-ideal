@@ -5,7 +5,6 @@ export type SignInParamsType = {
 
 export type TokenType = {
   accessToken: string;
-  refreshToken: string;
 };
 
 export type StaffInfoType = {

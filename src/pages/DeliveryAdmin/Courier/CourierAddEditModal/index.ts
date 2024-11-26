@@ -1,1 +1,0 @@
-export {CourierAddEditModal} from './CourierAddEditModal';

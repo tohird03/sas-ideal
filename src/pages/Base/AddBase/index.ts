@@ -1,1 +1,0 @@
-export {AddBasesModal} from './AddBaseModal';

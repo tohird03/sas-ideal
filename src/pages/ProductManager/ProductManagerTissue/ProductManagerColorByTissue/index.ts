@@ -1,1 +1,0 @@
-export {ProductManagerColorByTissue} from './ProductManagerColorByTissue';

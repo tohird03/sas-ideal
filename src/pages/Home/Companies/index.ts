@@ -1,1 +1,0 @@
-export {CompaniesModal} from './CompaniesModal';

@@ -1,1 +1,0 @@
-export {cashboxStore} from './cashbox';

@@ -1,1 +1,0 @@
-export {AddEditPaymentTypeModal} from './RequestPaymentCreateModal';

@@ -1,5 +1,5 @@
 export interface ILoginForm {
-  username: string;
+  phone: string;
   password: string;
 }
 export interface ILoginResponse {

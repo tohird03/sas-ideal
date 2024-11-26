@@ -1,1 +1,0 @@
-export {locationsStore} from './locations';

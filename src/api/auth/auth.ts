@@ -20,9 +20,6 @@ class AuthApi extends Instance {
   getUserProfile = (): Promise<IStaff> =>
     this.get(Endpoints.UserProfile);
 
-  logout = (refreshToken: string): Promise<AxiosResponse> =>
-    this.post(Endpoints.SignOut, {refreshToken});
-
   refreshToken = (refreshToken: string): Promise<AxiosResponse> =>
     this.post(Endpoints.RefreshToken, {refreshToken});
 }

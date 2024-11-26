@@ -1,1 +1,0 @@
-export {OrderPayment} from './OrderPayment';

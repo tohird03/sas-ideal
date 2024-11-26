@@ -1,1 +1,0 @@
-export {FlightInfoModal} from './FlightInfoModal';

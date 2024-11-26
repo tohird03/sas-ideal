@@ -1,1 +1,0 @@
-export {requestStore} from './request';

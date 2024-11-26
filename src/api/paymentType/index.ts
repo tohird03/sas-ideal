@@ -1,1 +1,0 @@
-export {paymentTypeApi} from './paymentType';
