@@ -1,11 +1,5 @@
 import {TagProps} from 'antd';
 
-type TError = {
-  errId: number;
-  errMsg: string | string[];
-  isFriendly: boolean;
-};
-
 export interface IResponse<TBody> {
   totalCount: number;
   pageNumber: number;
@@ -17,7 +11,6 @@ export interface IOneElement {
   id: string;
   name: string;
 }
-
 
 export interface ISuccessResponse {
   success: boolean;

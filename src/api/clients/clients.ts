@@ -2,7 +2,7 @@ import {AxiosResponse} from 'axios';
 import {Endpoints, umsStages} from '../endpoints';
 import {INetworkConfig, Instance} from '../instance';
 import {IResponse} from '../types';
-import { IAddEditClientInfo, IClientsInfo, IGetClientsInfoParams } from './types';
+import {IAddEditClientInfo, IClientsInfo, IGetClientsInfoParams} from './types';
 
 const config: INetworkConfig = {
   baseURL: Endpoints.Base,

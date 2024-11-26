@@ -1,6 +1,6 @@
-import { IGetStaffsParams, IStaffs, staffsApi } from '@/api/staffs';
-import { addNotification } from '@/utils';
 import {makeAutoObservable} from 'mobx';
+import {IGetStaffsParams, IStaffs, staffsApi} from '@/api/staffs';
+import {addNotification} from '@/utils';
 
 class Staffs {
   pageNumber = 1;

@@ -1,28 +1,7 @@
 import React from 'react';
 import {
-  ApartmentOutlined,
-  BankOutlined,
-  BarsOutlined,
-  CarOutlined,
   ControlOutlined,
-  DatabaseOutlined,
-  DollarOutlined,
-  EnvironmentOutlined,
-  FileTextOutlined,
-  GiftOutlined,
-  HistoryOutlined,
-  HomeOutlined,
-  PartitionOutlined,
-  PlusOutlined,
-  RadiusSettingOutlined,
-  RetweetOutlined,
-  ShopOutlined,
-  ShoppingCartOutlined,
-  TeamOutlined,
-  UnorderedListOutlined,
-  UsergroupAddOutlined,
   UserOutlined,
-  VerticalAlignBottomOutlined,
 } from '@ant-design/icons';
 import {ROUTES} from '@/constants';
 import {IAppRole, IMenuItems} from './types';

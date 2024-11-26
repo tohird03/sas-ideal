@@ -1,9 +1,9 @@
 import {appStore} from './app';
 import {authStore} from './auth';
 import {breadcrumbStore} from './breadcrumb';
+import {clientsInfoStore} from './clients';
 import {profileStore} from './profile';
 import {staffsStore} from './workers';
-import {clientsInfoStore} from './clients';
 
 export const stores = {
   appStore,

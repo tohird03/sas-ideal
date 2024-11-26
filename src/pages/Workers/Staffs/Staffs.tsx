@@ -5,12 +5,12 @@ import {useQuery} from '@tanstack/react-query';
 import {Button, Input, Typography} from 'antd';
 import classNames from 'classnames';
 import {DataTable} from '@/components/Datatable/datatable';
+import {staffsStore} from '@/stores/workers';
 import {getPaginationParams} from '@/utils/getPaginationParams';
 import {useMediaQuery} from '@/utils/mediaQuery';
 import {AddStaffsModal} from './AddStaffsModal';
 import {staffsColumns} from './constants';
 import styles from './staffs.scss';
-import { staffsStore } from '@/stores/workers';
 
 const cn = classNames.bind(styles);
 

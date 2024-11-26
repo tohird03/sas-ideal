@@ -1,9 +1,9 @@
 import {useEffect, useState} from 'react';
 import {useLocalStorage} from 'usehooks-ts';
+import {mainMenuList} from '@/modules/Layout/constants';
+import {generateAllMenuItems} from '@/modules/Layout/utils';
 import {useStores} from '@/stores';
 import {TokenType} from '@/stores/auth';
-import { generateAllMenuItems } from '@/modules/Layout/utils';
-import { mainMenuList } from '@/modules/Layout/constants';
 
 export const useBootstrap = () => {
   const {authStore} = useStores();

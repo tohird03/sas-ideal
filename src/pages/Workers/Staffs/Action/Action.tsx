@@ -3,9 +3,9 @@ import {observer} from 'mobx-react';
 import {DeleteOutlined, EditOutlined} from '@ant-design/icons';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {Button, Popconfirm} from 'antd';
+import {IStaffs, staffsApi} from '@/api/staffs';
+import {staffsStore} from '@/stores/workers';
 import {addNotification} from '@/utils';
-import { IStaffs, staffsApi } from '@/api/staffs';
-import { staffsStore } from '@/stores/workers';
 
 type Props = {
   staff: IStaffs;

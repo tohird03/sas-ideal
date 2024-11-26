@@ -18,11 +18,11 @@ export class AppStore {
 
   getProfile = () =>
     appApi.getProfile()
-      .then(res => {
+      .then(res =>
         // if (res.success) {
         //   this.staffInfo = res.data;
         // }
-      })
+        res)
       .catch(err => {
         addNotification(err);
       });

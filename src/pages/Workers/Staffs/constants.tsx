@@ -1,8 +1,8 @@
 import React from 'react';
 import {ColumnType} from 'antd/es/table';
-import {formatNumber} from '@/utils/formatInputNumber';
+import {IStaffs} from '@/api/staffs';
 import {Action} from './Action';
-import { IStaffs } from '@/api/staffs';
+import {formatPhoneNumber} from '@/utils/phoneFormat';
 
 export const staffsColumns: ColumnType<IStaffs>[] = [
   {
@@ -24,7 +24,7 @@ export const staffsColumns: ColumnType<IStaffs>[] = [
     dataIndex: 'phone',
     title: 'Telefon raqami',
     align: 'center',
-    render: (value, record) => record?.phone,
+    render: (value, record) => `+${formatPhoneNumber(record?.phone)}`,
   },
   {
     key: 'action',

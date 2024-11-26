@@ -1,13 +1,11 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {observer} from 'mobx-react';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {Form, Input, InputNumber, Modal, Select} from 'antd';
+import {Form, Input, InputNumber, Modal} from 'antd';
+import {IAddOrEditStaff, staffsApi} from '@/api/staffs';
+import {staffsStore} from '@/stores/workers';
 import {addNotification} from '@/utils';
-import {priceFormat} from '@/utils/priceFormat';
-import {trimValues} from '@/utils/trimObjectFunc';
-import { staffsStore } from '@/stores/workers';
-import { IAddOrEditStaff, staffsApi } from '@/api/staffs';
-import { regexPhoneNumber } from '@/utils/phoneFormat';
+import {regexPhoneNumber} from '@/utils/phoneFormat';
 
 export const AddStaffsModal = observer(() => {
   const [form] = Form.useForm();
@@ -91,7 +89,7 @@ export const AddStaffsModal = observer(() => {
         <Form.Item
           name="name"
           label="Mijoz"
-          rules={[{ required: true }]}
+          rules={[{required: true}]}
         >
           <Input placeholder="F.I.O" />
         </Form.Item>
@@ -99,7 +97,7 @@ export const AddStaffsModal = observer(() => {
           name="phone"
           label="Telefon raqami: 901234567"
           rules={[
-            { required: true },
+            {required: true},
             {
               pattern: regexPhoneNumber,
               message: 'Raqamni to\'g\'ri kiriting!, Masalan: 901234567',
@@ -109,7 +107,7 @@ export const AddStaffsModal = observer(() => {
           <InputNumber
             addonBefore="+998"
             placeholder="Telefon raqami"
-            style={{ width: '100%' }}
+            style={{width: '100%'}}
             type="number"
           />
         </Form.Item>

@@ -2,7 +2,6 @@ import React from 'react';
 import {StopOutlined} from '@ant-design/icons';
 import {Result} from 'antd';
 import classNames from 'classnames/bind';
-import {constantsDictionary} from '@/constants/dictionary';
 import styles from './not-found.scss';
 
 const cn = classNames.bind(styles);

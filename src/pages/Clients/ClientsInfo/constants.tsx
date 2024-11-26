@@ -1,7 +1,8 @@
 import React from 'react';
 import {ColumnType} from 'antd/es/table';
+import {IClientsInfo} from '@/api/clients';
 import {Action} from './Action';
-import { IClientsInfo } from '@/api/clients';
+import { formatPhoneNumber } from '@/utils/phoneFormat';
 
 export const clientsColumns: ColumnType<IClientsInfo>[] = [
   {
@@ -23,7 +24,7 @@ export const clientsColumns: ColumnType<IClientsInfo>[] = [
     dataIndex: 'phone',
     title: 'Telefon raqami',
     align: 'center',
-    render: (value, record) => record?.phone,
+    render: (value, record) => `+${formatPhoneNumber(record?.phone)}`,
   },
   {
     key: 'action',

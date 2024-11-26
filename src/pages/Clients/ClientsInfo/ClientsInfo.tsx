@@ -5,12 +5,12 @@ import {useQuery} from '@tanstack/react-query';
 import {Button, Input, Typography} from 'antd';
 import classNames from 'classnames';
 import {DataTable} from '@/components/Datatable/datatable';
+import {clientsInfoStore} from '@/stores/clients';
 import {getPaginationParams} from '@/utils/getPaginationParams';
 import {useMediaQuery} from '@/utils/mediaQuery';
-import {clientsColumns} from './constants';
+import {AddEditModal} from './AddEditModal';
 import styles from './client-info.scss';
-import { AddEditModal } from './AddEditModal';
-import { clientsInfoStore } from '@/stores/clients';
+import {clientsColumns} from './constants';
 
 const cn = classNames.bind(styles);
 

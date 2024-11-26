@@ -1,24 +1,23 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { observer } from 'mobx-react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Form, Input, InputNumber, Modal, Select } from 'antd';
-import { addNotification } from '@/utils';
-import { priceFormat } from '@/utils/priceFormat';
-import { IAddOrEditStaff, staffsApi } from '@/api/staffs';
-import { clientsInfoStore } from '@/stores/clients';
-import { regexPhoneNumber } from '@/utils/phoneFormat';
+import React, {useEffect, useState} from 'react';
+import {observer} from 'mobx-react';
+import {useMutation, useQueryClient} from '@tanstack/react-query';
+import {Form, Input, InputNumber, Modal} from 'antd';
+import {clientsInfoStore} from '@/stores/clients';
+import {addNotification} from '@/utils';
+import {regexPhoneNumber} from '@/utils/phoneFormat';
+import { IAddEditClientInfo, clientsInfoApi } from '@/api/clients';
 
 export const AddEditModal = observer(() => {
   const [form] = Form.useForm();
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
 
-  const { mutate: addNewStaffs } =
+  const {mutate: addNewStaffs} =
     useMutation({
       mutationKey: ['addNewStaffs'],
-      mutationFn: (params: IAddOrEditStaff) => staffsApi.addNewStaff(params),
+      mutationFn: (params: IAddEditClientInfo) => clientsInfoApi.clientsAddClient(params),
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['getStaffs'] });
+        queryClient.invalidateQueries({queryKey: ['getClients']});
         handleModalClose();
       },
       onError: addNotification,
@@ -27,12 +26,12 @@ export const AddEditModal = observer(() => {
       },
     });
 
-  const { mutate: updateProcess } =
+  const {mutate: updateProcess} =
     useMutation({
       mutationKey: ['updateProcess'],
-      mutationFn: (params: IAddOrEditStaff) => staffsApi.updateStaff(params),
+      mutationFn: (params: IAddEditClientInfo) => clientsInfoApi.updateClient(params),
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['getStaffs'] });
+        queryClient.invalidateQueries({queryKey: ['getClients']});
         handleModalClose();
       },
       onError: addNotification,
@@ -41,18 +40,23 @@ export const AddEditModal = observer(() => {
       },
     });
 
-  const handleSubmit = (values: IAddOrEditStaff) => {
+  const handleSubmit = (values: IAddEditClientInfo) => {
+    const valueControl = {
+      ...values,
+      phone: `998${values?.phone}`,
+    };
+
     setLoading(true);
 
     if (clientsInfoStore?.singleClientInfo) {
       updateProcess({
-        ...values,
+        ...valueControl,
         id: clientsInfoStore?.singleClientInfo?.id!,
       });
 
       return;
     }
-    addNewStaffs(values);
+    addNewStaffs(valueControl);
   };
 
   const handleModalClose = () => {
@@ -66,7 +70,10 @@ export const AddEditModal = observer(() => {
 
   useEffect(() => {
     if (clientsInfoStore.singleClientInfo) {
-      form.setFieldsValue(clientsInfoStore.singleClientInfo);
+      form.setFieldsValue({
+        ...clientsInfoStore.singleClientInfo,
+        phone: clientsInfoStore.singleClientInfo?.phone?.slice(3),
+      });
     }
   }, [clientsInfoStore.singleClientInfo]);
 
@@ -90,7 +97,7 @@ export const AddEditModal = observer(() => {
         <Form.Item
           name="name"
           label="Mijoz"
-          rules={[{ required: true }]}
+          rules={[{required: true}]}
         >
           <Input placeholder="F.I.O" />
         </Form.Item>
@@ -98,7 +105,7 @@ export const AddEditModal = observer(() => {
           name="phone"
           label="Telefon raqami: 901234567"
           rules={[
-            { required: true },
+            {required: true},
             {
               pattern: regexPhoneNumber,
               message: 'Raqamni to\'g\'ri kiriting!, Masalan: 901234567',
@@ -108,12 +115,11 @@ export const AddEditModal = observer(() => {
           <InputNumber
             addonBefore="+998"
             placeholder="Telefon raqami"
-            style={{ width: '100%' }}
+            style={{width: '100%'}}
             type="number"
           />
         </Form.Item>
       </Form>
-
     </Modal>
   );
 });

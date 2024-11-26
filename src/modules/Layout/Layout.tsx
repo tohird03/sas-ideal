@@ -32,7 +32,7 @@ export const Layout = () => {
         collapsed={value}
         width={250}
         style={isTablet ? {
-          left: `${value && isMobile ? '-250px' : !isMobile && isTablet ? '0' : '0'}`,
+          left: `${value && isMobile ? '-250px' : '0'}`,
           minWidth: '350px !important',
           height: 'calc(100vh - 64px)',
           position: 'absolute',
@@ -60,7 +60,6 @@ export const Layout = () => {
           <Outlet />
         </Content>
       </AntdLayout>
-
     </AntdLayout>
   );
 };

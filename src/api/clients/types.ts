@@ -1,4 +1,4 @@
-import { IPagination } from '../types';
+import {IPagination} from '../types';
 
 export interface IClientsInfo {
   id: string;
