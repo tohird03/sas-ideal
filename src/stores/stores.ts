@@ -1,9 +1,10 @@
 import {appStore} from './app';
 import {authStore} from './auth';
 import {breadcrumbStore} from './breadcrumb';
-import {clientsInfoStore} from './clients';
 import {profileStore} from './profile';
+import {clientsInfoStore} from './clients';
 import {staffsStore} from './workers';
+import {supplierInfoStore} from './supplier';
 
 export const stores = {
   appStore,
@@ -12,6 +13,7 @@ export const stores = {
   profileStore,
   staffsStore,
   clientsInfoStore,
+  supplierInfoStore,
 };
 
 export const resetStores = () => {
@@ -21,4 +23,5 @@ export const resetStores = () => {
   profileStore.reset();
   staffsStore.reset();
   clientsInfoStore.reset();
+  supplierInfoStore.reset();
 };

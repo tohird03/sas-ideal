@@ -9,6 +9,7 @@ import {
   Login,
   MyProfileHome,
   Staffs,
+  SupplierInfo,
 } from './lazy';
 import {ProtectedRoutes} from './ProtectedRoutes';
 import {PublicRoutes} from './PublicRoutes';
@@ -41,6 +42,11 @@ export const Router = ({isAuth}: Props) => useRoutes([
           {
             element: <Suspense fallback={<Loading />}><ClientsInfo /></Suspense>,
             path: ROUTES.clientsInfo,
+          },
+          // SUPPLIER
+          {
+            element: <Suspense fallback={<Loading />}><SupplierInfo /></Suspense>,
+            path: ROUTES.supplierInfo,
           },
           // SETTING ROUTES
           {

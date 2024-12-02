@@ -10,6 +10,10 @@ export const ROUTES = {
   // CLIENTS
   clients: '/clients',
   clientsInfo: '/clients/clients-info',
+
+  // SUPPLIER
+  supplier: '/supplier',
+  supplierInfo: '/supplier/supplier-info',
 } as const;
 
 export const roleChecker = {

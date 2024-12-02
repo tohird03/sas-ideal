@@ -2,22 +2,22 @@ import React, {useEffect, useState} from 'react';
 import {observer} from 'mobx-react';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {Form, Input, InputNumber, Modal} from 'antd';
-import {clientsInfoStore} from '@/stores/clients';
 import {addNotification} from '@/utils';
 import {regexPhoneNumber} from '@/utils/phoneFormat';
 import { IAddClientInfo, IUpdateUser, clientsInfoApi } from '@/api/clients';
+import { supplierInfoStore } from '@/stores/supplier';
 
 export const AddEditModal = observer(() => {
   const [form] = Form.useForm();
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
 
-  const {mutate: addNewStaffs} =
+  const {mutate: addNewSupplier} =
     useMutation({
-      mutationKey: ['addNewStaffs'],
-      mutationFn: (params: IAddClientInfo) => clientsInfoApi.addClients(params),
+      mutationKey: ['addNewSupplier'],
+      mutationFn: (params: IAddClientInfo) => clientsInfoApi.addSupplier(params),
       onSuccess: () => {
-        queryClient.invalidateQueries({queryKey: ['getClients']});
+        queryClient.invalidateQueries({queryKey: ['getSuppliers']});
         handleModalClose();
       },
       onError: addNotification,
@@ -26,12 +26,12 @@ export const AddEditModal = observer(() => {
       },
     });
 
-  const {mutate: updateClient} =
+  const {mutate: updateSupplier} =
     useMutation({
-      mutationKey: ['updateClient'],
+      mutationKey: ['updateSupplier'],
       mutationFn: (params: IUpdateUser) => clientsInfoApi.updateUser(params),
       onSuccess: () => {
-        queryClient.invalidateQueries({queryKey: ['getClients']});
+        queryClient.invalidateQueries({queryKey: ['getSuppliers']});
         handleModalClose();
       },
       onError: addNotification,
@@ -48,20 +48,20 @@ export const AddEditModal = observer(() => {
 
     setLoading(true);
 
-    if (clientsInfoStore?.singleClientInfo) {
-      updateClient({
+    if (supplierInfoStore?.singleSupplierInfo) {
+      updateSupplier({
         ...valueControl,
-        id: clientsInfoStore?.singleClientInfo?.id!,
+        id: supplierInfoStore?.singleSupplierInfo?.id!,
       });
 
       return;
     }
-    addNewStaffs(valueControl);
+    addNewSupplier(valueControl);
   };
 
   const handleModalClose = () => {
-    clientsInfoStore.setSingleClientInfo(null);
-    clientsInfoStore.setIsOpenAddEditClientModal(false);
+    supplierInfoStore.setSingleSupplierInfo(null);
+    supplierInfoStore.setIsOpenAddEditSupplierModal(false);
   };
 
   const handleModalOk = () => {
@@ -69,21 +69,21 @@ export const AddEditModal = observer(() => {
   };
 
   useEffect(() => {
-    if (clientsInfoStore.singleClientInfo) {
+    if (supplierInfoStore.singleSupplierInfo) {
       form.setFieldsValue({
-        ...clientsInfoStore.singleClientInfo,
-        phone: clientsInfoStore.singleClientInfo?.phone?.slice(3),
+        ...supplierInfoStore.singleSupplierInfo,
+        phone: supplierInfoStore.singleSupplierInfo?.phone?.slice(3),
       });
     }
-  }, [clientsInfoStore.singleClientInfo]);
+  }, [supplierInfoStore.singleSupplierInfo]);
 
   return (
     <Modal
-      open={clientsInfoStore.isOpenAddEditClientModal}
-      title={clientsInfoStore.singleClientInfo ? 'Mijozni tahrirlash' : 'Mijozni qo\'shish'}
+      open={supplierInfoStore.isOpenAddEditSupplierModal}
+      title={supplierInfoStore.singleSupplierInfo ? 'Yetkazib beruvchini tahrirlash' : 'Yetkazib beruvchini qo\'shish'}
       onCancel={handleModalClose}
       onOk={handleModalOk}
-      okText={clientsInfoStore.singleClientInfo ? 'Mijozni tahrirlash' : 'Mijozni qo\'shish'}
+      okText={supplierInfoStore.singleSupplierInfo ? 'Yetkazib beruvchini tahrirlash' : 'Yetkazib beruvchini qo\'shish'}
       cancelText="Bekor qilish"
       centered
       confirmLoading={loading}

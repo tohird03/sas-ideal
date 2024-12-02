@@ -32,7 +32,7 @@ export const ClientsInfo = observer(() => {
       }),
   });
 
-  const handleAddNewStaff = () => {
+  const handleAddNewClient = () => {
     clientsInfoStore.setIsOpenAddEditClientModal(true);
   };
 
@@ -61,7 +61,7 @@ export const ClientsInfo = observer(() => {
             className={cn('client-info__search')}
           />
           <Button
-            onClick={handleAddNewStaff}
+            onClick={handleAddNewClient}
             type="primary"
             icon={<PlusCircleOutlined />}
           >

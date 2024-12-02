@@ -1,8 +1,8 @@
-import {AxiosResponse} from 'axios';
-import {Endpoints, umsStages} from '../endpoints';
-import {INetworkConfig, Instance} from '../instance';
-import {IResponse} from '../types';
-import {IAddEditClientInfo, IClientsInfo, IGetClientsInfoParams} from './types';
+import { AxiosResponse } from 'axios';
+import { Endpoints, umsStages } from '../endpoints';
+import { INetworkConfig, Instance } from '../instance';
+import { IResponse } from '../types';
+import { IAddClientInfo, IAddSupplierInfo, IClientsInfo, IGetClientsInfoParams, IGetSupplierInfoParams, ISupplierInfo, IUpdateUser } from './types';
 
 const config: INetworkConfig = {
   baseURL: Endpoints.Base,
@@ -15,19 +15,23 @@ class ClientsInfoApi extends Instance {
   }
 
   getClientsInfo = (params: IGetClientsInfoParams): Promise<IResponse<IClientsInfo[]>> =>
-    this.get(Endpoints.ClientsInfo, {params});
+    this.get(Endpoints.Clients, { params });
 
-  clientsAddClient = (params: IAddEditClientInfo): Promise<AxiosResponse> =>
-    this.post(Endpoints.ClientsAddClient, params);
+  addClients = (params: IAddClientInfo): Promise<AxiosResponse> =>
+    this.post(Endpoints.Clients, params);
 
-  clientsAddSupplier = (params: IAddEditClientInfo): Promise<AxiosResponse> =>
-    this.post(Endpoints.ClientsAddSupplier, params);
+  getSupplierInfo = (params: IGetSupplierInfoParams): Promise<IResponse<ISupplierInfo[]>> =>
+    this.get(Endpoints.Supplier, { params });
 
-  updateClient = (params: IAddEditClientInfo): Promise<AxiosResponse> =>
-    this.patch(`${Endpoints.ClientsInfo}/${params?.id}`, params);
+  addSupplier = (params: IAddSupplierInfo): Promise<AxiosResponse> =>
+    this.post(Endpoints.Supplier, params);
 
-  deleteClient = (id: string): Promise<AxiosResponse> =>
-    this.delete(`${Endpoints.ClientsInfo}/${id}`);
+  // UPDATE
+  updateUser = (params: IUpdateUser): Promise<AxiosResponse> =>
+    this.patch(`${Endpoints.Users}/${params?.id}`, params);
+
+  deleteUser = (id: string): Promise<AxiosResponse> =>
+    this.delete(`${Endpoints.Users}/${id}`);
 }
 
 export const clientsInfoApi = new ClientsInfoApi(config);
