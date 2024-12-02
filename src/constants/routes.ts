@@ -14,6 +14,10 @@ export const ROUTES = {
   // SUPPLIER
   supplier: '/supplier',
   supplierInfo: '/supplier/supplier-info',
+
+  // PRODUCTS
+  products: '/products',
+  productsList: '/products/list',
 } as const;
 
 export const roleChecker = {

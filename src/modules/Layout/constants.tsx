@@ -55,6 +55,19 @@ export const appRoles: Record<IAppRole, {name: string, color: string}> = {
 
 export const mainMenuList: IMenuItems[] = [
   {
+    label: 'Mahsulotlar',
+    key: ROUTES.products,
+    icon: <UserOutlined />,
+    roleKey: 'products',
+    children: [
+      {
+        label: 'Mahsulotlar ro\'yxati',
+        key: ROUTES.productsList,
+        icon: <ControlOutlined />,
+      },
+    ],
+  },
+  {
     label: 'Mijozlar',
     key: ROUTES.clients,
     icon: <UserOutlined />,

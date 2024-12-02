@@ -16,6 +16,9 @@ export enum Endpoints {
   Users = '/user',
   Clients = '/user/client',
   Supplier = '/user/supplier',
+
+  // PRODUCTS
+  products = '/product',
 }
 
 const config: Record<string, TStage> = {
