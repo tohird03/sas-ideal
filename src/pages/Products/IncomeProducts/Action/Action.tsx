@@ -3,15 +3,16 @@ import {observer} from 'mobx-react';
 import {DeleteOutlined, EditOutlined} from '@ant-design/icons';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {Button, Popconfirm} from 'antd';
-import {clientsInfoApi, ISupplierInfo} from '@/api/clients';
+import {clientsInfoApi} from '@/api/clients';
 import {addNotification} from '@/utils';
-import { supplierInfoStore } from '@/stores/supplier';
+import { IIncomeOrder } from '@/api/income-products/types';
+import { incomeProductsStore } from '@/stores/products';
 
 type Props = {
-  supplier: ISupplierInfo;
+  order: IIncomeOrder;
 };
 
-export const Action: FC<Props> = observer(({supplier}) => {
+export const Action: FC<Props> = observer(({order}) => {
   const queryClient = useQueryClient();
 
   const {mutate: deleteSupplier} =
@@ -25,12 +26,12 @@ export const Action: FC<Props> = observer(({supplier}) => {
   });
 
   const handleEditProcess = () => {
-    supplierInfoStore.setSingleSupplierInfo(supplier);
-    supplierInfoStore.setIsOpenAddEditSupplierModal(true);
+    incomeProductsStore.setsingleIncomeOrder(order);
+    incomeProductsStore.setIsOpenAddEditIncomeProductsModal(true);
   };
 
   const handleDelete = () => {
-    deleteSupplier(supplier?.id);
+    deleteSupplier(order?.id);
   };
 
   return (

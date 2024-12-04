@@ -2,51 +2,47 @@ import React, { useEffect } from 'react';
 import { observer } from 'mobx-react';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
-import { Button, Input, Typography } from 'antd';
+import { Button, Typography } from 'antd';
 import classNames from 'classnames';
 import { DataTable } from '@/components/Datatable/datatable';
 import { getPaginationParams } from '@/utils/getPaginationParams';
 import { useMediaQuery } from '@/utils/mediaQuery';
 import { AddEditModal } from './AddEditModal';
 import styles from './income-products.scss';
-import { supplierColumns } from './constants';
-import { supplierInfoStore } from '@/stores/supplier';
+import { incomeOrdersColumns } from './constants';
+import { incomeProductsStore } from '@/stores/products';
 
 const cn = classNames.bind(styles);
 
 export const IncomeProducts = observer(() => {
   const isMobile = useMediaQuery('(max-width: 800px)');
 
-  const { data: supplierData, isLoading: loading } = useQuery({
+  const { data: incomeOrdersData, isLoading: loading } = useQuery({
     queryKey: [
-      'getSuppliers',
-      supplierInfoStore.pageNumber,
-      supplierInfoStore.pageSize,
-      supplierInfoStore.search,
+      'getOrders',
+      incomeProductsStore.pageNumber,
+      incomeProductsStore.pageSize,
+      incomeProductsStore.search,
     ],
     queryFn: () =>
-      supplierInfoStore.getSuppliers({
-        pageNumber: supplierInfoStore.pageNumber,
-        pageSize: supplierInfoStore.pageSize,
-        search: supplierInfoStore.search!,
+      incomeProductsStore.getIncomeOrders({
+        pageNumber: incomeProductsStore.pageNumber,
+        pageSize: incomeProductsStore.pageSize,
+        search: incomeProductsStore.search!,
       }),
   });
 
   const handleAddIncomeProduct = () => {
-    supplierInfoStore.setIsOpenAddEditSupplierModal(true);
-  };
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    supplierInfoStore.setSearch(e.currentTarget?.value);
+    incomeProductsStore.setIsOpenAddEditIncomeProductsModal(true);
   };
 
   const handlePageChange = (page: number, pageSize: number | undefined) => {
-    supplierInfoStore.setPageNumber(page);
-    supplierInfoStore.setPageSize(pageSize!);
+    incomeProductsStore.setPageNumber(page);
+    incomeProductsStore.setPageSize(pageSize!);
   };
 
   useEffect(() => () => {
-    supplierInfoStore.reset();
+    incomeProductsStore.reset();
   }, []);
 
   return (
@@ -65,21 +61,21 @@ export const IncomeProducts = observer(() => {
       </div>
 
       <DataTable
-        columns={supplierColumns}
-        data={supplierData?.data || []}
+        columns={incomeOrdersColumns}
+        data={incomeOrdersData?.data || []}
         loading={loading}
         isMobile={isMobile}
         pagination={{
-          total: supplierData?.totalCount,
-          current: supplierInfoStore?.pageNumber,
-          pageSize: supplierInfoStore?.pageSize,
+          total: incomeOrdersData?.totalCount,
+          current: incomeProductsStore?.pageNumber,
+          pageSize: incomeProductsStore?.pageSize,
           showSizeChanger: true,
           onChange: handlePageChange,
-          ...getPaginationParams(supplierData?.totalCount),
+          ...getPaginationParams(incomeOrdersData?.totalCount),
         }}
       />
 
-      {supplierInfoStore.isOpenAddEditSupplierModal && <AddEditModal />}
+      {incomeProductsStore.isOpenAddEditIncomeProductsModal && <AddEditModal />}
     </main>
   );
 });

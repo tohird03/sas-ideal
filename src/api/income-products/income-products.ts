@@ -1,7 +1,7 @@
 import { Endpoints, umsStages } from '../endpoints';
 import { INetworkConfig, Instance } from '../instance';
 import { IResponse } from '../types';
-import { IGetIncomeProductsParams, IIncomeProduct } from './types';
+import { IGetIncomeOrdersParams, IIncomeOrder } from './types';
 
 const config: INetworkConfig = {
   baseURL: Endpoints.Base,
@@ -14,8 +14,8 @@ class IncomeProductsApi extends Instance {
     super(config);
   }
 
-  getIncomeOrder = (params: IGetIncomeProductsParams): Promise<IResponse<IIncomeProduct[]>> =>
-    this.get(Endpoints.products, {params});
+  getIncomeOrder = (params: IGetIncomeOrdersParams): Promise<IResponse<IIncomeOrder[]>> =>
+    this.get(Endpoints.productsOrder, {params});
 }
 
 export const incomeProductsApi = new IncomeProductsApi(config);
