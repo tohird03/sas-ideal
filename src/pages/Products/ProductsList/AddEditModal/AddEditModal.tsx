@@ -1,23 +1,24 @@
-import React, {useEffect, useState} from 'react';
-import {observer} from 'mobx-react';
-import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {Form, Input, InputNumber, Modal} from 'antd';
-import {clientsInfoStore} from '@/stores/clients';
-import {addNotification} from '@/utils';
-import {regexPhoneNumber} from '@/utils/phoneFormat';
-import { IAddClientInfo, IUpdateUser, clientsInfoApi } from '@/api/clients';
+import React, { useEffect, useState } from 'react';
+import { observer } from 'mobx-react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Form, Input, InputNumber, Modal } from 'antd';
+import { addNotification } from '@/utils';
+import { productsListStore } from '@/stores/products';
+import { priceFormat } from '@/utils/priceFormat';
+import { productsApi } from '@/api/product/product';
+import { IAddEditProduct } from '@/api/product/types';
 
 export const AddEditModal = observer(() => {
   const [form] = Form.useForm();
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
 
-  const {mutate: addNewStaffs} =
+  const { mutate: addNewProduct } =
     useMutation({
-      mutationKey: ['addNewStaffs'],
-      mutationFn: (params: IAddClientInfo) => clientsInfoApi.addClients(params),
+      mutationKey: ['addNewProduct'],
+      mutationFn: (params: IAddEditProduct) => productsApi.addNewProduct(params),
       onSuccess: () => {
-        queryClient.invalidateQueries({queryKey: ['getClients']});
+        queryClient.invalidateQueries({ queryKey: ['getProducts'] });
         handleModalClose();
       },
       onError: addNotification,
@@ -26,12 +27,12 @@ export const AddEditModal = observer(() => {
       },
     });
 
-  const {mutate: updateClient} =
+  const { mutate: updateProduct } =
     useMutation({
-      mutationKey: ['updateClient'],
-      mutationFn: (params: IUpdateUser) => clientsInfoApi.updateUser(params),
+      mutationKey: ['updateProduct'],
+      mutationFn: (params: IAddEditProduct) => productsApi.updateProduct(params),
       onSuccess: () => {
-        queryClient.invalidateQueries({queryKey: ['getClients']});
+        queryClient.invalidateQueries({ queryKey: ['getProducts'] });
         handleModalClose();
       },
       onError: addNotification,
@@ -40,28 +41,23 @@ export const AddEditModal = observer(() => {
       },
     });
 
-  const handleSubmit = (values: IAddClientInfo) => {
-    const valueControl = {
-      ...values,
-      phone: `998${values?.phone}`,
-    };
-
+  const handleSubmit = (values: IAddEditProduct) => {
     setLoading(true);
 
-    if (clientsInfoStore?.singleClientInfo) {
-      updateClient({
-        ...valueControl,
-        id: clientsInfoStore?.singleClientInfo?.id!,
+    if (productsListStore?.singleProduct) {
+      updateProduct({
+        ...values,
+        id: productsListStore?.singleProduct?.id!,
       });
 
       return;
     }
-    addNewStaffs(valueControl);
+    addNewProduct(values);
   };
 
   const handleModalClose = () => {
-    clientsInfoStore.setSingleClientInfo(null);
-    clientsInfoStore.setIsOpenAddEditClientModal(false);
+    productsListStore.setSingleProduct(null);
+    productsListStore.setIsOpenAddEditProductModal(false);
   };
 
   const handleModalOk = () => {
@@ -69,21 +65,20 @@ export const AddEditModal = observer(() => {
   };
 
   useEffect(() => {
-    if (clientsInfoStore.singleClientInfo) {
+    if (productsListStore.singleProduct) {
       form.setFieldsValue({
-        ...clientsInfoStore.singleClientInfo,
-        phone: clientsInfoStore.singleClientInfo?.phone?.slice(3),
+        ...productsListStore.singleProduct,
       });
     }
-  }, [clientsInfoStore.singleClientInfo]);
+  }, [productsListStore.singleProduct]);
 
   return (
     <Modal
-      open={clientsInfoStore.isOpenAddEditClientModal}
-      title={clientsInfoStore.singleClientInfo ? 'Mijozni tahrirlash' : 'Mijozni qo\'shish'}
+      open={productsListStore.isOpenAddEditProductModal}
+      title={productsListStore.singleProduct ? 'Mahsulotni tahrirlash' : 'Mahsulotni qo\'shish'}
       onCancel={handleModalClose}
       onOk={handleModalOk}
-      okText={clientsInfoStore.singleClientInfo ? 'Mijozni tahrirlash' : 'Mijozni qo\'shish'}
+      okText={productsListStore.singleProduct ? 'Mahsulotni tahrirlash' : 'Mahsulotni qo\'shish'}
       cancelText="Bekor qilish"
       centered
       confirmLoading={loading}
@@ -95,28 +90,63 @@ export const AddEditModal = observer(() => {
         autoComplete="off"
       >
         <Form.Item
+          label="Mahsulot nomi"
+          rules={[{ required: true }]}
           name="name"
-          label="Mijoz"
-          rules={[{required: true}]}
         >
-          <Input placeholder="F.I.O" />
+          <Input placeholder="Mahsulot nomi" />
         </Form.Item>
         <Form.Item
-          name="phone"
-          label="Telefon raqami: 901234567"
-          rules={[
-            {required: true},
-            {
-              pattern: regexPhoneNumber,
-              message: 'Raqamni to\'g\'ri kiriting!, Masalan: 901234567',
-            },
-          ]}
+          label="Mahsulot soni"
+          rules={[{ required: true }]}
+          name="count"
         >
           <InputNumber
-            addonBefore="+998"
-            placeholder="Telefon raqami"
-            style={{width: '100%'}}
-            type="number"
+            placeholder="Qoldiq mahsulot"
+            style={{ width: '100%' }}
+            formatter={(value) => priceFormat(value!)}
+          />
+        </Form.Item>
+        <Form.Item
+          label="Ogohlantiruvchi qoldiq"
+          name="min_amount"
+        >
+          <InputNumber
+            placeholder="Ushbu sondan kam qolgan mahsulot haqida sizni ogohlantiramiz!"
+            style={{ width: '100%' }}
+            formatter={(value) => priceFormat(value!)}
+          />
+        </Form.Item>
+        <Form.Item
+          label="Sotish narxi"
+          rules={[{ required: true }]}
+          name="selling_price"
+        >
+          <InputNumber
+            placeholder="Sotish narxi"
+            style={{ width: '100%' }}
+            formatter={(value) => priceFormat(value!)}
+          />
+        </Form.Item>
+        <Form.Item
+          label="Ulgurji narxi"
+          name="wholesale_price"
+        >
+          <InputNumber
+            placeholder="Ulgurji narxi"
+            style={{ width: '100%' }}
+            formatter={(value) => priceFormat(value!)}
+          />
+        </Form.Item>
+        <Form.Item
+          label="Sotib olingan narxi"
+          rules={[{ required: true }]}
+          name="cost"
+        >
+          <InputNumber
+            placeholder="Sotib olingan narxi"
+            style={{ width: '100%' }}
+            formatter={(value) => priceFormat(value!)}
           />
         </Form.Item>
       </Form>

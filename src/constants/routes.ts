@@ -18,6 +18,8 @@ export const ROUTES = {
   // PRODUCTS
   products: '/products',
   productsList: '/products/list',
+  productsIncome: '/products/income',
+  productsOrder: '/products/order',
 } as const;
 
 export const roleChecker = {

@@ -11,6 +11,7 @@ import {AddEditModal} from './AddEditModal';
 import styles from './product-list.scss';
 import {productsListColumn} from './constants';
 import { productsListStore } from '@/stores/products';
+import { IProducts } from '@/api/product/types';
 
 const cn = classNames.bind(styles);
 
@@ -32,7 +33,7 @@ export const ProductsList = observer(() => {
       }),
   });
 
-  const handleAddNewClient = () => {
+  const handleAddNewProduct = () => {
     productsListStore.setIsOpenAddEditProductModal(true);
   };
 
@@ -49,19 +50,21 @@ export const ProductsList = observer(() => {
     productsListStore.reset();
   }, []);
 
+  const rowClassName = (record: IProducts) => record.count < record?.min_amount ? 'error__row' : '';
+
   return (
     <main>
       <div className={cn('product-list__head')}>
         <Typography.Title level={3}>Mahsulotlar</Typography.Title>
         <div className={cn('product-list__filter')}>
           <Input
-            placeholder="Mijozlarni qidirish"
+            placeholder="Mahsulotni qidirish"
             allowClear
             onChange={handleSearch}
             className={cn('product-list__search')}
           />
           <Button
-            onClick={handleAddNewClient}
+            onClick={handleAddNewProduct}
             type="primary"
             icon={<PlusCircleOutlined />}
           >
@@ -75,6 +78,7 @@ export const ProductsList = observer(() => {
         data={productsData?.data || []}
         loading={loading}
         isMobile={isMobile}
+        rowClassName={rowClassName}
         pagination={{
           total: productsData?.totalCount,
           current: productsListStore?.pageNumber,

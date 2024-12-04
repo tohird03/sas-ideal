@@ -65,6 +65,16 @@ export const mainMenuList: IMenuItems[] = [
         key: ROUTES.productsList,
         icon: <ControlOutlined />,
       },
+      {
+        label: 'Sotuvlar ro\'yxati',
+        key: ROUTES.productsOrder,
+        icon: <ControlOutlined />,
+      },
+      {
+        label: 'Tushurilgan mahsulotlar',
+        key: ROUTES.productsIncome,
+        icon: <ControlOutlined />,
+      },
     ],
   },
   {

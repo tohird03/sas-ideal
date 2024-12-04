@@ -3,44 +3,42 @@ import {observer} from 'mobx-react';
 import {DeleteOutlined, EditOutlined} from '@ant-design/icons';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {Button, Popconfirm} from 'antd';
+import {clientsInfoApi, ISupplierInfo} from '@/api/clients';
 import {addNotification} from '@/utils';
-import { IProducts } from '@/api/product/types';
-import { productsListStore } from '@/stores/products';
-import { productsApi } from '@/api/product/product';
+import { supplierInfoStore } from '@/stores/supplier';
 
 type Props = {
-  product: IProducts;
+  supplier: ISupplierInfo;
 };
 
-export const Action: FC<Props> = observer(({product}) => {
+export const Action: FC<Props> = observer(({supplier}) => {
   const queryClient = useQueryClient();
 
-  const {mutate: deleteClient} =
+  const {mutate: deleteSupplier} =
   useMutation({
-    mutationKey: ['deleteClient'],
-    mutationFn: (id: string) => productsApi.deleteProduct(id!),
+    mutationKey: ['deleteSupplier'],
+    mutationFn: (id: string) => clientsInfoApi.deleteUser(id!),
     onSuccess: () => {
-      addNotification('Mahsulot o\'chirildi');
-      queryClient.invalidateQueries({queryKey: ['getProducts']});
+      queryClient.invalidateQueries({queryKey: ['getSuppliers']});
     },
     onError: addNotification,
   });
 
   const handleEditProcess = () => {
-    productsListStore.setSingleProduct(product);
-    productsListStore.setIsOpenAddEditProductModal(true);
+    supplierInfoStore.setSingleSupplierInfo(supplier);
+    supplierInfoStore.setIsOpenAddEditSupplierModal(true);
   };
 
   const handleDelete = () => {
-    deleteClient(product?.id);
+    deleteSupplier(supplier?.id);
   };
 
   return (
     <div style={{display: 'flex', gap: '10px', justifyContent: 'center', alignItems: 'center'}}>
       <Button onClick={handleEditProcess} type="primary" icon={<EditOutlined />} />
       <Popconfirm
-        title="Xodimni o'chirish"
-        description="Rostdan ham bu xodimni o'chirishni xohlaysizmi?"
+        title="Yetkazib beruvchini o'chirish"
+        description="Rostdan ham bu yetkazib beruvchini o'chirishni xohlaysizmi?"
         onConfirm={handleDelete}
         okText="Ha"
         okButtonProps={{style: {background: 'red'}}}

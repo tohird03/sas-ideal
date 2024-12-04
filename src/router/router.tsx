@@ -6,8 +6,10 @@ import {ROUTES} from '@/constants';
 import {Layout} from '@/modules/Layout';
 import {
   ClientsInfo,
+  IncomeProducts,
   Login,
   MyProfileHome,
+  Orders,
   ProductsList,
   Staffs,
   SupplierInfo,
@@ -53,6 +55,14 @@ export const Router = ({isAuth}: Props) => useRoutes([
           {
             element: <Suspense fallback={<Loading />}><ProductsList /></Suspense>,
             path: ROUTES.productsList,
+          },
+          {
+            element: <Suspense fallback={<Loading />}><IncomeProducts /></Suspense>,
+            path: ROUTES.productsIncome,
+          },
+          {
+            element: <Suspense fallback={<Loading />}><Orders /></Suspense>,
+            path: ROUTES.productsOrder,
           },
           // SETTING ROUTES
           {

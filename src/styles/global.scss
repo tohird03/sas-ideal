@@ -146,17 +146,12 @@ input::-webkit-inner-spin-button {
   background: #555;
 }
 
-.ant-collapse-expand-icon {
-  margin-top: auto !important;
+.error__row {
+  background-color: #F1B0B7;
 }
 
-.roles {
-  .ant-collapse-header {
-    display: flex;
-    align-items: center !important;
-  }
-
-  .ant-collapse-expand-icon {
-    margin: 0 !important;
+.error__row:hover {
+  .ant-table-cell {
+    background-color: #F1B0B7 !important;
   }
 }

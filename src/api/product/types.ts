@@ -9,7 +9,6 @@ export interface IProducts {
   id: string;
   name: string;
   count: number;
-  unit: string;
   min_amount: number;
   // Sotib olingan narx
   cost: number;
@@ -17,4 +16,15 @@ export interface IProducts {
   selling_price: number;
   // Kelishtirib berishning oxirgi narxi
   wholesale_price: number;
+}
+
+export interface IAddEditProduct {
+  id?: string;
+  min_amount?: number;
+  wholesale_price?: number;
+  name: string;
+  count: number;
+  cost: number;
+  selling_price: number;
+  unit: string;
 }

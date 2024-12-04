@@ -99,7 +99,7 @@ export const DataTable = (props: DataTableProps) => {
         <Card
           bodyStyle={{padding: '12px'}}
           key={d?.id}
-          className={`${styles.card} ${d?.isRead ? rowClassName : ''}`}
+          className={`${styles.card} ${rowClassName(d)}`}
           style={cardStyle}
         >
           {columns.map((c, cIndex) => {

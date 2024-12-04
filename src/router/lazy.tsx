@@ -29,3 +29,9 @@ export const SupplierInfo = lazy(() =>
 // PRODUCTS
 export const ProductsList = lazy(() =>
   import('@/pages/Products').then(({ProductsList}) => ({default: ProductsList})).catch(handleCatchChunkError));
+
+export const IncomeProducts = lazy(() =>
+  import('@/pages/Products').then(({IncomeProducts}) => ({default: IncomeProducts})).catch(handleCatchChunkError));
+
+export const Orders = lazy(() =>
+  import('@/pages/Products').then(({Orders}) => ({default: Orders})).catch(handleCatchChunkError));

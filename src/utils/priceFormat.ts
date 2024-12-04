@@ -9,5 +9,5 @@ export const priceFormat = (price: string | number | null | undefined) => {
     return numberPrice.toLocaleString('en-US');
   }
 
-  return numberPrice.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 2});
+  return numberPrice.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 5});
 };
