@@ -5,13 +5,14 @@ import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {Button, Popconfirm} from 'antd';
 import {clientsInfoApi, ISupplierInfo} from '@/api/clients';
 import {addNotification} from '@/utils';
-import { supplierInfoStore } from '@/stores/supplier';
+import { IOrder } from '@/api/order/types';
+import { ordersStore } from '@/stores/products';
 
 type Props = {
-  supplier: ISupplierInfo;
+  orders: IOrder;
 };
 
-export const Action: FC<Props> = observer(({supplier}) => {
+export const Action: FC<Props> = observer(({orders}) => {
   const queryClient = useQueryClient();
 
   const {mutate: deleteSupplier} =
@@ -19,18 +20,18 @@ export const Action: FC<Props> = observer(({supplier}) => {
     mutationKey: ['deleteSupplier'],
     mutationFn: (id: string) => clientsInfoApi.deleteUser(id!),
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ['getSuppliers']});
+      queryClient.invalidateQueries({queryKey: ['getOrders']});
     },
     onError: addNotification,
   });
 
   const handleEditProcess = () => {
-    supplierInfoStore.setSingleSupplierInfo(supplier);
-    supplierInfoStore.setIsOpenAddEditSupplierModal(true);
+    ordersStore.setSingleOrder(orders);
+    ordersStore.setIsOpenAddEditNewOrderModal(true);
   };
 
   const handleDelete = () => {
-    deleteSupplier(supplier?.id);
+    deleteSupplier(orders?.id);
   };
 
   return (

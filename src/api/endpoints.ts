@@ -19,7 +19,8 @@ export enum Endpoints {
 
   // PRODUCTS
   products = '/product',
-  productsOrder = '/incomingOrder',
+  productsIncomeOrder = '/incomingOrder',
+  productsOrder = '/Order',
 }
 
 const config: Record<string, TStage> = {

@@ -1,4 +1,4 @@
-import {TagProps} from 'antd';
+import { TagProps } from 'antd';
 
 export interface IResponse<TBody> {
   totalCount: number;
@@ -27,32 +27,11 @@ export type TStage = {
   cdnHost?: string;
 };
 
-export enum IProductStatus {
-  ALL = 'all',
-  NEW = 'new',
-  CHECKED = 'checked',
-  PROCESS = 'process',
-  DONE = 'done',
-}
-
-export const ProductStatusColor: Record<IProductStatus, TagProps['color']> = {
-  [IProductStatus.ALL]: '#0352fc',
-  [IProductStatus.NEW]: '#0352fc',
-  [IProductStatus.CHECKED]: '#fc03df',
-  [IProductStatus.PROCESS]: '#e07000',
-  [IProductStatus.DONE]: '#06a800',
-};
-
-export const ProductStatusText = {
-  [IProductStatus.ALL]: 'Все',
-  [IProductStatus.NEW]: 'Новый',
-  [IProductStatus.CHECKED]: 'Проверено',
-  [IProductStatus.PROCESS]: 'В процессе',
-  [IProductStatus.DONE]: 'Готово',
-};
-
-export enum IUsersRoles {
-  Provider = 'provider',
-  Storekeeper = 'storekeeper',
-  ProviderQa = 'provider-qa',
+export interface IPayment {
+  id: string,
+  card: number,
+  cash: number,
+  transfer: number,
+  other: number,
+  createdAt: string;
 }

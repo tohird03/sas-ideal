@@ -61,19 +61,16 @@ export const mainMenuList: IMenuItems[] = [
     roleKey: 'products',
     children: [
       {
-        label: 'Mahsulotlar ro\'yxati',
+        label: <><ControlOutlined /> Mahsulotlar royxati</>,
         key: ROUTES.productsList,
-        icon: <ControlOutlined />,
       },
       {
         label: 'Sotuvlar ro\'yxati',
         key: ROUTES.productsOrder,
-        icon: <ControlOutlined />,
       },
       {
         label: 'Tushurilgan mahsulotlar',
         key: ROUTES.productsIncome,
-        icon: <ControlOutlined />,
       },
     ],
   },
@@ -86,7 +83,6 @@ export const mainMenuList: IMenuItems[] = [
       {
         label: 'Mijozlar ro\'yxati',
         key: ROUTES.clientsInfo,
-        icon: <ControlOutlined />,
       },
     ],
   },
@@ -99,7 +95,6 @@ export const mainMenuList: IMenuItems[] = [
       {
         label: 'Yetkazib beruvchilar ro\'yxati',
         key: ROUTES.supplierInfo,
-        icon: <ControlOutlined />,
       },
     ],
   },
@@ -112,19 +107,7 @@ export const mainMenuList: IMenuItems[] = [
       {
         label: 'Xodimlar ro\'yxati',
         key: ROUTES.workersStaffs,
-        icon: <ControlOutlined />,
       },
     ],
   },
 ];
-
-
-// MENU'ni fix qilish uchun
-// 1) Yokida GET so'rovlarni permession bilan tekshirmaymiz.
-// Shunchaki qaysidur ma'lumotni ko'rish degan permession qo'shamiz
-// va o'sha permession bilan page'larni ochish yokida ochmaslikni hal qilamiz!
-// 2) Yokida hamma permessionlar bilan frontda tekshiramiz, ko'rsatamiz yokida ko'rsatmaymiz!
-
-
-// Guruhlashni fix qilish
-// Sub menularni, oddiy menularga o'tkazib chiqamiz!

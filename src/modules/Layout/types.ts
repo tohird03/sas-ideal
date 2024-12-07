@@ -2,9 +2,9 @@ import {ReactNode} from 'react';
 
 export interface IMenuItems {
   children?: IMenuItems[] | [];
-  icon: ReactNode;
+  icon?: ReactNode;
   key: string;
-  label: string;
+  label: ReactNode;
   parent?: IMenuItems['key'];
   notification?: ReactNode;
   roleKey?: string;

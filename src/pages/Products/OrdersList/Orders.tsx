@@ -8,84 +8,84 @@ import { DataTable } from '@/components/Datatable/datatable';
 import { getPaginationParams } from '@/utils/getPaginationParams';
 import { useMediaQuery } from '@/utils/mediaQuery';
 import { AddEditModal } from './AddEditModal';
-import styles from './supplier-info.scss';
-import { supplierColumns } from './constants';
-import { supplierInfoStore } from '@/stores/supplier';
+import styles from './orders.scss';
+import { ordersColumns } from './constants';
+import { ordersStore } from '@/stores/products';
 
 const cn = classNames.bind(styles);
 
 export const Orders = observer(() => {
   const isMobile = useMediaQuery('(max-width: 800px)');
 
-  const { data: supplierData, isLoading: loading } = useQuery({
+  const { data: ordersData, isLoading: loading } = useQuery({
     queryKey: [
-      'getSuppliers',
-      supplierInfoStore.pageNumber,
-      supplierInfoStore.pageSize,
-      supplierInfoStore.search,
+      'getOrders',
+      ordersStore.pageNumber,
+      ordersStore.pageSize,
+      ordersStore.search,
     ],
     queryFn: () =>
-      supplierInfoStore.getSuppliers({
-        pageNumber: supplierInfoStore.pageNumber,
-        pageSize: supplierInfoStore.pageSize,
-        search: supplierInfoStore.search!,
+      ordersStore.getOrders({
+        pageNumber: ordersStore.pageNumber,
+        pageSize: ordersStore.pageSize,
+        search: ordersStore.search!,
       }),
   });
 
-  const handleAddNewSupplier = () => {
-    supplierInfoStore.setIsOpenAddEditSupplierModal(true);
+  const handleAddNewOrder = () => {
+    ordersStore.setIsOpenAddEditNewOrderModal(true);
   };
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    supplierInfoStore.setSearch(e.currentTarget?.value);
+    ordersStore.setSearch(e.currentTarget?.value);
   };
 
   const handlePageChange = (page: number, pageSize: number | undefined) => {
-    supplierInfoStore.setPageNumber(page);
-    supplierInfoStore.setPageSize(pageSize!);
+    ordersStore.setPageNumber(page);
+    ordersStore.setPageSize(pageSize!);
   };
 
   useEffect(() => () => {
-    supplierInfoStore.reset();
+    ordersStore.reset();
   }, []);
 
   return (
     <main>
-      <div className={cn('supplier-info__head')}>
+      <div className={cn('orders__head')}>
         <Typography.Title level={3}>Sotuvlar ro&apos;yxati</Typography.Title>
-        <div className={cn('supplier-info__filter')}>
+        <div className={cn('orders__filter')}>
           <Input
-            placeholder="Yetkazib beruvchilarni qidirish"
+            placeholder="Sotuvlarni qidirish"
             allowClear
             onChange={handleSearch}
-            className={cn('supplier-info__search')}
+            className={cn('orders__search')}
           />
           <Button
-            onClick={handleAddNewSupplier}
+            onClick={handleAddNewOrder}
             type="primary"
             icon={<PlusCircleOutlined />}
           >
-            Yetkazib beruvchi qo&apos;shish
+            Yangi sotuv qo&apos;shish
           </Button>
         </div>
       </div>
 
       <DataTable
-        columns={supplierColumns}
-        data={supplierData?.data || []}
+        columns={ordersColumns}
+        data={ordersData?.data || []}
         loading={loading}
         isMobile={isMobile}
         pagination={{
-          total: supplierData?.totalCount,
-          current: supplierInfoStore?.pageNumber,
-          pageSize: supplierInfoStore?.pageSize,
+          total: ordersData?.totalCount,
+          current: ordersStore?.pageNumber,
+          pageSize: ordersStore?.pageSize,
           showSizeChanger: true,
           onChange: handlePageChange,
-          ...getPaginationParams(supplierData?.totalCount),
+          ...getPaginationParams(ordersData?.totalCount),
         }}
       />
 
-      {supplierInfoStore.isOpenAddEditSupplierModal && <AddEditModal />}
+      {ordersStore.isOpenAddEditNewOrderModal && <AddEditModal />}
     </main>
   );
 });

@@ -10,9 +10,9 @@ const getItem = (
   icon?: React.ReactNode,
   children?: MenuItem[]
 ): MenuItem => ({
+  label,
   key,
   icon,
-  label,
   children,
 } as MenuItem);
 
@@ -32,5 +32,5 @@ export const generateAllMenuItems = (list: IMenuItems[] | undefined): MenuProps[
     </div>,
     item.key,
     item.icon,
-    item.children && generateAllMenuItems(item.children) || undefined
+    item.children && generateAllMenuItems(item.children)
   ));

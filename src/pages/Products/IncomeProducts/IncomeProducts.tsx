@@ -19,7 +19,7 @@ export const IncomeProducts = observer(() => {
 
   const { data: incomeOrdersData, isLoading: loading } = useQuery({
     queryKey: [
-      'getOrders',
+      'getIncomeOrders',
       incomeProductsStore.pageNumber,
       incomeProductsStore.pageSize,
       incomeProductsStore.search,

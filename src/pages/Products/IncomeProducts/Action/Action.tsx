@@ -20,7 +20,7 @@ export const Action: FC<Props> = observer(({order}) => {
     mutationKey: ['deleteSupplier'],
     mutationFn: (id: string) => clientsInfoApi.deleteUser(id!),
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ['getSuppliers']});
+      queryClient.invalidateQueries({queryKey: ['getIncomeOrders']});
     },
     onError: addNotification,
   });

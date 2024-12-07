@@ -6,6 +6,13 @@ export interface IUpdateUser {
   phone: string;
 }
 
+// THIS SELLER USER
+export interface ISeller {
+  id: string;
+  name: string;
+  phone: string;
+}
+
 // CLIENT
 export interface IClientsInfo {
   id: string;

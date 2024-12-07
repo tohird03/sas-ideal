@@ -15,7 +15,7 @@ class IncomeProductsApi extends Instance {
   }
 
   getIncomeOrder = (params: IGetIncomeOrdersParams): Promise<IResponse<IIncomeOrder[]>> =>
-    this.get(Endpoints.productsOrder, {params});
+    this.get(Endpoints.productsIncomeOrder, {params});
 }
 
 export const incomeProductsApi = new IncomeProductsApi(config);
