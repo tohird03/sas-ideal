@@ -23,7 +23,6 @@ export const Menu = observer(() => {
     navigate(key);
   };
 
-
   return (
     <AntdMenu
       theme="dark"

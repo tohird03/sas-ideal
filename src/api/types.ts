@@ -27,11 +27,14 @@ export type TStage = {
   cdnHost?: string;
 };
 
-export interface IPayment {
+export interface IPayment extends IPaymentType {
   id: string,
+  createdAt: string;
+}
+
+export interface IPaymentType {
   card: number,
   cash: number,
   transfer: number,
   other: number,
-  createdAt: string;
 }

@@ -1,7 +1,18 @@
 import React from 'react';
 import {
+  AppstoreAddOutlined,
+  AppstoreOutlined,
+  CodeSandboxOutlined,
+  ContactsOutlined,
   ControlOutlined,
+  DownloadOutlined,
+  SettingOutlined,
+  ShoppingCartOutlined,
+  SolutionOutlined,
+  TeamOutlined,
+  UserAddOutlined,
   UserOutlined,
+  UsergroupAddOutlined,
 } from '@ant-design/icons';
 import {ROUTES} from '@/constants';
 import {IAppRole, IMenuItems} from './types';
@@ -57,19 +68,19 @@ export const mainMenuList: IMenuItems[] = [
   {
     label: 'Mahsulotlar',
     key: ROUTES.products,
-    icon: <UserOutlined />,
+    icon: <CodeSandboxOutlined />,
     roleKey: 'products',
     children: [
       {
-        label: <><ControlOutlined /> Mahsulotlar royxati</>,
+        label: <><AppstoreAddOutlined /> Mahsulotlar ro&apos;yxati</>,
         key: ROUTES.productsList,
       },
       {
-        label: 'Sotuvlar ro\'yxati',
+        label: <><ShoppingCartOutlined /> Sotuvlar royxati</>,
         key: ROUTES.productsOrder,
       },
       {
-        label: 'Tushurilgan mahsulotlar',
+        label: <><DownloadOutlined /> Tushurilgan mahsulotlar</>,
         key: ROUTES.productsIncome,
       },
     ],
@@ -77,7 +88,7 @@ export const mainMenuList: IMenuItems[] = [
   {
     label: 'Mijozlar',
     key: ROUTES.clients,
-    icon: <UserOutlined />,
+    icon: <TeamOutlined />,
     roleKey: 'clients',
     children: [
       {
@@ -89,11 +100,11 @@ export const mainMenuList: IMenuItems[] = [
   {
     label: 'Yetkazib beruvchilar',
     key: ROUTES.supplier,
-    icon: <UserOutlined />,
+    icon: <UsergroupAddOutlined />,
     roleKey: 'supplier',
     children: [
       {
-        label: 'Yetkazib beruvchilar ro\'yxati',
+        label: <><ContactsOutlined /> Yetkazib beruvchilar ro&apos;yxati</>,
         key: ROUTES.supplierInfo,
       },
     ],
@@ -101,11 +112,11 @@ export const mainMenuList: IMenuItems[] = [
   {
     label: 'Xodimlar',
     key: ROUTES.workers,
-    icon: <UserOutlined />,
+    icon: <SettingOutlined />,
     roleKey: 'staffs',
     children: [
       {
-        label: 'Xodimlar ro\'yxati',
+        label: <><SolutionOutlined /> Xodimlar ro&apos;yxati</>,
         key: ROUTES.workersStaffs,
       },
     ],

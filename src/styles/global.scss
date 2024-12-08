@@ -155,3 +155,15 @@ input::-webkit-inner-spin-button {
     background-color: #F1B0B7 !important;
   }
 }
+
+.ant-menu-item-icon {
+  svg {
+    font-size: 22px;
+  }
+}
+
+.ant-menu-title-content {
+  svg {
+    font-size: 18px;
+  }
+}

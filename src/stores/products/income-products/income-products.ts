@@ -1,6 +1,6 @@
 import {makeAutoObservable} from 'mobx';
 import {addNotification} from '@/utils';
-import {IGetIncomeOrdersParams, IIncomeOrder} from '@/api/income-products/types';
+import {IAddIncomeOrderProducts, IGetIncomeOrdersParams, IIncomeOrder} from '@/api/income-products/types';
 import { incomeProductsApi } from '@/api/income-products';
 
 class IncomeProductsStore {
@@ -9,6 +9,7 @@ class IncomeProductsStore {
   search: string | null = null;
   isOpenAddEditIncomeProductsModal = false;
   singleIncomeOrder: IIncomeOrder | null = null;
+  addIncomeProducts: IAddIncomeOrderProducts[] = [];
 
   constructor() {
     makeAutoObservable(this);
@@ -37,6 +38,10 @@ class IncomeProductsStore {
 
   setsingleIncomeOrder = (singleIncomeOrder: IIncomeOrder | null) => {
     this.singleIncomeOrder = singleIncomeOrder;
+  };
+
+  setAddIncomeProducts = (addIncomeProducts: IAddIncomeOrderProducts[]) => {
+    this.addIncomeProducts = addIncomeProducts;
   };
 
   reset() {

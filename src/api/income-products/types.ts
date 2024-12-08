@@ -1,6 +1,6 @@
 import { ISupplierInfo } from "../clients";
 import { IProducts } from "../product/types"
-import { IPagination } from "../types";
+import { IPagination, IPaymentType } from "../types";
 
 export interface IIncomeOrder {
   id: string,
@@ -24,4 +24,23 @@ export interface IGetIncomeOrdersParams extends IPagination {
   search?: string;
   startDate?: Date;
   endDate?: Date;
+}
+
+
+export interface IAddIncomeOrderProducts {
+  product_name: string;
+  product_id: string;
+  count: number;
+  cost: number;
+}
+
+export interface IAddIncomeOrderForm extends IPaymentType {
+  supplierId: string;
+}
+
+export interface IAddEditIncomeOrder {
+  supplierId: string;
+  sum: number;
+  payment: IPaymentType;
+  products: IAddIncomeOrderProducts[];
 }
