@@ -1,15 +1,15 @@
-import React, {useEffect} from 'react';
-import {observer} from 'mobx-react';
-import {PlusCircleOutlined} from '@ant-design/icons';
-import {useQuery} from '@tanstack/react-query';
-import {Button, Input, Typography} from 'antd';
+import React, { useEffect } from 'react';
+import { observer } from 'mobx-react';
+import { PlusCircleOutlined } from '@ant-design/icons';
+import { useQuery } from '@tanstack/react-query';
+import { Button, Input, Typography } from 'antd';
 import classNames from 'classnames';
-import {DataTable} from '@/components/Datatable/datatable';
-import {getPaginationParams} from '@/utils/getPaginationParams';
-import {useMediaQuery} from '@/utils/mediaQuery';
-import {AddEditModal} from './AddEditModal';
+import { DataTable } from '@/components/Datatable/datatable';
+import { getPaginationParams } from '@/utils/getPaginationParams';
+import { useMediaQuery } from '@/utils/mediaQuery';
+import { AddEditModal } from './AddEditModal';
 import styles from './product-list.scss';
-import {productsListColumn} from './constants';
+import { productsListColumn } from './constants';
 import { productsListStore } from '@/stores/products';
 import { IProducts } from '@/api/product/types';
 
@@ -18,7 +18,7 @@ const cn = classNames.bind(styles);
 export const ProductsList = observer(() => {
   const isMobile = useMediaQuery('(max-width: 800px)');
 
-  const {data: productsData, isLoading: loading} = useQuery({
+  const { data: productsData, isLoading: loading } = useQuery({
     queryKey: [
       'getProducts',
       productsListStore.pageNumber,
@@ -50,7 +50,10 @@ export const ProductsList = observer(() => {
     productsListStore.reset();
   }, []);
 
-  const rowClassName = (record: IProducts) => record.count < record?.min_amount ? 'error__row' : '';
+  const rowClassName = (record: IProducts) =>
+    record.count < 0 ? 'error__row'
+      : record.count < record?.min_amount
+        ? 'warning__row' : '';
 
   return (
     <main>

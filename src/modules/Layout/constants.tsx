@@ -76,7 +76,7 @@ export const mainMenuList: IMenuItems[] = [
         key: ROUTES.productsList,
       },
       {
-        label: <><ShoppingCartOutlined /> Sotuvlar royxati</>,
+        label: <><ShoppingCartOutlined /> Sotuvlar ro&apos;yxati</>,
         key: ROUTES.productsOrder,
       },
       {

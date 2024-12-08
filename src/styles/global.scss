@@ -147,12 +147,22 @@ input::-webkit-inner-spin-button {
 }
 
 .error__row {
-  background-color: #F1B0B7;
+  background-color: #ff9ea8 !important;
 }
 
 .error__row:hover {
   .ant-table-cell {
-    background-color: #F1B0B7 !important;
+    background-color: #ff9ea8 !important;
+  }
+}
+
+.warning__row {
+  background-color: #fbc68a;
+}
+
+.warning__row:hover {
+  .ant-table-cell {
+    background-color: #fbc68a !important;
   }
 }
 
