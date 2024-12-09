@@ -11,6 +11,7 @@ import {useMediaQuery} from '@/utils/mediaQuery';
 import {AddEditModal} from './AddEditModal';
 import styles from './client-info.scss';
 import {clientsColumns} from './constants';
+import { IClientsInfo } from '@/api/clients';
 
 const cn = classNames.bind(styles);
 
@@ -49,6 +50,11 @@ export const ClientsInfo = observer(() => {
     clientsInfoStore.reset();
   }, []);
 
+  const rowClassName = (record: IClientsInfo) =>
+    record.debt > 0 ? 'error__row'
+      : record.debt < 0
+        ? 'info__row' : '';
+
   return (
     <main>
       <div className={cn('client-info__head')}>
@@ -75,6 +81,7 @@ export const ClientsInfo = observer(() => {
         data={clientsInfoData?.data || []}
         loading={loading}
         isMobile={isMobile}
+        rowClassName={rowClassName}
         pagination={{
           total: clientsInfoData?.totalCount,
           current: clientsInfoStore?.pageNumber,

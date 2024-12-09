@@ -1,12 +1,15 @@
 import { ISupplierInfo } from "../clients";
 import { IProducts } from "../product/types"
-import { IPagination, IPaymentType } from "../types";
+import { IStaffs } from "../staffs";
+import { IPagination, IPayment, IPaymentType } from "../types";
 
 export interface IIncomeOrder {
   id: string,
   sum: 0,
   accepted: boolean,
   supplier: ISupplierInfo,
+  admin: IStaffs,
+  payment: IPayment;
   incomingProducts: IIncomeProduct;
   createdAt: string;
 }
@@ -36,6 +39,7 @@ export interface IAddIncomeOrderProducts {
 
 export interface IAddIncomeOrderForm extends IPaymentType {
   supplierId: string;
+  createdAt: string;
 }
 
 export interface IAddEditIncomeOrder {
@@ -43,4 +47,5 @@ export interface IAddEditIncomeOrder {
   sum: number;
   payment: IPaymentType;
   products: IAddIncomeOrderProducts[];
+  createdAt: string;
 }

@@ -16,6 +16,8 @@ export interface IProducts {
   selling_price: number;
   // Kelishtirib berishning oxirgi narxi
   wholesale_price: number;
+  // Foyda
+  avarage_cost: number;
 }
 
 export interface IAddEditProduct {

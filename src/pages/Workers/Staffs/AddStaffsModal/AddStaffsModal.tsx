@@ -65,7 +65,10 @@ export const AddStaffsModal = observer(() => {
 
   useEffect(() => {
     if (staffsStore.singleStaff) {
-      form.setFieldsValue(staffsStore.singleStaff);
+      form.setFieldsValue({
+        ...staffsStore.singleStaff,
+        phone: staffsStore.singleStaff?.phone?.slice(3),
+      });
     }
   }, [staffsStore.singleStaff]);
 
@@ -88,7 +91,7 @@ export const AddStaffsModal = observer(() => {
       >
         <Form.Item
           name="name"
-          label="Mijoz"
+          label="Xodim"
           rules={[{required: true}]}
         >
           <Input placeholder="F.I.O" />

@@ -23,3 +23,28 @@ export const dateFormatter = (date: string) => {
     `${formattedDate.getDate() }.${ month[formattedDate.getMonth()] }.${ year }ㅤ${ time}`
   );
 };
+
+export const dateFormatterWithStringMonth = (date: string) => {
+  const formattedDate = new Date(date);
+
+  const month = [
+    'yanvar',
+    'fevral',
+    'mart',
+    'aprel',
+    'may',
+    'iyun',
+    'iyul',
+    'avgust',
+    'sentyabr',
+    'oktyabr',
+    'noyabr',
+    'dekabr',
+  ];
+
+  const year = formattedDate.getFullYear();
+
+  return (
+    `${formattedDate.getDate() }-${ month[formattedDate.getMonth()] } ${ year }-yil`
+  );
+};

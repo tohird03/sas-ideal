@@ -7,10 +7,10 @@
 .orders__filter {
   display: flex;
   flex-direction: row;
+  gap: 20px;
 }
 .orders__search {
   width: 250px;
-  margin-right: 10px;
 }
 
 @media only screen and (max-width: 800px) {
@@ -25,5 +25,14 @@
   }
   .orders__search {
     width: 100%;
+  }
+}
+
+.order {
+  &__show-header {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 30px;
   }
 }

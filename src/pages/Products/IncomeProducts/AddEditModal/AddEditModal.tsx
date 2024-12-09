@@ -109,6 +109,7 @@ export const AddEditModal = observer(() => {
         transfer: values?.transfer,
         other: values?.other,
       },
+      createdAt: values?.createdAt,
       products: incomeProductsStore.addIncomeProducts,
     };
 

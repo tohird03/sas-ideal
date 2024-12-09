@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { observer } from 'mobx-react';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
-import { Button, Input, Typography } from 'antd';
+import { Button, DatePicker, Input, Typography } from 'antd';
 import classNames from 'classnames';
 import { DataTable } from '@/components/Datatable/datatable';
 import { getPaginationParams } from '@/utils/getPaginationParams';
@@ -11,6 +11,8 @@ import { AddEditModal } from './AddEditModal';
 import styles from './orders.scss';
 import { ordersColumns } from './constants';
 import { ordersStore } from '@/stores/products';
+import dayjs from 'dayjs';
+import { OrderShowInfoModal } from './OrderShowInfoModal';
 
 const cn = classNames.bind(styles);
 
@@ -23,12 +25,16 @@ export const Orders = observer(() => {
       ordersStore.pageNumber,
       ordersStore.pageSize,
       ordersStore.search,
+      ordersStore.startDate,
+      ordersStore.endDate,
     ],
     queryFn: () =>
       ordersStore.getOrders({
         pageNumber: ordersStore.pageNumber,
         pageSize: ordersStore.pageSize,
         search: ordersStore.search!,
+        startDate: ordersStore.startDate!,
+        endDate: ordersStore.endDate!,
       }),
   });
 
@@ -39,6 +45,17 @@ export const Orders = observer(() => {
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     ordersStore.setSearch(e.currentTarget?.value);
   };
+
+  const handleDateChange = (values: any) => {
+    if (values) {
+      ordersStore.setStartDate(new Date(values[0]));
+      ordersStore.setEndDate(new Date(values[1]));
+    } else {
+      ordersStore.setStartDate(null);
+      ordersStore.setEndDate(null);
+    }
+  };
+
 
   const handlePageChange = (page: number, pageSize: number | undefined) => {
     ordersStore.setPageNumber(page);
@@ -59,6 +76,12 @@ export const Orders = observer(() => {
             allowClear
             onChange={handleSearch}
             className={cn('orders__search')}
+          />
+          <DatePicker.RangePicker
+            className={cn('promotion__datePicker')}
+            onChange={handleDateChange}
+            placeholder={['Boshlanish sanasi', 'Tugash sanasi']}
+            defaultValue={[dayjs(ordersStore.startDate), dayjs(ordersStore.endDate)]}
           />
           <Button
             onClick={handleAddNewOrder}
@@ -86,6 +109,7 @@ export const Orders = observer(() => {
       />
 
       {ordersStore.isOpenAddEditNewOrderModal && <AddEditModal />}
+      {ordersStore.isOpenShowOrderModal && <OrderShowInfoModal />}
     </main>
   );
 });

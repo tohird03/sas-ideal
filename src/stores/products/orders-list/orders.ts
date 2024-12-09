@@ -1,14 +1,21 @@
 import {makeAutoObservable} from 'mobx';
 import {addNotification} from '@/utils';
-import { IGetOrdersParams, IOrder } from '@/api/order/types';
+import { IAddOrderProducts, IGetOrdersParams, IOrder } from '@/api/order/types';
 import { ordersApi } from '@/api/order';
+import dayjs from 'dayjs';
 
 class OrdersStore {
+  #today = new Date();
+
   pageNumber = 1;
   pageSize = 10;
   search: string | null = null;
   isOpenAddEditNewOrderModal = false;
+  isOpenShowOrderModal = false;
   singleOrder: IOrder | null = null;
+  addOrderProducts: IAddOrderProducts[] = [];
+  startDate: Date | null = this.#today;
+  endDate: Date | null = this.#today;
 
   constructor() {
     makeAutoObservable(this);
@@ -31,12 +38,28 @@ class OrdersStore {
     this.search = search;
   };
 
+  setStartDate = (startDate: Date | null) => {
+    this.startDate = startDate;
+  };
+
+  setEndDate = (endDate: Date | null) => {
+    this.endDate = endDate;
+  };
+
   setIsOpenAddEditNewOrderModal = (isOpenAddEditNewOrderModal: boolean) => {
     this.isOpenAddEditNewOrderModal = isOpenAddEditNewOrderModal;
   };
 
+  setIsOpenShowOrderModal = (isOpenShowOrderModal: boolean) => {
+    this.isOpenShowOrderModal = isOpenShowOrderModal;
+  };
+
   setSingleOrder = (singleOrder: IOrder | null) => {
     this.singleOrder = singleOrder;
+  };
+
+  setAddOrderProducts = (addOrderProducts: IAddOrderProducts[]) => {
+    this.addOrderProducts = addOrderProducts;
   };
 
   reset() {

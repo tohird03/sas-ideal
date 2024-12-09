@@ -150,6 +150,16 @@ input::-webkit-inner-spin-button {
   background-color: #ff9ea8 !important;
 }
 
+.info__row:hover {
+  .ant-table-cell {
+    background-color: #aee7ff !important;
+  }
+}
+
+.info__row {
+  background-color: #aee7ff !important;
+}
+
 .error__row:hover {
   .ant-table-cell {
     background-color: #ff9ea8 !important;

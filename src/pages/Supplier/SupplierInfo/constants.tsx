@@ -3,6 +3,8 @@ import {ColumnType} from 'antd/es/table';
 import {IClientsInfo, ISupplierInfo} from '@/api/clients';
 import {Action} from './Action';
 import { formatPhoneNumber } from '@/utils/phoneFormat';
+import { priceFormat } from '@/utils/priceFormat';
+import { dateFormatterWithStringMonth } from '@/utils/dateFormat';
 
 export const supplierColumns: ColumnType<ISupplierInfo>[] = [
   {
@@ -15,7 +17,7 @@ export const supplierColumns: ColumnType<ISupplierInfo>[] = [
   {
     key: 'name',
     dataIndex: 'name',
-    title: 'Xodim',
+    title: 'Yetkazib beruvchi',
     align: 'center',
     render: (value, record) => record?.name,
   },
@@ -25,6 +27,20 @@ export const supplierColumns: ColumnType<ISupplierInfo>[] = [
     title: 'Telefon raqami',
     align: 'center',
     render: (value, record) => `+${formatPhoneNumber(record?.phone)}`,
+  },
+  {
+    key: 'debt',
+    dataIndex: 'debt',
+    title: 'Yetkazib beruvchiga qarz',
+    align: 'center',
+    render: (value, record) => `${priceFormat(record?.debt)}$`,
+  },
+  {
+    key: 'lastSale',
+    dataIndex: 'lastSale',
+    title: 'Oxirgi xarid',
+    align: 'center',
+    render: (value, record) => dateFormatterWithStringMonth(record?.lastSale),
   },
   {
     key: 'action',
