@@ -44,6 +44,6 @@ export const addOrderProductsColumns: ColumnType<IAddOrderProducts>[] = [
     dataIndex: 'action',
     title: 'Action',
     align: 'center',
-    render: (value, record) => <Action incomeProduct={record} />,
+    render: (value, record) => <Action orderAddProduct={record} />,
   },
 ];

@@ -102,7 +102,7 @@ export const AddEditModal = observer(() => {
 
     const valueControl: IAddEditIncomeOrder = {
       supplierId: values?.supplierId,
-      sum: 100,
+      accepted: true,
       payment: {
         card: values?.card,
         cash: values?.cash,

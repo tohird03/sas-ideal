@@ -3,6 +3,7 @@ import { Endpoints, umsStages } from '../endpoints';
 import { INetworkConfig, Instance } from '../instance';
 import { IResponse } from '../types';
 import { IAddEditIncomeOrder, IGetIncomeOrdersParams, IIncomeOrder } from './types';
+import { IUpdateOrder } from '../order/types';
 
 const config: INetworkConfig = {
   baseURL: Endpoints.Base,

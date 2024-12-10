@@ -7,6 +7,7 @@ import { IOrder, IOrderProducts } from '@/api/order/types';
 import { Tag } from 'antd';
 import { getFullDateFormat } from '@/utils/getDateFormat';
 import { priceFormat } from '@/utils/priceFormat';
+import { dateFormatterWithStringMonth } from '@/utils/dateFormat';
 
 export const ordersColumns: ColumnType<IOrder>[] = [
   {
@@ -75,7 +76,7 @@ export const ordersColumns: ColumnType<IOrder>[] = [
     title: 'Jami to\'lov',
     align: 'center',
     width: '150px',
-    render: (value, record) => 'Jami to\'lov',
+    render: (value, record) => `${priceFormat(record?.payment?.totalPay)}$`,
   },
   {
     key: 'debt',
@@ -86,44 +87,12 @@ export const ordersColumns: ColumnType<IOrder>[] = [
     render: (value, record) => record?.debt,
   },
   {
-    key: 'cash',
-    dataIndex: 'cash',
-    title: 'Naqd to\'lov',
-    align: 'center',
-    width: '150px',
-    render: (value, record) => record?.payment?.cash,
-  },
-  {
-    key: 'card',
-    dataIndex: 'card',
-    title: 'Bank kartasi orqali to\'lov',
-    align: 'center',
-    width: '150px',
-    render: (value, record) => record?.payment?.card,
-  },
-  {
-    key: 'transfer',
-    dataIndex: 'transfer',
-    title: 'Bank o\'tkazmasi orqali to\'lov',
-    align: 'center',
-    width: '150px',
-    render: (value, record) => record?.payment?.transfer,
-  },
-  {
-    key: 'other',
-    dataIndex: 'other',
-    title: 'Boshqa usullar bilan to\'lov',
-    align: 'center',
-    width: '150px',
-    render: (value, record) => record?.payment?.transfer,
-  },
-  {
     key: 'createdAt',
     dataIndex: 'createdAt',
     title: 'Sotilgan vaqti',
     align: 'center',
     width: '150px',
-    render: (value, record) => getFullDateFormat(record?.createdAt),
+    render: (value, record) => dateFormatterWithStringMonth(record?.createdAt),
   },
   {
     key: 'action',
@@ -218,7 +187,7 @@ export const ordersInfoPaymentColumns: ColumnType<IOrder>[] = [
     title: 'Jami to\'lov',
     align: 'center',
     width: '150px',
-    render: (value, record) => 'Jami to\'lov',
+    render: (value, record) => `${priceFormat(record?.payment?.totalPay)}$`,
   },
   {
     key: 'debt',
@@ -258,7 +227,7 @@ export const ordersInfoPaymentColumns: ColumnType<IOrder>[] = [
     title: 'Boshqa usullar bilan to\'lov',
     align: 'center',
     width: '150px',
-    render: (value, record) => `${priceFormat(record?.payment?.transfer)}$`,
+    render: (value, record) => `${priceFormat(record?.payment?.other)}$`,
   },
 ];
 

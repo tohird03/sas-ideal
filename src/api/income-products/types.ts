@@ -5,7 +5,8 @@ import { IPagination, IPayment, IPaymentType } from "../types";
 
 export interface IIncomeOrder {
   id: string,
-  sum: 0,
+  sum: number,
+  debt: number,
   accepted: boolean,
   supplier: ISupplierInfo,
   admin: IStaffs,
@@ -44,8 +45,8 @@ export interface IAddIncomeOrderForm extends IPaymentType {
 
 export interface IAddEditIncomeOrder {
   supplierId: string;
-  sum: number;
   payment: IPaymentType;
   products: IAddIncomeOrderProducts[];
   createdAt: string;
+  accepted: boolean;
 }

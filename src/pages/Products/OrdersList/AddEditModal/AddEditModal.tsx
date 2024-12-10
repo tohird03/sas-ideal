@@ -16,7 +16,7 @@ import { useMediaQuery } from '@/utils/mediaQuery';
 import dayjs from 'dayjs';
 import { clientsInfoStore } from '@/stores/clients';
 import { ordersApi } from '@/api/order';
-import { IAddOrder, IAddOrderModalForm, IAddOrderProducts } from '@/api/order/types';
+import { IAddOrder, IAddOrderModalForm, IAddOrderProducts, IOrderProducts, IUpdateOrder } from '@/api/order/types';
 
 const cn = classNames.bind(styles);
 
@@ -32,6 +32,7 @@ export const AddEditModal = observer(() => {
   const [searchClients, setSearchClients] = useState<string | null>(null);
   const [searchProducts, setSearchProducts] = useState<string | null>(null);
   const [isAcceptedOrder, setIsAcceptedOrder] = useState(false);
+  const [updateOrderOldProducts, setUpdateOrderOldProducts] = useState<IAddOrderProducts[]>([]);
 
   // GET DATAS
   const { data: clientsData, isLoading: loadingClients } = useQuery({
@@ -71,7 +72,7 @@ export const AddEditModal = observer(() => {
   const { mutate: updateOrder } =
     useMutation({
       mutationKey: ['updateOrder'],
-      mutationFn: (params: IUpdateUser) => clientsInfoApi.updateUser(params),
+      mutationFn: (params: IUpdateOrder) => ordersApi.updateOrder(params),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['getOrders'] });
         handleModalClose();
@@ -107,9 +108,44 @@ export const AddEditModal = observer(() => {
       return;
     }
 
+    if (ordersStore?.singleOrder) {
+      const addProducts = ordersStore.addOrderProducts?.filter(allProduct => {
+        const findOldProduct = updateOrderOldProducts?.find(oldProduct => oldProduct?.product_id === allProduct?.product_id);
+
+        if (!findOldProduct) {
+          return allProduct;
+        }
+      });
+
+      const removeProducts = updateOrderOldProducts?.filter(oldProduct => {
+        const findOldProduct = ordersStore.addOrderProducts?.find(allProduct => allProduct?.product_id === oldProduct?.product_id);
+
+        if (!findOldProduct) {
+          return oldProduct;
+        }
+      })?.map(product => product?.product_id);
+
+      const valueControl: IUpdateOrder = {
+        id: ordersStore?.singleOrder?.id,
+        clientId: values?.clientId,
+        payment: {
+          card: values?.card,
+          cash: values?.cash,
+          transfer: values?.transfer,
+          other: values?.other,
+        },
+        createdAt: values?.createdAt,
+        addProducts,
+        removeProducts,
+      };
+
+      updateOrder(valueControl);
+
+      return;
+    }
+
     const valueControl: IAddOrder = {
       clientId: values?.clientId,
-      sum: 100,
       payment: {
         card: values?.card,
         cash: values?.cash,
@@ -120,12 +156,6 @@ export const AddEditModal = observer(() => {
       createdAt: values?.createdAt,
       products: ordersStore.addOrderProducts,
     };
-
-    if (ordersStore?.singleOrder) {
-      // UPDATE LOGIC
-
-      return;
-    }
 
     createNewOrder(valueControl);
   };
@@ -174,7 +204,11 @@ export const AddEditModal = observer(() => {
   const handleChangeProduct = (productId: string) => {
     const findProduct = productsData?.data?.find(product => product?.id === productId);
 
-    formProduct.setFieldValue('price', findProduct?.cost);
+    formProduct.setFieldValue('price', findProduct?.selling_price);
+  };
+
+  const handleClearClient = () => {
+    setSearchClients(null);
   };
 
   const supplierOptions = useMemo(() => (
@@ -186,27 +220,32 @@ export const AddEditModal = observer(() => {
 
   useEffect(() => {
     if (ordersStore.singleOrder) {
+      setSearchClients(ordersStore?.singleOrder?.client?.phone);
+
       form.setFieldsValue({
-        ...ordersStore.singleOrder,
+        cash: ordersStore.singleOrder?.payment?.cash,
+        card: ordersStore.singleOrder?.payment?.card,
+        transfer: ordersStore.singleOrder?.payment?.transfer,
+        other: ordersStore.singleOrder?.payment?.other,
+        createdAt: dayjs(ordersStore.singleOrder?.createdAt),
+        clientId: ordersStore?.singleOrder?.client?.id,
       });
+
+      const orderProducts: IAddOrderProducts[] = ordersStore?.singleOrder?.products?.map(product => ({
+        product_name: product?.product?.name,
+        product_id: product?.id,
+        count: product?.count,
+        price: product?.price,
+        cost: product?.cost,
+        avarage_cost: product.avarage_cost,
+      }));
+
+      setUpdateOrderOldProducts(orderProducts);
+      ordersStore.setAddOrderProducts(orderProducts);
     }
   }, [ordersStore.singleOrder]);
 
-  // Esc Key Listener
-  useEffect(() => {
-    const handleEscKey = (event: KeyboardEvent) => {
-      console.log('Salom');
-      if (event.key === 'Escape') {
-        handleCloseUnAcceptedOrder();
-      }
-    };
-
-    document.addEventListener('keydown', handleEscKey);
-
-    return () => {
-      document.removeEventListener('keydown', handleEscKey);
-    };
-  }, []);
+  console.log(ordersStore.singleOrder);
 
 
   const countColor = (count: number, min_amount: number): string =>
@@ -256,7 +295,7 @@ export const AddEditModal = observer(() => {
         >
           <Select
             showSearch
-            placeholder="Yetkazib beruvchi"
+            placeholder="Mahsulot"
             loading={loadingProducts}
             optionFilterProp="children"
             notFoundContent={loadingProducts ? <Spin style={{ margin: '10px' }} /> : null}
@@ -360,7 +399,9 @@ export const AddEditModal = observer(() => {
             notFoundContent={loadingClients ? <Spin style={{ margin: '10px' }} /> : null}
             filterOption={filterOption}
             onSearch={handleSearchSupplier}
+            onClear={handleClearClient}
             options={supplierOptions}
+            allowClear
           />
         </Form.Item>
         <Form.Item
