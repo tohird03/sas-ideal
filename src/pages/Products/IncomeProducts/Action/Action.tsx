@@ -1,8 +1,8 @@
 import React, {FC} from 'react';
 import {observer} from 'mobx-react';
-import {DeleteOutlined, EditOutlined} from '@ant-design/icons';
+import {DeleteOutlined, EditOutlined, EyeOutlined} from '@ant-design/icons';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {Button, Popconfirm} from 'antd';
+import {Button, Popconfirm, Tooltip} from 'antd';
 import {clientsInfoApi} from '@/api/clients';
 import {addNotification} from '@/utils';
 import { IIncomeOrder } from '@/api/income-products/types';
@@ -25,6 +25,11 @@ export const Action: FC<Props> = observer(({order}) => {
     onError: addNotification,
   });
 
+  const handleShowOrder = () => {
+    incomeProductsStore.setsingleIncomeOrder(order);
+    incomeProductsStore.setIsOpenShowIncomeOrderModal(true);
+  };
+
   const handleEditProcess = () => {
     incomeProductsStore.setsingleIncomeOrder(order);
     incomeProductsStore.setIsOpenAddEditIncomeProductsModal(true);
@@ -36,6 +41,9 @@ export const Action: FC<Props> = observer(({order}) => {
 
   return (
     <div style={{display: 'flex', gap: '10px', justifyContent: 'center', alignItems: 'center'}}>
+      <Tooltip placement="top" title="Tushurilgan mahsulotni ko'rish">
+        <Button onClick={handleShowOrder} icon={<EyeOutlined />} />
+      </Tooltip>
       <Button onClick={handleEditProcess} type="primary" icon={<EditOutlined />} />
       <Popconfirm
         title="Yetkazib beruvchini o'chirish"

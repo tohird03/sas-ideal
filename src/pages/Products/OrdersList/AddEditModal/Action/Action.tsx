@@ -26,8 +26,8 @@ export const Action: FC<Props> = observer(({orderAddProduct}) => {
     <div style={{display: 'flex', gap: '10px', justifyContent: 'center', alignItems: 'center'}}>
       {/* <Button onClick={handleEditAddProduct} type="primary" icon={<EditOutlined />} /> */}
       <Popconfirm
-        title="Yetkazib beruvchini o'chirish"
-        description="Rostdan ham bu yetkazib beruvchini o'chirishni xohlaysizmi?"
+        title="Mahsulotni o'chirish"
+        description="Rostdan ham bu mahsulotni o'chirishni xohlaysizmi?"
         onConfirm={handleDeleteAddEditProduct}
         okText="Ha"
         okButtonProps={{style: {background: 'red'}}}

@@ -123,7 +123,7 @@ export const AddEditModal = observer(() => {
         if (!findOldProduct) {
           return oldProduct;
         }
-      })?.map(product => product?.product_id);
+      });
 
       const valueControl: IUpdateOrder = {
         id: ordersStore?.singleOrder?.id,
@@ -137,6 +137,7 @@ export const AddEditModal = observer(() => {
         createdAt: values?.createdAt,
         addProducts,
         removeProducts,
+        accepted: isAcceptedOrder,
       };
 
       updateOrder(valueControl);

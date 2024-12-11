@@ -31,6 +31,7 @@ export const AddEditModal = observer(() => {
   const [loading, setLoading] = useState(false);
   const [searchSupplierOption, setSearchSupplierOption] = useState<string | null>(null);
   const [searchProducts, setSearchProducts] = useState<string | null>(null);
+  const [updateOrderOldProducts, setUpdateOrderOldProducts] = useState<IAddIncomeOrderProducts[]>([]);
 
   // GET DATAS
   const { data: supplierData, isLoading: loadingSupplier } = useQuery({
@@ -173,6 +174,31 @@ export const AddEditModal = observer(() => {
     }
   }, [incomeProductsStore.singleIncomeOrder]);
 
+  useEffect(() => {
+    if (incomeProductsStore.singleIncomeOrder) {
+      setSearchSupplierOption(incomeProductsStore?.singleIncomeOrder?.supplier?.phone);
+
+      form.setFieldsValue({
+        cash: incomeProductsStore.singleIncomeOrder?.payment?.cash,
+        card: incomeProductsStore.singleIncomeOrder?.payment?.card,
+        transfer: incomeProductsStore.singleIncomeOrder?.payment?.transfer,
+        other: incomeProductsStore.singleIncomeOrder?.payment?.other,
+        createdAt: dayjs(incomeProductsStore.singleIncomeOrder?.createdAt),
+        supplierId: incomeProductsStore?.singleIncomeOrder?.supplier?.id,
+      });
+
+      const orderProducts: IAddIncomeOrderProducts[] = incomeProductsStore?.singleIncomeOrder?.incomingProducts?.map(product => ({
+        product_name: product?.product?.name,
+        product_id: product?.id,
+        count: product?.count,
+        cost: product?.cost,
+      }));
+
+      setUpdateOrderOldProducts(orderProducts);
+      incomeProductsStore.setAddIncomeProducts(orderProducts);
+    }
+  }, [incomeProductsStore.singleIncomeOrder]);
+
   const countColor = (count: number, min_amount: number): string =>
     count < 0 ? 'red' : count < min_amount ? 'orange' : 'green';
 
@@ -203,7 +229,7 @@ export const AddEditModal = observer(() => {
         >
           <Select
             showSearch
-            placeholder="Yetkazib beruvchi"
+            placeholder="Mahsulot"
             loading={loadingProducts}
             optionFilterProp="children"
             notFoundContent={loadingProducts ? <Spin style={{ margin: '10px' }} /> : null}

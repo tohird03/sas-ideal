@@ -11,7 +11,7 @@ export interface IIncomeOrder {
   supplier: ISupplierInfo,
   admin: IStaffs,
   payment: IPayment;
-  incomingProducts: IIncomeProduct;
+  incomingProducts: IIncomeProduct[];
   createdAt: string;
 }
 

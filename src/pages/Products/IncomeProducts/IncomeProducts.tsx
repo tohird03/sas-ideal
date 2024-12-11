@@ -11,6 +11,7 @@ import { AddEditModal } from './AddEditModal';
 import styles from './income-products.scss';
 import { incomeOrdersColumns } from './constants';
 import { incomeProductsStore } from '@/stores/products';
+import { OrderShowInfoModal } from './OrderShowInfoModal';
 
 const cn = classNames.bind(styles);
 
@@ -76,6 +77,7 @@ export const IncomeProducts = observer(() => {
       />
 
       {incomeProductsStore.isOpenAddEditIncomeProductsModal && <AddEditModal />}
+      {incomeProductsStore.isOpenShowIncomeOrderModal && <OrderShowInfoModal />}
     </main>
   );
 });

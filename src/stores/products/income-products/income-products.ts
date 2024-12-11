@@ -8,6 +8,7 @@ class IncomeProductsStore {
   pageSize = 10;
   search: string | null = null;
   isOpenAddEditIncomeProductsModal = false;
+  isOpenShowIncomeOrderModal = false;
   singleIncomeOrder: IIncomeOrder | null = null;
   addIncomeProducts: IAddIncomeOrderProducts[] = [];
 
@@ -34,6 +35,10 @@ class IncomeProductsStore {
 
   setIsOpenAddEditIncomeProductsModal = (isOpenAddEditIncomeProductsModal: boolean) => {
     this.isOpenAddEditIncomeProductsModal = isOpenAddEditIncomeProductsModal;
+  };
+
+  setIsOpenShowIncomeOrderModal = (isOpenShowIncomeOrderModal: boolean) => {
+    this.isOpenShowIncomeOrderModal = isOpenShowIncomeOrderModal;
   };
 
   setsingleIncomeOrder = (singleIncomeOrder: IIncomeOrder | null) => {

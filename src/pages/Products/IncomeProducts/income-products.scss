@@ -83,8 +83,17 @@
   }
   &__add-products-form-info {
     display: grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: 50% 50%;
     gap: 10px;
     align-items: center;
+  }
+}
+
+.order {
+  &__show-header {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 30px;
   }
 }

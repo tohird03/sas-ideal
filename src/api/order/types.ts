@@ -60,6 +60,7 @@ export interface IUpdateOrder {
   payment: IPaymentType;
   addProducts: IAddOrderProducts[];
   updateProducts?: IAddOrderProducts[];
-  removeProducts: string[];
+  removeProducts: IAddOrderProducts[];
   createdAt: string;
+  accepted: boolean;
 }
