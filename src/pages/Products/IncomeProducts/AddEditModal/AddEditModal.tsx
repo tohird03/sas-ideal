@@ -9,7 +9,7 @@ import { incomeProductsStore, productsListStore } from '@/stores/products';
 import { supplierInfoStore } from '@/stores/supplier';
 import styles from '../income-products.scss';
 import { priceFormat } from '@/utils/priceFormat';
-import { IAddEditIncomeOrder, IAddIncomeOrderForm, IAddIncomeOrderProducts } from '@/api/income-products/types';
+import { IAddEditIncomeOrder, IAddIncomeOrderForm, IAddIncomeOrderProducts, IUpdateIncomeOrder } from '@/api/income-products/types';
 import { PlusOutlined } from '@ant-design/icons';
 import { DataTable } from '@/components/Datatable/datatable';
 import { addIncomeOrderProductsColumns } from './constants';
@@ -68,10 +68,10 @@ export const AddEditModal = observer(() => {
       },
     });
 
-  const { mutate: updateOrder } =
+  const { mutate: updateIncomeOrder } =
     useMutation({
-      mutationKey: ['updateOrder'],
-      mutationFn: (params: IUpdateUser) => clientsInfoApi.updateUser(params),
+      mutationKey: ['updateIncomeOrder'],
+      mutationFn: (params: IUpdateIncomeOrder) => incomeProductsApi.updateIncomeOrder(params),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['getIncomeOrders'] });
         handleModalClose();
@@ -101,6 +101,47 @@ export const AddEditModal = observer(() => {
       return;
     }
 
+    if (incomeProductsStore?.singleIncomeOrder) {
+      const addProducts = incomeProductsStore.addIncomeProducts?.filter(allProduct => {
+        const findOldProduct = updateOrderOldProducts?.find(oldProduct => oldProduct?.product_id === allProduct?.product_id);
+
+        if (!findOldProduct) {
+          return allProduct;
+        }
+      });
+
+      const removeProducts = updateOrderOldProducts?.filter(oldProduct => {
+        const findOldProduct = incomeProductsStore.addIncomeProducts?.find(allProduct => allProduct?.product_id === oldProduct?.product_id);
+
+        if (!findOldProduct) {
+          return oldProduct;
+        }
+      })?.map(product => ({
+        id: product?.product_id,
+        product_id: product?.productOldId,
+        count: product?.count,
+        cost: product?.cost,
+      }));
+
+      const valueControl: IUpdateIncomeOrder = {
+        id: incomeProductsStore?.singleIncomeOrder?.id,
+        supplierId: values?.supplierId,
+        payment: {
+          card: values?.card,
+          cash: values?.cash,
+          transfer: values?.transfer,
+          other: values?.other,
+        },
+        createdAt: values?.createdAt,
+        addProducts,
+        removeProducts,
+      };
+
+      updateIncomeOrder(valueControl);
+
+      return;
+    }
+
     const valueControl: IAddEditIncomeOrder = {
       supplierId: values?.supplierId,
       accepted: true,
@@ -113,12 +154,6 @@ export const AddEditModal = observer(() => {
       createdAt: values?.createdAt,
       products: incomeProductsStore.addIncomeProducts,
     };
-
-    if (incomeProductsStore?.singleIncomeOrder) {
-      // UPDATE LOGIC
-
-      return;
-    }
 
     createNewIncomeOrder(valueControl);
   };
@@ -192,6 +227,7 @@ export const AddEditModal = observer(() => {
         product_id: product?.id,
         count: product?.count,
         cost: product?.cost,
+        productOldId: product?.product?.id,
       }));
 
       setUpdateOrderOldProducts(orderProducts);

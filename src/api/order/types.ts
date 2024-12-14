@@ -38,6 +38,7 @@ export interface IAddOrderProducts {
   price: number;
   cost: number;
   avarage_cost: number;
+  productOldId: string;
 }
 
 export interface IAddOrderModalForm extends IPaymentType {
@@ -53,14 +54,20 @@ export interface IAddOrder {
   accepted: boolean;
 }
 
-
 export interface IUpdateOrder {
   id: string;
   clientId: string;
   payment: IPaymentType;
   addProducts: IAddOrderProducts[];
   updateProducts?: IAddOrderProducts[];
-  removeProducts: IAddOrderProducts[];
+  removeProducts: IUpdateOrderRemoveProducts[];
   createdAt: string;
   accepted: boolean;
+}
+
+export interface IUpdateOrderRemoveProducts {
+  id: string;
+  product_id: string;
+  count: number;
+  price: number;
 }

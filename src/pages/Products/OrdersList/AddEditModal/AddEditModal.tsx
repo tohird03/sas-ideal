@@ -123,7 +123,12 @@ export const AddEditModal = observer(() => {
         if (!findOldProduct) {
           return oldProduct;
         }
-      });
+      })?.map(product => ({
+        id: product?.product_id,
+        product_id: product?.productOldId,
+        count: product?.count,
+        price: product?.price,
+      }));
 
       const valueControl: IUpdateOrder = {
         id: ordersStore?.singleOrder?.id,
@@ -239,6 +244,7 @@ export const AddEditModal = observer(() => {
         price: product?.price,
         cost: product?.cost,
         avarage_cost: product.avarage_cost,
+        productOldId: product?.product?.id,
       }));
 
       setUpdateOrderOldProducts(orderProducts);

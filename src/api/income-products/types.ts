@@ -34,6 +34,7 @@ export interface IGetIncomeOrdersParams extends IPagination {
 export interface IAddIncomeOrderProducts {
   product_name: string;
   product_id: string;
+  productOldId: string;
   count: number;
   cost: number;
 }
@@ -49,4 +50,21 @@ export interface IAddEditIncomeOrder {
   products: IAddIncomeOrderProducts[];
   createdAt: string;
   accepted: boolean;
+}
+
+export interface IUpdateIncomeOrder {
+  id: string;
+  supplierId: string;
+  payment: IPaymentType;
+  addProducts: IAddIncomeOrderProducts[];
+  updateProducts?: IAddIncomeOrderProducts[];
+  removeProducts: IUpdateOrderRemoveProducts[];
+  createdAt: string;
+}
+
+export interface IUpdateOrderRemoveProducts {
+  id: string;
+  product_id: string;
+  count: number;
+  cost: number;
 }
