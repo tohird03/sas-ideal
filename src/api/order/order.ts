@@ -2,7 +2,7 @@ import { AxiosResponse } from 'axios';
 import { Endpoints, umsStages } from '../endpoints';
 import { INetworkConfig, Instance } from '../instance';
 import { IResponse } from '../types';
-import { IAddOrder, IGetOrdersParams, IOrder, IUpdateOrder } from './types';
+import { IAddOrder, IGetOrdersParams, IOrder, IUpdateOrder, IUploadOrderToExelParams } from './types';
 
 const config: INetworkConfig = {
   baseURL: Endpoints.Base,
@@ -26,6 +26,16 @@ class OrdersApi extends Instance {
 
   deleteOrder = (id: string): Promise<AxiosResponse> =>
     this.delete(`${Endpoints.productsOrder}/${id}`);
+
+  getUploadOrderToExel = (params: IUploadOrderToExelParams): Promise<any> =>
+    this.get(`${Endpoints.productsOrderExel}/${params?.orderId}`, {
+      params,
+      responseType: 'arraybuffer',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/xlsx',
+      },
+    });
 }
 
 export const ordersApi = new OrdersApi(config);

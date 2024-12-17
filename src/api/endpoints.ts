@@ -21,6 +21,10 @@ export enum Endpoints {
   products = '/product',
   productsIncomeOrder = '/incomingOrder',
   productsOrder = '/Order',
+  productsOrderExel = '/Order/upload',
+
+  // ROLES
+  role = '/role',
 }
 
 const config: Record<string, TStage> = {

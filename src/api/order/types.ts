@@ -71,3 +71,7 @@ export interface IUpdateOrderRemoveProducts {
   count: number;
   price: number;
 }
+
+export interface IUploadOrderToExelParams extends IGetOrdersParams {
+  orderId: string;
+}

@@ -262,7 +262,7 @@ export const ordersInfoProductsColumns: ColumnType<IOrderProducts>[] = [
     title: 'Sotish narxi',
     align: 'center',
     width: '150px',
-    render: (value, record) => `${priceFormat(record?.cost)}$`,
+    render: (value, record) => `${priceFormat(record?.price)}$`,
   },
   {
     key: 'total',

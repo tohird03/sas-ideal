@@ -17,6 +17,7 @@ import dayjs from 'dayjs';
 import { clientsInfoStore } from '@/stores/clients';
 import { ordersApi } from '@/api/order';
 import { IAddOrder, IAddOrderModalForm, IAddOrderProducts, IOrderProducts, IUpdateOrder } from '@/api/order/types';
+import { CustomFormItem } from '@/components/CustomFormItemCalc';
 
 const cn = classNames.bind(styles);
 
@@ -195,6 +196,7 @@ export const AddEditModal = observer(() => {
 
   const handleModalClose = () => {
     ordersStore.setSingleOrder(null);
+    ordersStore.setAddOrderProducts([]);
     ordersStore.setIsOpenAddEditNewOrderModal(false);
   };
 
@@ -423,19 +425,15 @@ export const AddEditModal = observer(() => {
             style={{ width: '100%' }}
           />
         </Form.Item>
-        <Form.Item
+
+        <CustomFormItem
           label="Naqd to'lov"
-          rules={[{ required: true }]}
           name="cash"
+          form={form}
           initialValue={0}
-        >
-          <InputNumber
-            placeholder="Naqd to'lov"
-            defaultValue={0}
-            style={{ width: '100%' }}
-            formatter={(value) => priceFormat(value!)}
-          />
-        </Form.Item>
+          rules={[{ required: true }]}
+          formatter={(value) => priceFormat(value!)}
+        />
         <Form.Item
           label="Bank kartasi orqali to'lov"
           rules={[{ required: true }]}

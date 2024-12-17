@@ -1,6 +1,6 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { observer } from 'mobx-react';
-import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
+import { DeleteOutlined, DownOutlined, DownloadOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button, Popconfirm, Tooltip } from 'antd';
 import { clientsInfoApi, ISupplierInfo } from '@/api/clients';
@@ -15,6 +15,7 @@ type Props = {
 
 export const Action: FC<Props> = observer(({ orders }) => {
   const queryClient = useQueryClient();
+  const [downloadLoading, setDownLoadLoading] = useState(false);
 
   const { mutate: deleteOrder } =
     useMutation({
@@ -36,6 +37,28 @@ export const Action: FC<Props> = observer(({ orders }) => {
     ordersStore.setIsOpenAddEditNewOrderModal(true);
   };
 
+  const handleDownloadExcel = () => {
+    setDownLoadLoading(true);
+    ordersApi.getUploadOrderToExel({
+      startDate: ordersStore?.startDate!,
+      endDate: ordersStore?.endDate!,
+      orderId: orders?.id,
+    })
+      .then(res => {
+        const url = URL.createObjectURL(new Blob([res]));
+        const a = document.createElement('a');
+
+        a.href = url;
+        a.download = 'order.xlsx';
+        a.click();
+        URL.revokeObjectURL(url);
+      })
+      .catch(addNotification)
+      .finally(() => {
+        setDownLoadLoading(false);
+      });
+  };
+
   const handleDelete = () => {
     deleteOrder(orders?.id);
   };
@@ -47,6 +70,9 @@ export const Action: FC<Props> = observer(({ orders }) => {
       </Tooltip>
       <Tooltip placement="top" title="Sotuvni tahrirlash">
         <Button onClick={handleEditOrder} type="primary" icon={<EditOutlined />} />
+      </Tooltip>
+      <Tooltip placement="top" title="Excelda yuklash">
+        <Button onClick={handleDownloadExcel} type="primary" icon={<DownloadOutlined />} />
       </Tooltip>
       <Tooltip placement="top" title="Sotuvni o'chirish">
         <Popconfirm
