@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Collapse, Form, Input, InputNumber, Modal } from 'antd';
+import { Checkbox, Collapse, Form, Input, InputNumber, Modal } from 'antd';
 import { IAddOrEditStaff, staffsApi } from '@/api/staffs';
 import { staffsStore } from '@/stores/workers';
 import { addNotification } from '@/utils';
@@ -128,7 +128,10 @@ export const AddStaffsModal = observer(() => {
             items={[{
               key: role?.id,
               label: role?.name,
-              children: <p>{role?.permissions[0]?.name}</p>,
+              children:
+                  role?.permissions?.map((per) => (
+                    <Checkbox style={{display: 'flex', paddingLeft: '20px'}} key={per?.id}>{per?.name}</Checkbox>
+                  )),
             }]}
           />
         </div>
