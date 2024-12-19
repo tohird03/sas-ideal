@@ -21,6 +21,7 @@ export enum Endpoints {
   products = '/product',
   productsIncomeOrder = '/incomingOrder',
   productsOrder = '/Order',
+  productsOrderProduct = '/orderProduct',
   productsOrderExel = '/Order/upload',
 
   // ROLES

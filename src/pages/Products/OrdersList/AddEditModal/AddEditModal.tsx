@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { observer } from 'mobx-react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Alert, Button, DatePicker, Form, InputNumber, Modal, Select, Spin, notification } from 'antd';
+import { Alert, Button, DatePicker, Form, InputNumber, Modal, Popconfirm, Select, Spin, notification } from 'antd';
 import classNames from 'classnames';
 import { addNotification } from '@/utils';
 import { IUpdateUser, clientsInfoApi } from '@/api/clients';
@@ -9,15 +9,22 @@ import { ordersStore, productsListStore } from '@/stores/products';
 import { supplierInfoStore } from '@/stores/supplier';
 import styles from '../orders.scss';
 import { priceFormat } from '@/utils/priceFormat';
-import { PlusOutlined } from '@ant-design/icons';
+import { CheckOutlined, DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { DataTable } from '@/components/Datatable/datatable';
 import { addOrderProductsColumns } from './constants';
 import { useMediaQuery } from '@/utils/mediaQuery';
 import dayjs from 'dayjs';
 import { clientsInfoStore } from '@/stores/clients';
 import { ordersApi } from '@/api/order';
-import { IAddOrder, IAddOrderModalForm, IAddOrderProducts, IOrderProducts, IUpdateOrder } from '@/api/order/types';
+import {
+  IAddOrder,
+  IAddOrderModalForm,
+  IAddOrderProducts,
+  IOrderProductAdd,
+  IOrderProducts,
+} from '@/api/order/types';
 import { CustomFormItem } from '@/components/CustomFormItemCalc';
+import { ColumnType } from 'antd/es/table';
 
 const cn = classNames.bind(styles);
 
@@ -26,14 +33,12 @@ const filterOption = (input: string, option?: { label: string, value: string }) 
 
 export const AddEditModal = observer(() => {
   const [form] = Form.useForm();
-  const [formProduct] = Form.useForm();
   const queryClient = useQueryClient();
   const isMobile = useMediaQuery('(max-width: 800px)');
   const [loading, setLoading] = useState(false);
   const [searchClients, setSearchClients] = useState<string | null>(null);
   const [searchProducts, setSearchProducts] = useState<string | null>(null);
-  const [isAcceptedOrder, setIsAcceptedOrder] = useState(false);
-  const [updateOrderOldProducts, setUpdateOrderOldProducts] = useState<IAddOrderProducts[]>([]);
+  const [isUpdatingProduct, setIsUpdatingProduct] = useState<IOrderProducts | null>(null);
 
   // GET DATAS
   const { data: clientsData, isLoading: loadingClients } = useQuery({
@@ -56,147 +61,67 @@ export const AddEditModal = observer(() => {
       }),
   });
 
-  const { mutate: createNewOrder } =
-    useMutation({
-      mutationKey: ['createNewOrder'],
-      mutationFn: (params: IAddOrder) => ordersApi.addNewOrder(params),
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['getOrders'] });
-        handleModalClose();
-      },
-      onError: addNotification,
-      onSettled: async () => {
-        setLoading(false);
-      },
-    });
-
-  const { mutate: updateOrder } =
-    useMutation({
-      mutationKey: ['updateOrder'],
-      mutationFn: (params: IUpdateOrder) => ordersApi.updateOrder(params),
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['getOrders'] });
-        handleModalClose();
-      },
-      onError: addNotification,
-      onSettled: async () => {
-        setLoading(false);
-      },
-    });
-
   // SUBMIT FORMS
-  const handleCloseUnAcceptedOrder = () => {
-    setIsAcceptedOrder(false);
+  const handleSaveAndCloseModal = () => {
+    // TODO
+  };
+
+  const handleCreateOrUpdateOrder = () => {
     form.submit();
   };
 
-  const handleCloseAcceptedOrder = () => {
-    setIsAcceptedOrder(true);
-    form.submit();
-  };
+  const handleSubmitProduct = async (values: IAddOrderModalForm) => {
+    setLoading(true);
 
-  const handleSubmitProductModal = () => {
-    formProduct.submit();
-  };
+    const addProducts: IAddOrderProducts = {
+      product_id: values?.product_id,
+      count: values?.count,
+      price: values?.price,
+    };
 
-  const handleSubmit = (values: IAddOrderModalForm) => {
-    if (ordersStore.addOrderProducts?.length === 0) {
-      notification.error({
-        message: 'Mahsulot qo\'shing!',
-        placement: 'topRight',
-      });
-
-      return;
-    }
-
-    if (ordersStore?.singleOrder) {
-      const addProducts = ordersStore.addOrderProducts?.filter(allProduct => {
-        const findOldProduct = updateOrderOldProducts?.find(oldProduct => oldProduct?.product_id === allProduct?.product_id);
-
-        if (!findOldProduct) {
-          return allProduct;
-        }
-      });
-
-      const removeProducts = updateOrderOldProducts?.filter(oldProduct => {
-        const findOldProduct = ordersStore.addOrderProducts?.find(allProduct => allProduct?.product_id === oldProduct?.product_id);
-
-        if (!findOldProduct) {
-          return oldProduct;
-        }
-      })?.map(product => ({
-        id: product?.product_id,
-        product_id: product?.productOldId,
-        count: product?.count,
-        price: product?.price,
-      }));
-
-      const valueControl: IUpdateOrder = {
-        id: ordersStore?.singleOrder?.id,
-        clientId: values?.clientId,
-        payment: {
-          card: values?.card,
-          cash: values?.cash,
-          transfer: values?.transfer,
-          other: values?.other,
-        },
-        createdAt: values?.createdAt,
-        addProducts,
-        removeProducts,
-        accepted: isAcceptedOrder,
+    if (ordersStore?.order) {
+      const addOrderProduct: IOrderProductAdd = {
+        ...addProducts,
+        order_id: ordersStore?.order?.id,
       };
 
-      updateOrder(valueControl);
+      ordersApi.orderProductAdd(addOrderProduct)
+        .then(() => {
+          ordersStore.getSingleOrder(ordersStore.order?.id!)
+            .finally(() => {
+              setLoading(false);
+            });
+        })
+        .catch(addNotification);
 
       return;
     }
 
-    const valueControl: IAddOrder = {
+    const createOrderData: IAddOrder = {
       clientId: values?.clientId,
-      payment: {
-        card: values?.card,
-        cash: values?.cash,
-        transfer: values?.transfer,
-        other: values?.other,
-      },
-      accepted: isAcceptedOrder,
       createdAt: values?.createdAt,
-      products: ordersStore.addOrderProducts,
+      products: [addProducts],
     };
 
-    createNewOrder(valueControl);
-  };
+    ordersApi.addNewOrder(createOrderData)
+      .then(res => {
+        if (res?.id) {
+          ordersStore.getSingleOrder(res?.id!)
+            .finally(() => {
+              setLoading(false);
+            });
+        } else {
+          ordersStore.setOrder(res);
+        }
+        queryClient.invalidateQueries({ queryKey: ['getOrders'] });
+      })
+      .catch(addNotification);
 
-  const handleSubmitProduct = (values: IAddOrderProducts) => {
-    const findProduct = productsData?.data?.find(product => product?.id === values?.product_id);
-
-    if (!findProduct) {
-      notification.error({
-        message: 'Mahsulot topilmadi!',
-        placement: 'topRight',
-      });
-
-      return;
-    }
-
-    const newOrderProduct: IAddOrderProducts = {
-      ...values,
-      cost: findProduct?.cost,
-      avarage_cost: findProduct?.avarage_cost,
-      product_name: findProduct?.name,
-    };
-
-    ordersStore.setAddOrderProducts([
-      ...ordersStore.addOrderProducts,
-      newOrderProduct,
-    ]);
-
-    formProduct.resetFields();
   };
 
   const handleModalClose = () => {
     ordersStore.setSingleOrder(null);
-    ordersStore.setAddOrderProducts([]);
+    ordersStore.setOrder(null);
     ordersStore.setIsOpenAddEditNewOrderModal(false);
   };
 
@@ -212,7 +137,7 @@ export const AddEditModal = observer(() => {
   const handleChangeProduct = (productId: string) => {
     const findProduct = productsData?.data?.find(product => product?.id === productId);
 
-    formProduct.setFieldValue('price', findProduct?.selling_price);
+    form.setFieldValue('price', findProduct?.selling_price);
   };
 
   const handleClearClient = () => {
@@ -227,38 +152,114 @@ export const AddEditModal = observer(() => {
   ), [clientsData]);
 
   useEffect(() => {
-    if (ordersStore.singleOrder) {
-      setSearchClients(ordersStore?.singleOrder?.client?.phone);
+    if (ordersStore.singleOrder && ordersStore?.order) {
+      setSearchClients(ordersStore?.order?.client?.phone);
 
       form.setFieldsValue({
-        cash: ordersStore.singleOrder?.payment?.cash,
-        card: ordersStore.singleOrder?.payment?.card,
-        transfer: ordersStore.singleOrder?.payment?.transfer,
-        other: ordersStore.singleOrder?.payment?.other,
-        createdAt: dayjs(ordersStore.singleOrder?.createdAt),
-        clientId: ordersStore?.singleOrder?.client?.id,
+        cash: ordersStore.order?.payment?.cash,
+        card: ordersStore.order?.payment?.card,
+        transfer: ordersStore.order?.payment?.transfer,
+        other: ordersStore.order?.payment?.other,
+        createdAt: dayjs(ordersStore.order?.createdAt),
+        clientId: ordersStore?.order?.client?.id,
       });
-
-      const orderProducts: IAddOrderProducts[] = ordersStore?.singleOrder?.products?.map(product => ({
-        product_name: product?.product?.name,
-        product_id: product?.id,
-        count: product?.count,
-        price: product?.price,
-        cost: product?.cost,
-        avarage_cost: product.avarage_cost,
-        productOldId: product?.product?.id,
-      }));
-
-      setUpdateOrderOldProducts(orderProducts);
-      ordersStore.setAddOrderProducts(orderProducts);
     }
-  }, [ordersStore.singleOrder]);
-
-  console.log(ordersStore.singleOrder);
-
+  }, [ordersStore.order]);
 
   const countColor = (count: number, min_amount: number): string =>
     count < 0 ? 'red' : count < min_amount ? 'orange' : 'green';
+
+  // TABLE ACTIONS
+  const handleEditProduct = (order: IOrderProducts) => {
+    // TODO
+  };
+
+  const handleSaveAndAddProductToOrder = () => {
+
+    setIsUpdatingProduct(null);
+  };
+
+  const handleDeleteProduct = (orderId: string) => {
+    ordersApi.deleteOrderProduct(orderId)
+      .then(() => {
+        ordersStore.getSingleOrder(ordersStore.order?.id!);
+      })
+      .catch(addNotification);
+
+  };
+
+  const addOrderProductsColumns: ColumnType<IOrderProducts>[] = [
+    {
+      key: 'index',
+      dataIndex: 'index',
+      title: '#',
+      align: 'center',
+      render: (value, record, index) => index + 1,
+    },
+    {
+      key: 'product_name',
+      dataIndex: 'product_name',
+      title: 'Mahsulot nomi',
+      align: 'center',
+      render: (value, record) => record?.product?.name,
+    },
+    {
+      key: 'cost',
+      dataIndex: 'cost',
+      title: 'Narxi',
+      align: 'center',
+      render: (value, record) => `${record?.price}$`,
+    },
+    {
+      key: 'count',
+      dataIndex: 'count',
+      title: 'Soni',
+      align: 'center',
+      render: (value, record) => `${record?.count} dona`,
+    },
+    {
+      key: 'totalCost',
+      dataIndex: 'totalCost',
+      title: 'Jami narxi',
+      align: 'center',
+      render: (value, record) => `${record?.price * record?.count}$`,
+    },
+    {
+      key: 'action',
+      dataIndex: 'action',
+      title: 'Action',
+      align: 'center',
+      render: (value, record) => (
+        <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', alignItems: 'center' }}>
+          {isUpdatingProduct ? (
+            <Button
+              onClick={handleSaveAndAddProductToOrder}
+              type="primary"
+              style={{ backgroundColor: 'green' }}
+              icon={<CheckOutlined />}
+            />
+          ) : (
+            <Button
+              onClick={handleEditProduct.bind(null, record)}
+              type="primary"
+              icon={<EditOutlined />}
+            />
+          )
+          }
+          <Popconfirm
+            title="Mahsulotni o'chirish"
+            description="Rostdan ham bu mahsulotni o'chirishni xohlaysizmi?"
+            onConfirm={handleDeleteProduct.bind(null, record?.id)}
+            okText="Ha"
+            okButtonProps={{ style: { background: 'red' } }}
+            cancelText="Yo'q"
+          >
+            <Button type="primary" icon={<DeleteOutlined />} danger />
+          </Popconfirm>
+        </div>
+      ),
+    },
+  ];
 
   return (
     <Modal
@@ -269,34 +270,57 @@ export const AddEditModal = observer(() => {
       cancelText="Bekor qilish"
       centered
       confirmLoading={loading}
-      width={900}
+      width={'95%'}
       footer={
         <div>
           <Button
             type="primary"
-            style={{ backgroundColor: 'orange' }}
-            onClick={handleCloseUnAcceptedOrder}
-          >
-            Tasdiqlamasdan yopish
-          </Button>
-          <Button
-            type="primary"
             style={{ backgroundColor: 'green' }}
-            onClick={handleCloseAcceptedOrder}
+            onClick={handleSaveAndCloseModal}
           >
-            Tasdiqlab yopish
+            Saqlash
           </Button>
         </div>
       }
     >
       {/* PRODUCTS FORM */}
       <Form
-        form={formProduct}
+        form={form}
         onFinish={handleSubmitProduct}
         layout="vertical"
         autoComplete="off"
-        className="income-order__add-products-form"
+        className="order__add-products-form"
       >
+        <Form.Item
+          label="Mijoz"
+          rules={[{ required: true }]}
+          name="clientId"
+        >
+          <Select
+            showSearch
+            placeholder="Mijoz"
+            loading={loadingClients}
+            optionFilterProp="children"
+            notFoundContent={loadingClients ? <Spin style={{ margin: '10px' }} /> : null}
+            filterOption={filterOption}
+            onSearch={handleSearchSupplier}
+            onClear={handleClearClient}
+            options={supplierOptions}
+            allowClear
+          />
+        </Form.Item>
+        <Form.Item
+          label="Tushurish sanasi"
+          rules={[{ required: true }]}
+          name="createdAt"
+          initialValue={dayjs()}
+        >
+          <DatePicker
+            defaultValue={dayjs()}
+            format="DD.MM.YYYY"
+            style={{ width: '100%' }}
+          />
+        </Form.Item>
         <Form.Item
           label="Mahsulot"
           rules={[{ required: true }]}
@@ -364,7 +388,7 @@ export const AddEditModal = observer(() => {
           />
         </Form.Item>
         <Button
-          onClick={handleSubmitProductModal}
+          onClick={handleCreateOrUpdateOrder}
           type="primary"
           icon={<PlusOutlined />}
         >
@@ -375,20 +399,20 @@ export const AddEditModal = observer(() => {
       {/* PRODUCTS SHOW LIST */}
       <DataTable
         columns={addOrderProductsColumns}
-        data={ordersStore?.addOrderProducts || []}
+        data={ordersStore?.order?.products || []}
         isMobile={isMobile}
         pagination={false}
         scroll={{ y: 300 }}
       />
 
-      <div className="income-order__add-products-form-pay-info">
+      {/* <div className="income-order__add-products-form-pay-info">
         <Alert type="info" message={`Umumiy narx: ${100}$`} />
         <Alert type="error" message={`Qarzga: ${100}$`} />
         <Alert type="warning" message={`Qaytim: ${100}$`} />
-      </div>
+      </div> */}
 
       {/* ORDER OTHER INFO */}
-      <Form
+      {/* <Form
         form={form}
         onFinish={handleSubmit}
         layout="vertical"
@@ -471,7 +495,7 @@ export const AddEditModal = observer(() => {
             formatter={(value) => priceFormat(value!)}
           />
         </Form.Item>
-      </Form>
+      </Form> */}
     </Modal>
   );
 });

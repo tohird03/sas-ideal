@@ -37,7 +37,7 @@ export const Layout = () => {
           height: 'calc(100vh - 64px)',
           position: 'absolute',
           marginTop: '64px',
-          zIndex: '999',
+          zIndex: '1',
         } : {}}
       >
         {!isTablet && (

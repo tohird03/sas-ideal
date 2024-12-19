@@ -1,9 +1,9 @@
 import React from 'react';
 import { ColumnType } from 'antd/es/table';
 import { Action } from './Action';
-import { IAddOrderProducts } from '@/api/order/types';
+import { IAddOrderProducts, IOrderProducts } from '@/api/order/types';
 
-export const addOrderProductsColumns: ColumnType<IAddOrderProducts>[] = [
+export const addOrderProductsColumns: ColumnType<IOrderProducts>[] = [
   {
     key: 'index',
     dataIndex: 'index',
@@ -16,7 +16,7 @@ export const addOrderProductsColumns: ColumnType<IAddOrderProducts>[] = [
     dataIndex: 'product_name',
     title: 'Mahsulot nomi',
     align: 'center',
-    render: (value, record) => record?.product_name,
+    render: (value, record) => record?.product?.name,
   },
   {
     key: 'cost',

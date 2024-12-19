@@ -1,19 +1,19 @@
-import {makeAutoObservable} from 'mobx';
-import {addNotification} from '@/utils';
-import { IAddOrderProducts, IGetOrdersParams, IOrder } from '@/api/order/types';
+import { makeAutoObservable } from 'mobx';
+import { addNotification } from '@/utils';
+import { IAddOrder, IAddOrderProducts, IGetOrdersParams, IOrder } from '@/api/order/types';
 import { ordersApi } from '@/api/order';
 import dayjs from 'dayjs';
 
 class OrdersStore {
   #today = new Date();
 
+  order: IOrder | null = null;
   pageNumber = 1;
   pageSize = 10;
   search: string | null = null;
   isOpenAddEditNewOrderModal = false;
   isOpenShowOrderModal = false;
   singleOrder: IOrder | null = null;
-  addOrderProducts: IAddOrderProducts[] = [];
   startDate: Date | null = this.#today;
   endDate: Date | null = this.#today;
 
@@ -25,6 +25,19 @@ class OrdersStore {
     ordersApi.getOrders(params)
       .then(res => res)
       .catch(addNotification);
+
+  getSingleOrder = (orderId: string) =>
+    ordersApi.getSingleOrder(orderId)
+      .then(res => {
+        this.setOrder(res);
+
+        return res;
+      })
+      .catch(addNotification);
+
+  setOrder = (order: IOrder | null) => {
+    this.order = order;
+  };
 
   setPageNumber = (pageNumber: number) => {
     this.pageNumber = pageNumber;
@@ -56,10 +69,6 @@ class OrdersStore {
 
   setSingleOrder = (singleOrder: IOrder | null) => {
     this.singleOrder = singleOrder;
-  };
-
-  setAddOrderProducts = (addOrderProducts: IAddOrderProducts[]) => {
-    this.addOrderProducts = addOrderProducts;
   };
 
   reset() {

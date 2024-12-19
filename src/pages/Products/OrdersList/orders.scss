@@ -29,6 +29,13 @@
 }
 
 .order {
+  &__add-products-form {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 0px 40px;
+    align-items: center;
+    padding: 30px;
+  }
   &__show-header {
     display: flex;
     align-items: center;

@@ -34,6 +34,7 @@ export const Action: FC<Props> = observer(({ orders }) => {
 
   const handleEditOrder = () => {
     ordersStore.setSingleOrder(orders);
+    ordersStore.setOrder(orders);
     ordersStore.setIsOpenAddEditNewOrderModal(true);
   };
 
@@ -72,7 +73,12 @@ export const Action: FC<Props> = observer(({ orders }) => {
         <Button onClick={handleEditOrder} type="primary" icon={<EditOutlined />} />
       </Tooltip>
       <Tooltip placement="top" title="Excelda yuklash">
-        <Button onClick={handleDownloadExcel} type="primary" icon={<DownloadOutlined />} />
+        <Button
+          onClick={handleDownloadExcel}
+          type="primary"
+          icon={<DownloadOutlined />}
+          loading={downloadLoading}
+        />
       </Tooltip>
       <Tooltip placement="top" title="Sotuvni o'chirish">
         <Popconfirm

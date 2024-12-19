@@ -59,6 +59,12 @@ export class Instance {
     return this.instance.post(url, params, {...config, baseURL: `${this.stageUrl}${this.baseURL}`});
   }
 
+  public async resPost(url: string, params?: any, config?: AxiosRequestConfig) {
+    const {data} = await this.instance.post(url, params, {...config, baseURL: `${this.stageUrl}${this.baseURL}`});
+
+    return data;
+  }
+
   public async delete(url: string, config?: AxiosRequestConfig) {
     return this.instance.delete(url, {...config, baseURL: `${this.stageUrl}${this.baseURL}`});
   }

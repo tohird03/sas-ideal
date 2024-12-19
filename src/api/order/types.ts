@@ -32,46 +32,34 @@ export interface IOrderProducts {
 }
 
 export interface IAddOrderProducts {
-  product_name: string;
   product_id: string;
   count: number;
   price: number;
-  cost: number;
-  avarage_cost: number;
-  productOldId: string;
 }
 
-export interface IAddOrderModalForm extends IPaymentType {
+export interface IAddOrderModalForm extends IAddOrderProducts {
   clientId: string;
   createdAt: string;
 }
 
 export interface IAddOrder {
   clientId: string;
-  payment: IPaymentType;
-  products: IAddOrderProducts[];
   createdAt: string;
-  accepted: boolean;
+  accepted?: boolean;
+  products: IAddOrderProducts[];
 }
 
 export interface IUpdateOrder {
   id: string;
   clientId: string;
-  payment: IPaymentType;
-  addProducts: IAddOrderProducts[];
-  updateProducts?: IAddOrderProducts[];
-  removeProducts: IUpdateOrderRemoveProducts[];
   createdAt: string;
   accepted: boolean;
 }
 
-export interface IUpdateOrderRemoveProducts {
-  id: string;
-  product_id: string;
-  count: number;
-  price: number;
-}
-
 export interface IUploadOrderToExelParams extends IGetOrdersParams {
   orderId: string;
+}
+
+export interface IOrderProductAdd extends IAddOrderProducts {
+  order_id: string;
 }
