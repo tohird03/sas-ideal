@@ -105,12 +105,12 @@ export const ordersColumns: ColumnType<IOrder>[] = [
 ];
 
 
-const OrderStatus: Record<string, string> = {
+export const OrderStatus: Record<string, string> = {
   true: 'Tasdiqlangan',
   false: 'Tasdiqlanmagan',
 };
 
-const OrderStatusColor: Record<string, string> = {
+export const OrderStatusColor: Record<string, string> = {
   true: '#178c03',
   false: '#ff7700',
 };

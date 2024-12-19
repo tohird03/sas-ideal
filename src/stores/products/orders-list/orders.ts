@@ -13,6 +13,7 @@ class OrdersStore {
   search: string | null = null;
   isOpenAddEditNewOrderModal = false;
   isOpenShowOrderModal = false;
+  isOpenPaymentModal = false;
   singleOrder: IOrder | null = null;
   startDate: Date | null = this.#today;
   endDate: Date | null = this.#today;
@@ -65,6 +66,10 @@ class OrdersStore {
 
   setIsOpenShowOrderModal = (isOpenShowOrderModal: boolean) => {
     this.isOpenShowOrderModal = isOpenShowOrderModal;
+  };
+
+  setIsOpenPaymentModal = (isOpenPaymentModal: boolean) => {
+    this.isOpenPaymentModal = isOpenPaymentModal;
   };
 
   setSingleOrder = (singleOrder: IOrder | null) => {

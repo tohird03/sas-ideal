@@ -13,6 +13,7 @@ import { ordersColumns } from './constants';
 import { ordersStore } from '@/stores/products';
 import dayjs from 'dayjs';
 import { OrderShowInfoModal } from './OrderShowInfoModal';
+import { PaymentModal } from './PaymentModal';
 
 const cn = classNames.bind(styles);
 
@@ -109,6 +110,7 @@ export const Orders = observer(() => {
 
       {ordersStore.isOpenAddEditNewOrderModal && <AddEditModal />}
       {ordersStore.isOpenShowOrderModal && <OrderShowInfoModal />}
+      {ordersStore.isOpenPaymentModal && <PaymentModal />}
     </main>
   );
 });

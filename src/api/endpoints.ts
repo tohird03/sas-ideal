@@ -24,6 +24,9 @@ export enum Endpoints {
   productsOrderProduct = '/orderProduct',
   productsOrderExel = '/Order/upload',
 
+  // PAYMENT
+  payment = 'payment',
+
   // ROLES
   role = '/role',
 }

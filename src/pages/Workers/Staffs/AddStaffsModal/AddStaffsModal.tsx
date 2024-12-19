@@ -7,11 +7,13 @@ import { staffsStore } from '@/stores/workers';
 import { addNotification } from '@/utils';
 import { regexPhoneNumber } from '@/utils/phoneFormat';
 import { roleApi } from '@/api/role';
+import { CheckboxChangeEvent } from 'antd/es/checkbox';
 
 export const AddStaffsModal = observer(() => {
   const [form] = Form.useForm();
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
+  const [userPer, setUserPer] = useState<string[]>([]);
 
   const { data: roleData, isLoading: loadingRole } = useQuery({
     queryKey: ['getRoles'],
@@ -49,15 +51,34 @@ export const AddStaffsModal = observer(() => {
   const handleSubmit = (values: IAddOrEditStaff) => {
     setLoading(true);
 
+    console.log('Salom');
+
     if (staffsStore?.singleStaff) {
       updateProcess({
         ...values,
+        phone: `998${values?.phone}`,
         id: staffsStore?.singleStaff?.id!,
       });
 
       return;
     }
-    addNewStaffs(values);
+    addNewStaffs({
+      ...values,
+      permission: userPer,
+      phone: `998${values?.phone}`,
+    });
+  };
+
+  const handleChangePer = (e: CheckboxChangeEvent, perId: string) => {
+    const findOldAssignPer = userPer?.find((per) => per === perId);
+
+    if (e?.target?.checked && !findOldAssignPer) {
+      setUserPer([...userPer, perId]);
+    } else if (findOldAssignPer) {
+      const filterPer = userPer?.filter((per) => per !== perId);
+
+      setUserPer(filterPer);
+    }
   };
 
   const handleModalClose = () => {
@@ -88,6 +109,7 @@ export const AddStaffsModal = observer(() => {
       cancelText="Bekor qilish"
       centered
       confirmLoading={loading}
+      width={600}
     >
       <Form
         form={form}
@@ -120,6 +142,32 @@ export const AddStaffsModal = observer(() => {
             type="number"
           />
         </Form.Item>
+        <Form.Item
+          name="password"
+          label="Parolni kiriting"
+          rules={[{ required: true }]}
+        >
+          <Input.Password placeholder="Parolni kiriting" />
+        </Form.Item>
+        <Form.Item
+          name="reset-password"
+          label="Parolni qayta kiriting"
+          rules={[
+            { required: true },
+            {
+              validator(rule, value, callback) {
+                if (value !== form.getFieldValue('password')) {
+                  throw new Error('Parollar mos emas!');
+                }
+              },
+              message: 'Parollar bir-biriga mos emas',
+            },
+          ]}
+        >
+          <Input.Password
+            placeholder="Parolni qayta kiriting"
+          />
+        </Form.Item>
       </Form>
       {roleData?.data?.map(role => (
         <div key={role?.id}>
@@ -129,9 +177,15 @@ export const AddStaffsModal = observer(() => {
               key: role?.id,
               label: role?.name,
               children:
-                  role?.permissions?.map((per) => (
-                    <Checkbox style={{display: 'flex', paddingLeft: '20px'}} key={per?.id}>{per?.name}</Checkbox>
-                  )),
+                role?.permissions?.map((per) => (
+                  <Checkbox
+                    onChange={(e) => handleChangePer(e, per?.id)}
+                    key={per?.id}
+                    style={{ display: 'flex', paddingLeft: '20px' }}
+                  >
+                    {per?.name}
+                  </Checkbox>
+                )),
             }]}
           />
         </div>

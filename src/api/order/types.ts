@@ -63,3 +63,9 @@ export interface IUploadOrderToExelParams extends IGetOrdersParams {
 export interface IOrderProductAdd extends IAddOrderProducts {
   order_id: string;
 }
+
+export interface IUpdateOrderProduct {
+  id: string;
+  count: number;
+  price: number;
+}
