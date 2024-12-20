@@ -12,6 +12,7 @@ export const deedColumns: ColumnType<IDeed>[] = [
     dataIndex: 'index',
     title: '#',
     align: 'center',
+    width: '40px',
     render: (value, record, index) => index + 1,
   },
   {
@@ -19,7 +20,7 @@ export const deedColumns: ColumnType<IDeed>[] = [
     dataIndex: 'data',
     title: 'Vaqti',
     align: 'center',
-    width: '150px',
+    width: '100px',
     render: (value, record) => (
       record?.type === 'order'
         ? getFullDateFormat(record?.createdAt)
@@ -30,12 +31,43 @@ export const deedColumns: ColumnType<IDeed>[] = [
     key: 'type',
     dataIndex: 'type',
     title: 'Harakat turi',
+    width: '250px',
+    render: (value, record) => (
+      <>
+        {record?.type === 'order' ? 'Sotuv' : 'Qarzga to\'lov'}
+        {<ArrowRightOutlined />}
+        <p
+          style={{ margin: 0, color: 'blue', display: 'inline' }}
+        >
+          №: {record?.type === 'order' ? record?.articl : record?.id}
+        </p>
+      </>
+    ),
+  },
+  {
+    key: 'debt',
+    dataIndex: 'debt',
+    title: 'Дебит',
     align: 'center',
-    width: '150px',
+    width: '50px',
+    className: 'green-col',
     render: (value, record) => (
       record?.type === 'order'
-        ? `Sotuv ${<ArrowRightOutlined />} №: ${record?.articl}`
-        : `Qarzga to'lov ${<ArrowRightOutlined />} №: ${record?.id}`
+        ? `${priceFormat(record?.sum)}$`
+        : null
+    ),
+  },
+  {
+    key: 'data',
+    dataIndex: 'data',
+    title: 'Кредит',
+    align: 'center',
+    width: '50px',
+    className: 'red-col',
+    render: (value, record) => (
+      record?.type === 'payment'
+        ? `${priceFormat(record?.totalPay)}$`
+        : null
     ),
   },
 ];

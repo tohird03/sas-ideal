@@ -8,15 +8,15 @@ import { Deed } from './Deed';
 export const singleClientTabOptions = [
   {
     value: ISingleClientTabs.ORDER,
-    label: 'Order',
+    label: 'Mijozning xaridlari',
   },
   {
     value: ISingleClientTabs.PAYMENT,
-    label: 'Payment',
+    label: 'Mijozning to\'lovlari',
   },
   {
     value: ISingleClientTabs.DEED,
-    label: 'Deed',
+    label: 'Solishtirish dalolatnomalari',
   },
 ];
 

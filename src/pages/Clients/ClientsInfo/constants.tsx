@@ -1,7 +1,7 @@
 import React from 'react';
-import {ColumnType} from 'antd/es/table';
-import {IClientsInfo} from '@/api/clients';
-import {Action} from './Action';
+import { ColumnType } from 'antd/es/table';
+import { IClientsInfo } from '@/api/clients';
+import { Action } from './Action';
 import { formatPhoneNumber } from '@/utils/phoneFormat';
 import { priceFormat } from '@/utils/priceFormat';
 import { dateFormatterWithStringMonth } from '@/utils/dateFormat';

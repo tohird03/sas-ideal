@@ -8,6 +8,7 @@ import { Tag } from 'antd';
 import { getFullDateFormat } from '@/utils/getDateFormat';
 import { priceFormat } from '@/utils/priceFormat';
 import { dateFormatterWithStringMonth } from '@/utils/dateFormat';
+import { ClientNameLink } from '@/pages/ActionComponents/ClientNameLink';
 
 export const ordersColumns: ColumnType<IOrder>[] = [
   {
@@ -30,12 +31,7 @@ export const ordersColumns: ColumnType<IOrder>[] = [
     dataIndex: 'client',
     title: 'Mijoz',
     align: 'center',
-    render: (value, record) => (
-      <div>
-        <p style={{ margin: 0, fontWeight: 'bold' }}>{record?.client?.name}</p>
-        <i>+{record?.client?.phone}</i>
-      </div>
-    ),
+    render: (value, record) => <ClientNameLink client={record?.client} />,
   },
   {
     key: 'status',
@@ -130,7 +126,7 @@ export const ordersInfoColumns: ColumnType<IOrder>[] = [
     title: 'Mijoz',
     align: 'center',
     render: (value, record) => (
-      <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '5px 0'}}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '5px 0' }}>
         <p style={{ margin: 0, fontWeight: 'bold' }}>{record?.client?.name}</p>
         <i>+{record?.client?.phone}</i>
       </div>
@@ -142,7 +138,7 @@ export const ordersInfoColumns: ColumnType<IOrder>[] = [
     title: 'Sotuvchi',
     align: 'center',
     render: (value, record) => (
-      <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '5px 0'}}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '5px 0' }}>
         <p style={{ margin: 0, fontWeight: 'bold' }}>{record?.seller?.name}</p>
         <i>+{record?.seller?.phone}</i>
       </div>

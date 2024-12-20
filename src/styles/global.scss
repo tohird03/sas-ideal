@@ -176,6 +176,23 @@ input::-webkit-inner-spin-button {
   }
 }
 
+.green-col {
+  background-color: #B1DFBB;
+}
+
+.red-col {
+  background-color: #F1B0B7;
+}
+
+.ant-table-row:hover {
+  .green-col {
+    background-color: #B1DFBB !important;
+  }
+  .red-col {
+    background-color: #F1B0B7 !important;
+  }
+}
+
 .ant-menu-item-icon {
   svg {
     font-size: 22px;
