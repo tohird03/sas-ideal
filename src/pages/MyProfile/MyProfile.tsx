@@ -25,7 +25,7 @@ export const MyProfile = observer(() => {
             ? (
               <>
                 <Typography.Title className={cn('my-profile__title')} level={4}>
-                   Username: {authStore?.staffInfo?.username}
+                   Username: {authStore?.staffInfo?.name}
                 </Typography.Title>
                 <Typography.Title className={cn('my-profile__title')} level={4}>
                    Phone: +{authStore?.staffInfo?.phone}
@@ -41,7 +41,7 @@ export const MyProfile = observer(() => {
           }
 
 
-          {authStore?.staffInfo?.roles?.map(role => (
+          {authStore?.staffInfo?.permissions?.map(role => (
             <Badge.Ribbon
               key={role}
               text={appRoles[role as IAppRole]?.name}

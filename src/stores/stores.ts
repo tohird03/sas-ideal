@@ -2,7 +2,7 @@ import {appStore} from './app';
 import {authStore} from './auth';
 import {breadcrumbStore} from './breadcrumb';
 import {profileStore} from './profile';
-import {clientsInfoStore} from './clients';
+import {clientsInfoStore, paymentsStore} from './clients';
 import {staffsStore} from './workers';
 import {supplierInfoStore} from './supplier';
 import {productsListStore, incomeProductsStore, ordersStore} from './products';
@@ -14,6 +14,7 @@ export const stores = {
   profileStore,
   staffsStore,
   clientsInfoStore,
+  paymentsStore,
   supplierInfoStore,
   productsListStore,
   incomeProductsStore,
@@ -27,6 +28,7 @@ export const resetStores = () => {
   profileStore.reset();
   staffsStore.reset();
   clientsInfoStore.reset();
+  paymentsStore.reset();
   supplierInfoStore.reset();
   productsListStore.reset();
   incomeProductsStore.reset();

@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { ordersStore } from '@/stores/products';
 import { priceFormat } from '@/utils/priceFormat';
 import { IPaymentType } from '@/api/types';
-import { IAddPaymentParams } from '@/api/payment/types';
+import { IAddEditPaymentParams } from '@/api/payment/types';
 import { paymentApi } from '@/api/payment';
 import { addNotification } from '@/utils';
 
@@ -20,7 +20,7 @@ export const PaymentModal = observer(() => {
   };
 
   const handleSubmitPayment = (values: IPaymentType) => {
-    const orderPaymentData: IAddPaymentParams = {
+    const orderPaymentData: IAddEditPaymentParams = {
       ...values,
       orderId: ordersStore?.order?.id,
       clientId: ordersStore?.order?.client?.id!,

@@ -6,6 +6,7 @@ import {ROUTES} from '@/constants';
 import {Layout} from '@/modules/Layout';
 import {
   ClientsInfo,
+  ClientsPayments,
   IncomeProducts,
   Login,
   MyProfileHome,
@@ -45,6 +46,10 @@ export const Router = ({isAuth}: Props) => useRoutes([
           {
             element: <Suspense fallback={<Loading />}><ClientsInfo /></Suspense>,
             path: ROUTES.clientsInfo,
+          },
+          {
+            element: <Suspense fallback={<Loading />}><ClientsPayments /></Suspense>,
+            path: ROUTES.clientsPayments,
           },
           // SUPPLIER
           {

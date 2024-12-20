@@ -95,6 +95,10 @@ export const mainMenuList: IMenuItems[] = [
         label: 'Mijozlar ro\'yxati',
         key: ROUTES.clientsInfo,
       },
+      {
+        label: 'To\'lovlar ro\'yxati',
+        key: ROUTES.clientsPayments,
+      },
     ],
   },
   {

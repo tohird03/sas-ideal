@@ -7,7 +7,7 @@ export enum Endpoints {
   // SETTINGS
   SignIn = '/admin/sign-in',
   RefreshToken = '/dashboard-auth/refresh',
-  UserProfile = '/admin',
+  UserProfile = '/admin/profile',
 
   // STAFFS
   Staffs = '/admin',
@@ -25,7 +25,7 @@ export enum Endpoints {
   productsOrderExel = '/Order/upload',
 
   // PAYMENT
-  payment = 'payment',
+  payment = '/payment',
 
   // ROLES
   role = '/role',

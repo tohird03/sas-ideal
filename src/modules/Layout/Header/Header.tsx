@@ -41,7 +41,10 @@ export const Header = observer(({collapsed, onCollapsedClick, isMobile}: Props) 
 
         <div className="header__profile">
           <Typography.Title level={5} style={{color: 'white', margin: '0'}}>
-            {authStore.staffInfo?.username}
+            {authStore.staffInfo?.name}
+          </Typography.Title>
+          <Typography.Title level={5} style={{color: 'white', margin: '0'}}>
+            +{authStore.staffInfo?.phone}
           </Typography.Title>
           <Dropdown menu={{items}} placement="bottomRight">
             <Avatar style={{backgroundColor: '#1677FF'}} icon={<UserOutlined />} />

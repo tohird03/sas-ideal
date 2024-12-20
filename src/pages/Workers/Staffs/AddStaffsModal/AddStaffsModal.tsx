@@ -48,10 +48,19 @@ export const AddStaffsModal = observer(() => {
       },
     });
 
+  const handleModalClose = () => {
+    staffsStore.setSingleStaff(null);
+    staffsStore.setIsOpenAddEditStaffModal(false);
+  };
+
+  const handleModalOk = () => {
+    console.log('Salom');
+
+    form.submit();
+  };
+
   const handleSubmit = (values: IAddOrEditStaff) => {
     setLoading(true);
-
-    console.log('Salom');
 
     if (staffsStore?.singleStaff) {
       updateProcess({
@@ -64,7 +73,7 @@ export const AddStaffsModal = observer(() => {
     }
     addNewStaffs({
       ...values,
-      permission: userPer,
+      permissions: userPer,
       phone: `998${values?.phone}`,
     });
   };
@@ -79,15 +88,6 @@ export const AddStaffsModal = observer(() => {
 
       setUserPer(filterPer);
     }
-  };
-
-  const handleModalClose = () => {
-    staffsStore.setSingleStaff(null);
-    staffsStore.setIsOpenAddEditStaffModal(false);
-  };
-
-  const handleModalOk = () => {
-    form.submit();
   };
 
   useEffect(() => {
@@ -155,9 +155,11 @@ export const AddStaffsModal = observer(() => {
           rules={[
             { required: true },
             {
-              validator(rule, value, callback) {
+              validator(rule, value) {
                 if (value !== form.getFieldValue('password')) {
-                  throw new Error('Parollar mos emas!');
+                  return Promise.reject('Parollar bir-biriga mos emas');
+                } else {
+                  return Promise.resolve();
                 }
               },
               message: 'Parollar bir-biriga mos emas',

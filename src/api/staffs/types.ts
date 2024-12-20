@@ -15,5 +15,5 @@ export interface IAddOrEditStaff {
   name: string;
   phone: string;
   password: string;
-  permission: string[];
+  permissions: string[];
 }

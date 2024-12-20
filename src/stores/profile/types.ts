@@ -1,15 +1,10 @@
-export interface IStaff {
-  username: string;
-  phone: string;
-  roles: string[];
+import { ISeller } from "@/api/clients";
+
+export interface IStaff extends ISeller {
+  permissions: string[];
 }
 
 export type ChangePasswordFormType = {
   currentPassword: string;
   newPassword: string;
-};
-
-export type ProfileFormType = {
-  username: IStaff['username'];
-  phone: IStaff['phone'];
 };
