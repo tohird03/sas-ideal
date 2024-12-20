@@ -30,6 +30,7 @@ export type TStage = {
 export interface IPayment extends IPaymentType {
   id: string,
   createdAt: string;
+  updatedAt: string;
   totalPay: number,
 }
 

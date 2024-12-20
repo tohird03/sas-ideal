@@ -1,4 +1,5 @@
-import {IPagination} from '../types';
+import { IOrder } from '../order/types';
+import {IPagination, IPayment} from '../types';
 
 export interface IUpdateUser {
   id: string;
@@ -49,4 +50,20 @@ export interface IAddSupplierInfo {
   id?: string;
   name: string;
   phone: string;
+}
+
+export interface IDeedPayment extends IPayment {
+  type: 'payment';
+}
+
+export interface IDeedOrder extends IOrder {
+  type: 'order';
+}
+
+export type IDeed = IDeedPayment | IDeedOrder;
+
+export interface IGetClientDeedParams {
+  id: string;
+  startDate?: string;
+  endDate?: string;
 }

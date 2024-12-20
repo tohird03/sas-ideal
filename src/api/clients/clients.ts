@@ -2,7 +2,17 @@ import { AxiosResponse } from 'axios';
 import { Endpoints, umsStages } from '../endpoints';
 import { INetworkConfig, Instance } from '../instance';
 import { IResponse } from '../types';
-import { IAddClientInfo, IAddSupplierInfo, IClientsInfo, IGetClientsInfoParams, IGetSupplierInfoParams, ISupplierInfo, IUpdateUser } from './types';
+import {
+  IAddClientInfo,
+  IAddSupplierInfo,
+  IClientsInfo,
+  IDeed,
+  IGetClientDeedParams,
+  IGetClientsInfoParams,
+  IGetSupplierInfoParams,
+  ISupplierInfo,
+  IUpdateUser,
+} from './types';
 
 const config: INetworkConfig = {
   baseURL: Endpoints.Base,
@@ -16,6 +26,12 @@ class ClientsInfoApi extends Instance {
 
   getClientsInfo = (params: IGetClientsInfoParams): Promise<IResponse<IClientsInfo[]>> =>
     this.get(Endpoints.Clients, { params });
+
+  getSingleClient = (clientId: string): Promise<IClientsInfo> =>
+    this.get(`${Endpoints.Users}/${clientId}`);
+
+  getClientDeed = (params: IGetClientDeedParams): Promise<IResponse<IDeed[]>> =>
+    this.get(Endpoints.ClientsDeed, { params });
 
   addClients = (params: IAddClientInfo): Promise<AxiosResponse> =>
     this.post(Endpoints.Clients, params);

@@ -15,6 +15,7 @@ export enum Endpoints {
   // CLIENTS
   Users = '/user',
   Clients = '/user/client',
+  ClientsDeed = '/user/client/deed',
   Supplier = '/user/supplier',
 
   // PRODUCTS

@@ -12,6 +12,7 @@ import {
   MyProfileHome,
   Orders,
   ProductsList,
+  SingleClient,
   Staffs,
   SupplierInfo,
 } from './lazy';
@@ -48,6 +49,10 @@ export const Router = ({isAuth}: Props) => useRoutes([
             path: ROUTES.clientsInfo,
           },
           {
+            element: <Suspense fallback={<Loading />}><SingleClient /></Suspense>,
+            path: ROUTES.clientsSingleClient,
+          },
+          {
             element: <Suspense fallback={<Loading />}><ClientsPayments /></Suspense>,
             path: ROUTES.clientsPayments,
           },
@@ -56,7 +61,7 @@ export const Router = ({isAuth}: Props) => useRoutes([
             element: <Suspense fallback={<Loading />}><SupplierInfo /></Suspense>,
             path: ROUTES.supplierInfo,
           },
-          // SUPPLIER
+          // PRODUCTS
           {
             element: <Suspense fallback={<Loading />}><ProductsList /></Suspense>,
             path: ROUTES.productsList,
