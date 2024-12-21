@@ -70,3 +70,17 @@ export interface IUpdateOrderProduct {
   count: number;
   price: number;
 }
+
+export interface IOrderStatistic {
+  todaySales: number,
+  weeklySales: number,
+  monthlySales: number,
+  ourDebt: number,
+  fromDebt: number,
+  weeklyChart: IOrderStatisticChart[],
+}
+
+export interface IOrderStatisticChart {
+  date: string;
+  sum: number;
+}

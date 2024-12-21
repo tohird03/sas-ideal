@@ -39,20 +39,6 @@ export const MyProfile = observer(() => {
               </>
             )
           }
-
-
-          {authStore?.staffInfo?.permissions?.map(role => (
-            <Badge.Ribbon
-              key={role}
-              text={appRoles[role as IAppRole]?.name}
-              color={appRoles[role as IAppRole]?.color}
-            >
-              <Card size="small">
-                {`${isMobile ? '' : 'У вас есть роль'} ${appRoles[role as IAppRole]?.name}`}
-              </Card>
-            </Badge.Ribbon>
-          ))
-          }
         </div>
 
         <div>

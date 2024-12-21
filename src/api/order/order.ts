@@ -2,7 +2,7 @@ import { AxiosResponse } from 'axios';
 import { Endpoints, umsStages } from '../endpoints';
 import { INetworkConfig, Instance } from '../instance';
 import { IResponse } from '../types';
-import { IAddOrder, IGetOrdersParams, IOrder, IOrderProductAdd, IUpdateOrder, IUpdateOrderProduct, IUploadOrderToExelParams } from './types';
+import { IAddOrder, IGetOrdersParams, IOrder, IOrderProductAdd, IOrderStatistic, IUpdateOrder, IUpdateOrderProduct, IUploadOrderToExelParams } from './types';
 
 const config: INetworkConfig = {
   baseURL: Endpoints.Base,
@@ -48,6 +48,9 @@ class OrdersApi extends Instance {
         'Accept': 'application/xlsx',
       },
     });
+
+  getOrdersStatistic = (): Promise<IOrderStatistic> =>
+    this.get(Endpoints.productsOrderStatistic);
 }
 
 export const ordersApi = new OrdersApi(config);

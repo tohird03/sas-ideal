@@ -104,14 +104,13 @@ export const AddEditModal = observer(() => {
       ordersApi.orderProductAdd(addOrderProduct)
         .then(() => {
           form.resetFields(['product_id', 'price', 'count']);
-          ordersStore.getSingleOrder(ordersStore.order?.id!)
-            .finally(() => {
-              setLoading(false);
-            });
-
+          ordersStore.getSingleOrder(ordersStore.order?.id!);
           queryClient.invalidateQueries({ queryKey: ['getOrders'] });
         })
-        .catch(addNotification);
+        .catch(addNotification)
+        .finally(() => {
+          setLoading(false);
+        });
 
       return;
     }
@@ -126,16 +125,16 @@ export const AddEditModal = observer(() => {
       .then(res => {
         form.resetFields(['product_id', 'price', 'count']);
         if (res?.id) {
-          ordersStore.getSingleOrder(res?.id!)
-            .finally(() => {
-              setLoading(false);
-            });
+          ordersStore.getSingleOrder(res?.id!);
         } else {
           ordersStore.setOrder(res);
         }
         queryClient.invalidateQueries({ queryKey: ['getOrders'] });
       })
-      .catch(addNotification);
+      .catch(addNotification)
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const handleModalClose = () => {
@@ -408,7 +407,7 @@ export const AddEditModal = observer(() => {
           />
         </Form.Item>
         <Form.Item
-          label="Tushurish sanasi"
+          label="Sotish sanasi"
           rules={[{ required: true }]}
           name="sellingDate"
           initialValue={dayjs()}

@@ -15,8 +15,6 @@ export const useBootstrap = () => {
   };
 
   const setToken = async () => {
-    authStore.setMainMenuItems(generateAllMenuItems(mainMenuList));
-
     if (accessToken) {
       authStore.setIsAuth(true);
       await authStore.setToken({accessToken});

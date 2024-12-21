@@ -22,6 +22,7 @@ export enum Endpoints {
   products = '/product',
   productsIncomeOrder = '/incomingOrder',
   productsOrder = '/Order',
+  productsOrderStatistic = '/Order/statistica',
   productsOrderProduct = '/orderProduct',
   productsOrderExel = '/Order/upload',
 

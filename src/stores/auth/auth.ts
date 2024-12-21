@@ -5,6 +5,8 @@ import {ILoginForm} from '@/api/auth/types';
 import {addNotification} from '@/utils/addNotification';
 import {IStaff} from '../profile/types';
 import {TokenType} from './types';
+import { generateAllMenuItems } from '@/modules/Layout/utils';
+import { mainMenuList } from '@/modules/Layout/constants';
 
 class AuthStore {
   isAuth: boolean | null = false;
@@ -36,8 +38,8 @@ class AuthStore {
     authApi.getUserProfile()
       .then(res => {
         if (res) {
+          this.mainMenuItems = generateAllMenuItems(mainMenuList, res);
           this.setStaffInfo(res);
-          // this.mainMenuItems = generateAllMenuItems(mainMenuList, res);
         }
       })
       .catch(addNotification);

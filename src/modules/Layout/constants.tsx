@@ -6,6 +6,7 @@ import {
   ContactsOutlined,
   ControlOutlined,
   DownloadOutlined,
+  HomeOutlined,
   SettingOutlined,
   ShoppingCartOutlined,
   SolutionOutlined,
@@ -16,6 +17,7 @@ import {
 } from '@ant-design/icons';
 import {ROUTES} from '@/constants';
 import {IAppRole, IMenuItems} from './types';
+import { IStaffPerKey } from '@/stores/profile/types';
 
 export const appRoles: Record<IAppRole, {name: string, color: string}> = {
   [IAppRole.SuperAdmin]: {
@@ -66,22 +68,35 @@ export const appRoles: Record<IAppRole, {name: string, color: string}> = {
 
 export const mainMenuList: IMenuItems[] = [
   {
+    label: 'Bosh sahifa',
+    key: ROUTES.home,
+    icon: <HomeOutlined />,
+    children: [
+      {
+        label: <><AppstoreAddOutlined /> Statistika</>,
+        key: ROUTES.home,
+      },
+    ],
+  },
+  {
     label: 'Mahsulotlar',
     key: ROUTES.products,
     icon: <CodeSandboxOutlined />,
-    roleKey: 'products',
     children: [
       {
         label: <><AppstoreAddOutlined /> Mahsulotlar ro&apos;yxati</>,
         key: ROUTES.productsList,
+        roleKey: IStaffPerKey.GET_PRODUCTS,
       },
       {
         label: <><ShoppingCartOutlined /> Sotuvlar ro&apos;yxati</>,
         key: ROUTES.productsOrder,
+        roleKey: IStaffPerKey.GET_ORDER,
       },
       {
         label: <><DownloadOutlined /> Tushurilgan mahsulotlar</>,
         key: ROUTES.productsIncome,
+        roleKey: IStaffPerKey.GET_INCOME_ORDERS,
       },
     ],
   },
