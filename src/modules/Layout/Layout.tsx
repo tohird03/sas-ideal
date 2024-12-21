@@ -14,15 +14,7 @@ import {Menu} from './Menu';
 export const Layout = () => {
   const isTablet = useMediaQuery('(max-width: 1200px)');
   const isMobile = useMediaQuery('(max-width: 800px)');
-  const {value, setValue, toggle} = useBoolean(isTablet);
-
-  useEffect(() => {
-    if (isTablet) {
-      setValue(true);
-    } else {
-      setValue(false);
-    }
-  }, [isTablet]);
+  const {value, setValue, toggle} = useBoolean(true);
 
   return (
     <AntdLayout className="layout" hasSider>

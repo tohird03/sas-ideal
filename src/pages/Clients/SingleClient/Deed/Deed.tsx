@@ -23,10 +23,6 @@ export const Deed = observer(() => {
       }),
   });
 
-  useEffect(() => () => {
-    singleClientStore.reset();
-  }, []);
-
   return (
     <main>
       <div className={cn('deed__head')}>

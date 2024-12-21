@@ -7,6 +7,7 @@ import { priceFormat } from '@/utils/priceFormat';
 import { dateFormatterWithStringMonth } from '@/utils/dateFormat';
 import { IClientsPayments } from '@/api/payment/types';
 import { getFullDateFormat } from '@/utils/getDateFormat';
+import { ClientNameLink } from '@/pages/ActionComponents/ClientNameLink';
 
 export const paymentsColumns: ColumnType<IClientsPayments>[] = [
   {
@@ -21,12 +22,7 @@ export const paymentsColumns: ColumnType<IClientsPayments>[] = [
     dataIndex: 'client',
     title: 'Mijoz',
     align: 'center',
-    render: (value, record) => (
-      <div>
-        <p style={{ margin: 0, fontWeight: 'bold' }}>{record?.client?.name}</p>
-        <i>+{record?.client?.phone}</i>
-      </div>
-    ),
+    render: (value, record) => <ClientNameLink client={record?.client} />,
   },
   {
     key: 'cash',

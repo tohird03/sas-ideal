@@ -10,7 +10,7 @@ import { CheckOutlined, DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-
 import { DataTable } from '@/components/Datatable/datatable';
 import { useMediaQuery } from '@/utils/mediaQuery';
 import dayjs from 'dayjs';
-import { clientsInfoStore } from '@/stores/clients';
+import { clientsInfoStore, singleClientStore } from '@/stores/clients';
 import { ordersApi } from '@/api/order';
 import styles from '../orders.scss';
 import {
@@ -59,16 +59,27 @@ export const AddEditModal = observer(() => {
   });
 
   const handleOpenPaymentModal = () => {
-    ordersStore.setIsOpenPaymentModal(true);
+    if (ordersStore?.order?.id) {
+      ordersStore.setOrderPayment({
+        payment: ordersStore?.order?.payment,
+        client: ordersStore?.order?.client,
+        orderId: ordersStore?.order?.id,
+      });
+      ordersStore.setIsOpenPaymentModal(true);
+    }
   };
 
   // SUBMIT FORMS
-  const handleSaveUnAccepted = () => {
-    // TODO
-  };
-
   const handleSaveAccepted = () => {
-    // TODO
+    ordersApi.updateOrder({
+      accepted: true,
+      id: ordersStore?.order?.id!,
+    })
+      .then(() => {
+        queryClient.invalidateQueries({ queryKey: ['getOrders'] });
+        handleModalClose();
+      })
+      .catch(addNotification);
   };
 
   const handleCreateOrUpdateOrder = () => {
@@ -97,6 +108,8 @@ export const AddEditModal = observer(() => {
             .finally(() => {
               setLoading(false);
             });
+
+          queryClient.invalidateQueries({ queryKey: ['getOrders'] });
         })
         .catch(addNotification);
 
@@ -105,7 +118,7 @@ export const AddEditModal = observer(() => {
 
     const createOrderData: IAddOrder = {
       clientId: values?.clientId,
-      createdAt: values?.createdAt,
+      sellingDate: values?.sellingDate,
       products: [addProducts],
     };
 
@@ -166,11 +179,14 @@ export const AddEditModal = observer(() => {
         card: ordersStore.order?.payment?.card,
         transfer: ordersStore.order?.payment?.transfer,
         other: ordersStore.order?.payment?.other,
-        createdAt: dayjs(ordersStore.order?.createdAt),
+        sellingDate: dayjs(ordersStore.order?.sellingDate),
         clientId: ordersStore?.order?.client?.id,
       });
+    } else if (singleClientStore.activeClient?.id) {
+      setSearchClients(singleClientStore.activeClient?.phone);
+      form.setFieldValue('clientId', singleClientStore.activeClient?.id);
     }
-  }, [ordersStore.order]);
+  }, [ordersStore.order, singleClientStore.activeClient]);
 
   const countColor = (count: number, min_amount: number): string =>
     count < 0 ? 'red' : count < min_amount ? 'orange' : 'green';
@@ -318,12 +334,24 @@ export const AddEditModal = observer(() => {
       open={ordersStore.isOpenAddEditNewOrderModal}
       title={(
         <div className={cn('order__add-products-header')}>
-          {ordersStore.singleOrder ? 'Sotuvni tahrirlash' : 'Yangi sotuv'}
+          <div style={{display: 'flex', alignItems: 'center', gap: '20px'}}>
+            {ordersStore?.order?.id ? 'Sotuvni tahrirlash' : 'Yangi sotuv'}
+            {ordersStore?.order?.id && (
+              <Button
+                type="primary"
+                style={{ backgroundColor: 'green' }}
+                onClick={handleSaveAccepted}
+              >
+                Saqlash
+              </Button>
+            )
+            }
+          </div>
           <div>
             <Tag
-              color={OrderStatusColor[String(ordersStore?.order?.accepted)]}
+              color={OrderStatusColor[String(ordersStore?.order?.accepted || false)]}
             >
-              {OrderStatus[String(ordersStore?.order?.accepted)]}
+              {OrderStatus[String(ordersStore?.order?.accepted || false)]}
             </Tag>
             <Button
               type="primary"
@@ -344,19 +372,12 @@ export const AddEditModal = observer(() => {
             <Button
               type="primary"
               style={{ backgroundColor: '#ff7700' }}
-              onClick={handleSaveUnAccepted}
+              onClick={handleModalClose}
             >
               Tasdiqlamasdan saqlash
             </Button>
           )
           }
-          <Button
-            type="primary"
-            style={{ backgroundColor: 'green' }}
-            onClick={handleSaveAccepted}
-          >
-            Saqlash
-          </Button>
         </div>
       }
     >
@@ -389,7 +410,7 @@ export const AddEditModal = observer(() => {
         <Form.Item
           label="Tushurish sanasi"
           rules={[{ required: true }]}
-          name="createdAt"
+          name="sellingDate"
           initialValue={dayjs()}
         >
           <DatePicker

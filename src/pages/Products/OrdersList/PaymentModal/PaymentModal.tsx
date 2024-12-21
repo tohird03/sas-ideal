@@ -7,11 +7,14 @@ import { IPaymentType } from '@/api/types';
 import { IAddEditPaymentParams } from '@/api/payment/types';
 import { paymentApi } from '@/api/payment';
 import { addNotification } from '@/utils';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const PaymentModal = observer(() => {
   const [form] = Form.useForm();
+  const queryClient = useQueryClient();
 
   const handleModalClose = () => {
+    ordersStore.setOrderPayment(null);
     ordersStore.setIsOpenPaymentModal(false);
   };
 
@@ -22,36 +25,48 @@ export const PaymentModal = observer(() => {
   const handleSubmitPayment = (values: IPaymentType) => {
     const orderPaymentData: IAddEditPaymentParams = {
       ...values,
-      orderId: ordersStore?.order?.id,
-      clientId: ordersStore?.order?.client?.id!,
+      orderId: ordersStore.orderPayment?.orderId,
+      clientId: ordersStore.orderPayment?.client?.id!,
     };
+
+    if (ordersStore.orderPayment?.payment) {
+      paymentApi.updatePayment({
+        ...orderPaymentData,
+        id: ordersStore.orderPayment?.payment?.id,
+      })
+        .then(res => {
+          ordersStore.getSingleOrder(ordersStore.orderPayment?.orderId!);
+          queryClient.invalidateQueries({ queryKey: ['getOrders'] });
+          handleModalClose();
+        })
+        .catch(addNotification);
+
+      return;
+    }
 
     paymentApi.addPayment(orderPaymentData)
       .then(res => {
-        ordersStore.getSingleOrder(ordersStore?.order?.id!);
+        ordersStore.getSingleOrder(ordersStore.orderPayment?.orderId!);
+        queryClient.invalidateQueries({ queryKey: ['getOrders'] });
         handleModalClose();
       })
       .catch(addNotification);
   };
 
   useEffect(() => {
-    if (!ordersStore?.order?.id) {
-      ordersStore.setIsOpenPaymentModal(false);
-    }
-
     form.setFieldsValue({
-      cash: ordersStore.order?.payment?.cash,
-      card: ordersStore.order?.payment?.card,
-      transfer: ordersStore.order?.payment?.transfer,
-      other: ordersStore.order?.payment?.other,
-      clientId: ordersStore?.order?.client?.id,
+      cash: ordersStore.orderPayment?.payment?.cash,
+      card: ordersStore.orderPayment?.payment?.card,
+      transfer: ordersStore.orderPayment?.payment?.transfer,
+      other: ordersStore.orderPayment?.payment?.other,
+      clientId: ordersStore.orderPayment?.client?.id,
     });
-  }, [ordersStore?.order]);
+  }, [ordersStore.orderPayment]);
 
   return (
     <Modal
       open={ordersStore.isOpenPaymentModal}
-      title={`To'lov, ${ordersStore?.order?.client?.name}`}
+      title={`To'lov, ${ordersStore.orderPayment?.client?.name}`}
       onCancel={handleModalClose}
       cancelText="Bekor qilish"
       centered
@@ -76,15 +91,15 @@ export const PaymentModal = observer(() => {
           label="Mijoz"
           rules={[{ required: true }]}
           name="clientId"
-          initialValue={ordersStore?.order?.client?.id}
+          initialValue={ordersStore.orderPayment?.client?.id}
         >
           <Select
             showSearch
             placeholder="Mijoz"
             optionFilterProp="children"
             options={[{
-              value: ordersStore?.order?.client?.id,
-              label: `${ordersStore?.order?.client?.name} ${ordersStore?.order?.client?.phone}`,
+              value: ordersStore.orderPayment?.client?.id,
+              label: `${ordersStore.orderPayment?.client?.name} ${ordersStore.orderPayment?.client?.phone}`,
             }]}
             allowClear
           />

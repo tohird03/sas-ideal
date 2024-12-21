@@ -23,7 +23,7 @@ export const deedColumns: ColumnType<IDeed>[] = [
     width: '100px',
     render: (value, record) => (
       record?.type === 'order'
-        ? getFullDateFormat(record?.createdAt)
+        ? getFullDateFormat(record?.sellingDate)
         : getFullDateFormat(record?.updatedAt)
     ),
   },

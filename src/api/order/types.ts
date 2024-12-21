@@ -11,7 +11,7 @@ export interface IOrder {
   sum: number;
   debt: number;
   accepted: boolean;
-  createdAt: string;
+  sellingDate: string;
   articl: number;
 }
 
@@ -19,6 +19,7 @@ export interface IGetOrdersParams extends IPagination {
   search?: string;
   startDate?: Date;
   endDate?: Date;
+  clientId?: string;
 }
 
 
@@ -39,21 +40,21 @@ export interface IAddOrderProducts {
 
 export interface IAddOrderModalForm extends IAddOrderProducts {
   clientId: string;
-  createdAt: string;
+  sellingDate: string;
 }
 
 export interface IAddOrder {
   clientId: string;
-  createdAt: string;
+  sellingDate: string;
   accepted?: boolean;
   products: IAddOrderProducts[];
 }
 
 export interface IUpdateOrder {
   id: string;
-  clientId: string;
-  createdAt: string;
-  accepted: boolean;
+  clientId?: string;
+  sellingDate?: string;
+  accepted?: boolean;
 }
 
 export interface IUploadOrderToExelParams extends IGetOrdersParams {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { observer } from 'mobx-react';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
@@ -14,10 +14,13 @@ import { ordersStore } from '@/stores/products';
 import dayjs from 'dayjs';
 import { OrderShowInfoModal } from './OrderShowInfoModal';
 import { PaymentModal } from './PaymentModal';
+import { singleClientStore } from '@/stores/clients';
+import { useParams } from 'react-router-dom';
 
 const cn = classNames.bind(styles);
 
 export const Orders = observer(() => {
+  const {clientId} = useParams();
   const isMobile = useMediaQuery('(max-width: 800px)');
 
   const { data: ordersData, isLoading: loading } = useQuery({
@@ -28,6 +31,7 @@ export const Orders = observer(() => {
       ordersStore.search,
       ordersStore.startDate,
       ordersStore.endDate,
+      clientId,
     ],
     queryFn: () =>
       ordersStore.getOrders({
@@ -36,6 +40,7 @@ export const Orders = observer(() => {
         search: ordersStore.search!,
         startDate: ordersStore.startDate!,
         endDate: ordersStore.endDate!,
+        clientId,
       }),
   });
 

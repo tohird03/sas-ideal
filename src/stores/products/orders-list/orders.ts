@@ -3,11 +3,13 @@ import { addNotification } from '@/utils';
 import { IAddOrder, IAddOrderProducts, IGetOrdersParams, IOrder } from '@/api/order/types';
 import { ordersApi } from '@/api/order';
 import dayjs from 'dayjs';
+import { IOrderPayment } from './types';
 
 class OrdersStore {
   #today = new Date();
 
   order: IOrder | null = null;
+  orderPayment: IOrderPayment | null = null;
   pageNumber = 1;
   pageSize = 10;
   search: string | null = null;
@@ -38,6 +40,10 @@ class OrdersStore {
 
   setOrder = (order: IOrder | null) => {
     this.order = order;
+  };
+
+  setOrderPayment = (orderPayment: IOrderPayment | null) => {
+    this.orderPayment = orderPayment;
   };
 
   setPageNumber = (pageNumber: number) => {

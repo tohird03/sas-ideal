@@ -11,11 +11,13 @@ import {AddEditModal} from './AddEditModal';
 import styles from './payments.scss';
 import {paymentsColumns} from './constants';
 import { singleClientStore } from '@/stores/clients';
+import { useParams } from 'react-router-dom';
 
 const cn = classNames.bind(styles);
 
 export const Payments = observer(() => {
   const isMobile = useMediaQuery('(max-width: 800px)');
+  const {clientId} = useParams();
 
   const {data: clientsInfoData, isLoading: loading} = useQuery({
     queryKey: [
@@ -23,12 +25,14 @@ export const Payments = observer(() => {
       singleClientStore.paymentPage,
       singleClientStore.paymentPageSize,
       singleClientStore.paymentSearch,
+      singleClientStore.activeClient?.id,
     ],
     queryFn: () =>
       singleClientStore.getSingleClientsPayments({
         pageNumber: singleClientStore.paymentPage,
         pageSize: singleClientStore.paymentPageSize,
         search: singleClientStore.paymentSearch!,
+        clientId,
       }),
   });
 
@@ -44,10 +48,6 @@ export const Payments = observer(() => {
     singleClientStore.setPaymentPage(page);
     singleClientStore.setPaymentPageSize(pageSize!);
   };
-
-  useEffect(() => () => {
-    singleClientStore.reset();
-  }, []);
 
   return (
     <main>

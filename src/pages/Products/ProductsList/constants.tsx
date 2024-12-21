@@ -2,6 +2,7 @@ import React from 'react';
 import {ColumnType} from 'antd/es/table';
 import {Action} from './Action';
 import { IProducts } from '@/api/product/types';
+import { getFullDateFormat } from '@/utils/getDateFormat';
 
 export const productsListColumn: ColumnType<IProducts>[] = [
   {
@@ -63,6 +64,13 @@ export const productsListColumn: ColumnType<IProducts>[] = [
 
       return `${totalSellingPrice}$`;
     },
+  },
+  {
+    key: 'createdAt',
+    dataIndex: 'createdAt',
+    title: 'Yaratilgan vaqti',
+    align: 'center',
+    render: (value, record) => getFullDateFormat(record?.createdAt),
   },
   {
     key: 'action',

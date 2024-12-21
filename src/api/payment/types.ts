@@ -13,6 +13,7 @@ export interface IGetClientsPaymentsParams extends IPagination {
   search?: string;
   startDate?: string;
   endDate?: string;
+  clientId?: string;
 }
 
 export interface IAddEditPaymentParams {

@@ -9,6 +9,7 @@ import { getFullDateFormat } from '@/utils/getDateFormat';
 import { priceFormat } from '@/utils/priceFormat';
 import { dateFormatterWithStringMonth } from '@/utils/dateFormat';
 import { ClientNameLink } from '@/pages/ActionComponents/ClientNameLink';
+import { PaymentStatus } from './PaymentStatus';
 
 export const ordersColumns: ColumnType<IOrder>[] = [
   {
@@ -18,14 +19,14 @@ export const ordersColumns: ColumnType<IOrder>[] = [
     align: 'center',
     render: (value, record, index) => index + 1,
   },
-  {
-    key: 'articl',
-    dataIndex: 'articl',
-    title: 'Sotuv raqami',
-    align: 'center',
-    width: '150px',
-    render: (value, record) => record?.articl,
-  },
+  // {
+  //   key: 'articl',
+  //   dataIndex: 'articl',
+  //   title: 'Sotuv raqami',
+  //   align: 'center',
+  //   width: '150px',
+  //   render: (value, record) => record?.articl,
+  // },
   {
     key: 'client',
     dataIndex: 'client',
@@ -45,6 +46,13 @@ export const ordersColumns: ColumnType<IOrder>[] = [
         {OrderStatus[String(record?.accepted)]}
       </Tag>
     ),
+  },
+  {
+    key: 'payment',
+    dataIndex: 'payment',
+    title: 'To\'lov holati',
+    align: 'center',
+    render: (value, record) => <PaymentStatus order={record} />,
   },
   {
     key: 'seller',
@@ -75,6 +83,38 @@ export const ordersColumns: ColumnType<IOrder>[] = [
     render: (value, record) => `${priceFormat(record?.payment?.totalPay)}$`,
   },
   {
+    key: 'cash',
+    dataIndex: 'cash',
+    title: 'Naqd to\'lov',
+    align: 'center',
+    width: '150px',
+    render: (value, record) => `${priceFormat(record?.payment?.cash)}$`,
+  },
+  {
+    key: 'card',
+    dataIndex: 'card',
+    title: 'Bank kartasi orqali to\'lov',
+    align: 'center',
+    width: '150px',
+    render: (value, record) => `${priceFormat(record?.payment?.card)}$`,
+  },
+  {
+    key: 'transfer',
+    dataIndex: 'transfer',
+    title: 'Bank o\'tkazmasi orqali to\'lov',
+    align: 'center',
+    width: '150px',
+    render: (value, record) => `${priceFormat(record?.payment?.transfer)}$`,
+  },
+  {
+    key: 'other',
+    dataIndex: 'other',
+    title: 'Boshqa usullar bilan to\'lov',
+    align: 'center',
+    width: '150px',
+    render: (value, record) => `${priceFormat(record?.payment?.other)}$`,
+  },
+  {
     key: 'debt',
     dataIndex: 'debt',
     title: 'Qarzga',
@@ -88,7 +128,7 @@ export const ordersColumns: ColumnType<IOrder>[] = [
     title: 'Sotilgan vaqti',
     align: 'center',
     width: '150px',
-    render: (value, record) => dateFormatterWithStringMonth(record?.createdAt),
+    render: (value, record) => getFullDateFormat(record?.sellingDate),
   },
   {
     key: 'action',
@@ -163,7 +203,7 @@ export const ordersInfoColumns: ColumnType<IOrder>[] = [
     title: 'Sotilgan vaqti',
     align: 'center',
     width: '150px',
-    render: (value, record) => getFullDateFormat(record?.createdAt),
+    render: (value, record) => getFullDateFormat(record?.sellingDate),
   },
 ];
 

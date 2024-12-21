@@ -14,6 +14,7 @@ import {
   ProductsList,
   SingleClient,
   Staffs,
+  Statistic,
   SupplierInfo,
 } from './lazy';
 import {ProtectedRoutes} from './ProtectedRoutes';
@@ -34,7 +35,7 @@ export const Router = ({isAuth}: Props) => useRoutes([
         children: [
           // ADMIN
           {
-            element: <Suspense fallback={<Loading />}><MyProfileHome /></Suspense>,
+            element: <Suspense fallback={<Loading />}><Statistic /></Suspense>,
             path: ROUTES.home,
             index: true,
           },

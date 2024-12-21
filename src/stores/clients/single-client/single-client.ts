@@ -72,6 +72,7 @@ class SingleClientStore {
       .catch(addNotification);
 
   reset() {
+    this.activeClient = null;
     this.activeTabs = ISingleClientTabs.ORDER;
   }
 }

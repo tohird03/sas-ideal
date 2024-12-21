@@ -10,6 +10,7 @@ export interface IProducts {
   name: string;
   count: number;
   min_amount: number;
+  createdAt: string;
   // Sotib olingan narx
   cost: number;
   // Sotuvda sotiladigan narxi
