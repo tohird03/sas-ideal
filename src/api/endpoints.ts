@@ -21,6 +21,7 @@ export enum Endpoints {
   // PRODUCTS
   products = '/product',
   productsIncomeOrder = '/incomingOrder',
+  productsIncomeOrderProduct = '/incomingProduct',
   productsOrder = '/Order',
   productsOrderStatistic = '/Order/statistica',
   productsOrderProduct = '/orderProduct',
@@ -28,6 +29,7 @@ export enum Endpoints {
 
   // PAYMENT
   payment = '/payment',
+  incomePayment = '/incomingOrderPayment',
 
   // ROLES
   role = '/role',

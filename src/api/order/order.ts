@@ -2,7 +2,17 @@ import { AxiosResponse } from 'axios';
 import { Endpoints, umsStages } from '../endpoints';
 import { INetworkConfig, Instance } from '../instance';
 import { IResponse } from '../types';
-import { IAddOrder, IGetOrdersParams, IOrder, IOrderProductAdd, IOrderStatistic, IUpdateOrder, IUpdateOrderProduct, IUploadOrderToExelParams } from './types';
+import {
+  IAddOrder,
+  IGetOrdersParams,
+  IOrder,
+  IOrderProductAdd,
+  IOrderStatistic,
+  ITotalOrderPaymentCalc,
+  IUpdateOrder,
+  IUpdateOrderProduct,
+  IUploadOrderToExelParams,
+} from './types';
 
 const config: INetworkConfig = {
   baseURL: Endpoints.Base,
@@ -15,7 +25,7 @@ class OrdersApi extends Instance {
     super(config);
   }
 
-  getOrders = (params: IGetOrdersParams): Promise<IResponse<IOrder[]>> =>
+  getOrders = (params: IGetOrdersParams): Promise<IResponse<IOrder[], ITotalOrderPaymentCalc>> =>
     this.get(Endpoints.productsOrder, { params });
 
   getSingleOrder = (orderId: string): Promise<IOrder> =>

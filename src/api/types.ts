@@ -1,10 +1,9 @@
-import { TagProps } from 'antd';
-
-export interface IResponse<TBody> {
+export interface IResponse<TBody, TTotalCalc = any> {
   totalCount: number;
   pageNumber: number;
   pageSize: number;
   data: TBody;
+  totalCalc?: TTotalCalc;
 }
 
 export interface IOneElement {

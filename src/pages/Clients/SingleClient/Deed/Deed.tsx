@@ -44,10 +44,10 @@ export const Deed = observer(() => {
                 Jami
               </Table.Summary.Cell>
               <Table.Summary.Cell index={2}>
-                10$
+                <div style={{ textAlign: 'center' }}>10;</div>
               </Table.Summary.Cell>
               <Table.Summary.Cell index={2}>
-                113$
+                <div style={{ textAlign: 'center' }}>10;</div>
               </Table.Summary.Cell>
             </Table.Summary.Row>
             <Table.Summary.Row>
@@ -55,7 +55,7 @@ export const Deed = observer(() => {
                 Umumiy farq
               </Table.Summary.Cell>
               <Table.Summary.Cell colSpan={2} index={2}>
-                103$
+                <div style={{ textAlign: 'center' }}>10;</div>
               </Table.Summary.Cell>
             </Table.Summary.Row>
           </>

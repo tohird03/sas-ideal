@@ -1,46 +1,49 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { observer } from 'mobx-react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Alert, Button, DatePicker, Form, InputNumber, Modal, Select, Spin, notification } from 'antd';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { Alert, Button, DatePicker, Form, InputNumber, Modal, Popconfirm, Select, Spin, Tag } from 'antd';
 import classNames from 'classnames';
 import { addNotification } from '@/utils';
-import { IAddClientInfo, IUpdateUser, clientsInfoApi } from '@/api/clients';
 import { incomeProductsStore, productsListStore } from '@/stores/products';
-import { supplierInfoStore } from '@/stores/supplier';
-import styles from '../income-products.scss';
 import { priceFormat } from '@/utils/priceFormat';
-import { IAddEditIncomeOrder, IAddIncomeOrderForm, IAddIncomeOrderProducts, IUpdateIncomeOrder } from '@/api/income-products/types';
-import { PlusOutlined } from '@ant-design/icons';
+import { CheckOutlined, DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { DataTable } from '@/components/Datatable/datatable';
-import { addIncomeOrderProductsColumns } from './constants';
 import { useMediaQuery } from '@/utils/mediaQuery';
-import { incomeProductsApi } from '@/api/income-products';
 import dayjs from 'dayjs';
+import { clientsInfoStore, singleClientStore } from '@/stores/clients';
+import { ordersApi } from '@/api/order';
+import styles from '../income-products.scss';
+import {
+  IOrderProducts,
+} from '@/api/order/types';
+import { ColumnType } from 'antd/es/table';
+import { incomeProductsApi } from '@/api/income-products';
+import { IAddEditIncomeOrder, IAddIncomeOrderForm, IAddIncomeOrderProducts, IIncomeOrderProductAdd, IIncomeProduct } from '@/api/income-products/types';
+import { staffsStore } from '@/stores/workers';
+import { supplierInfoStore } from '@/stores/supplier';
 
 const cn = classNames.bind(styles);
 
 const filterOption = (input: string, option?: { label: string, value: string }) =>
   (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
 
-
 export const AddEditModal = observer(() => {
   const [form] = Form.useForm();
-  const [formProduct] = Form.useForm();
   const queryClient = useQueryClient();
   const isMobile = useMediaQuery('(max-width: 800px)');
   const [loading, setLoading] = useState(false);
-  const [searchSupplierOption, setSearchSupplierOption] = useState<string | null>(null);
+  const [searchClients, setSearchClients] = useState<string | null>(null);
   const [searchProducts, setSearchProducts] = useState<string | null>(null);
-  const [updateOrderOldProducts, setUpdateOrderOldProducts] = useState<IAddIncomeOrderProducts[]>([]);
+  const [isUpdatingProduct, setIsUpdatingProduct] = useState<IIncomeProduct | null>(null);
 
   // GET DATAS
-  const { data: supplierData, isLoading: loadingSupplier } = useQuery({
-    queryKey: ['getSuppliers', searchSupplierOption],
+  const { data: supplierData, isLoading: loadingClients } = useQuery({
+    queryKey: ['getSuppliers', searchClients],
     queryFn: () =>
       supplierInfoStore.getSuppliers({
         pageNumber: 1,
         pageSize: 15,
-        search: searchSupplierOption!,
+        search: searchClients!,
       }),
   });
 
@@ -54,134 +57,94 @@ export const AddEditModal = observer(() => {
       }),
   });
 
-  const { mutate: createNewIncomeOrder } =
-    useMutation({
-      mutationKey: ['createNewIncomeOrder'],
-      mutationFn: (params: IAddEditIncomeOrder) => incomeProductsApi.addNewIncomeOrder(params),
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['getIncomeOrders'] });
-        handleModalClose();
-      },
-      onError: addNotification,
-      onSettled: async () => {
-        setLoading(false);
-      },
-    });
-
-  const { mutate: updateIncomeOrder } =
-    useMutation({
-      mutationKey: ['updateIncomeOrder'],
-      mutationFn: (params: IUpdateIncomeOrder) => incomeProductsApi.updateIncomeOrder(params),
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['getIncomeOrders'] });
-        handleModalClose();
-      },
-      onError: addNotification,
-      onSettled: async () => {
-        setLoading(false);
-      },
-    });
+  const handleOpenPaymentModal = () => {
+    if (incomeProductsStore?.incomeOrder?.id) {
+      incomeProductsStore.setIncomeOrderPayment({
+        payment: incomeProductsStore?.incomeOrder?.payment,
+        supplierId: incomeProductsStore?.incomeOrder?.supplier?.id,
+        orderId: incomeProductsStore?.incomeOrder?.id,
+      });
+      incomeProductsStore.setIsOpenIncomePaymentModal(true);
+    }
+  };
 
   // SUBMIT FORMS
-  const handleModalOk = () => {
+  const handleSaveAccepted = () => {
+    incomeProductsApi.updateIncomeOrder({
+      id: incomeProductsStore?.incomeOrder?.id!,
+    })
+      .then(() => {
+        queryClient.invalidateQueries({ queryKey: ['getIncomeOrders'] });
+        handleModalClose();
+      })
+      .catch(addNotification);
+  };
+
+  const handleCreateOrUpdateOrder = () => {
     form.submit();
   };
 
-  const handleSubmitProductModal = () => {
-    formProduct.submit();
-  };
+  const handleSubmitProduct = (values: IAddIncomeOrderForm) => {
+    setLoading(true);
 
-  const handleSubmit = (values: IAddIncomeOrderForm) => {
-    if (incomeProductsStore.addIncomeProducts?.length === 0) {
-      notification.error({
-        message: 'Mahsulot qo\'shing!',
-        placement: 'topRight',
-      });
+    const addProducts: IAddIncomeOrderProducts = {
+      product_id: values?.product_id,
+      count: values?.count,
+      cost: values?.cost,
+      selling_price: values?.selling_price,
+    };
 
-      return;
-    }
-
-    if (incomeProductsStore?.singleIncomeOrder) {
-      const addProducts = incomeProductsStore.addIncomeProducts?.filter(allProduct => {
-        const findOldProduct = updateOrderOldProducts?.find(oldProduct => oldProduct?.product_id === allProduct?.product_id);
-
-        if (!findOldProduct) {
-          return allProduct;
-        }
-      });
-
-      const removeProducts = updateOrderOldProducts?.filter(oldProduct => {
-        const findOldProduct = incomeProductsStore.addIncomeProducts?.find(allProduct => allProduct?.product_id === oldProduct?.product_id);
-
-        if (!findOldProduct) {
-          return oldProduct;
-        }
-      })?.map(product => ({
-        id: product?.product_id,
-        product_id: product?.productOldId,
-        count: product?.count,
-        cost: product?.cost,
-      }));
-
-      const valueControl: IUpdateIncomeOrder = {
-        id: incomeProductsStore?.singleIncomeOrder?.id,
-        supplierId: values?.supplierId,
-        payment: {
-          card: values?.card,
-          cash: values?.cash,
-          transfer: values?.transfer,
-          other: values?.other,
-        },
-        createdAt: values?.createdAt,
-        addProducts,
-        removeProducts,
+    if (incomeProductsStore?.incomeOrder) {
+      const addOrderProduct: IIncomeOrderProductAdd = {
+        ...addProducts,
+        incomingOrderId: incomeProductsStore?.incomeOrder?.id,
       };
 
-      updateIncomeOrder(valueControl);
+      incomeProductsApi.orderProductAdd(addOrderProduct)
+        .then(() => {
+          form.resetFields(['product_id', 'cost', 'count']);
+          incomeProductsStore.getSingleIncomeOrder(incomeProductsStore.incomeOrder?.id!);
+          queryClient.invalidateQueries({ queryKey: ['getIncomeOrders'] });
+        })
+        .catch(addNotification)
+        .finally(() => {
+          setLoading(false);
+        });
 
       return;
     }
 
-    const valueControl: IAddEditIncomeOrder = {
+    const createOrderData: IAddEditIncomeOrder = {
       supplierId: values?.supplierId,
-      accepted: true,
-      payment: {
-        card: values?.card,
-        cash: values?.cash,
-        transfer: values?.transfer,
-        other: values?.other,
-      },
-      createdAt: values?.createdAt,
-      products: incomeProductsStore.addIncomeProducts,
+      sellingDate: values?.sellingDate,
+      products: [addProducts],
     };
 
-    createNewIncomeOrder(valueControl);
-  };
-
-  const handleSubmitProduct = (values: IAddIncomeOrderProducts) => {
-    const findProduct = productsData?.data?.find(product => product?.id === values?.product_id);
-
-    const newOrderProduct: IAddIncomeOrderProducts = {
-      ...values,
-      product_name: findProduct?.name!,
-    };
-
-    incomeProductsStore.setAddIncomeProducts([
-      ...incomeProductsStore.addIncomeProducts,
-      newOrderProduct,
-    ]);
-
-    formProduct.resetFields();
+    incomeProductsApi.addNewIncomeOrder(createOrderData)
+      .then(res => {
+        form.resetFields(['product_id', 'cost', 'count', 'selling_price']);
+        if (res?.id) {
+          incomeProductsStore.getSingleIncomeOrder(res?.id!);
+        } else {
+          incomeProductsStore.setIncomeOrder(res);
+        }
+        queryClient.invalidateQueries({ queryKey: ['getIncomeOrders'] });
+      })
+      .catch(addNotification)
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const handleModalClose = () => {
     incomeProductsStore.setsingleIncomeOrder(null);
+    incomeProductsStore.setIncomeOrder(null);
     incomeProductsStore.setIsOpenAddEditIncomeProductsModal(false);
   };
 
   // SEARCH OPTIONS
   const handleSearchSupplier = (value: string) => {
-    setSearchSupplierOption(value);
+    setSearchClients(value);
   };
 
   const handleSearchProducts = (value: string) => {
@@ -191,7 +154,12 @@ export const AddEditModal = observer(() => {
   const handleChangeProduct = (productId: string) => {
     const findProduct = productsData?.data?.find(product => product?.id === productId);
 
-    formProduct.setFieldValue('cost', findProduct?.cost);
+    form.setFieldValue('cost', findProduct?.cost);
+    form.setFieldValue('selling_price', findProduct?.selling_price);
+  };
+
+  const handleClearClient = () => {
+    setSearchClients(null);
   };
 
   const supplierOptions = useMemo(() => (
@@ -202,62 +170,270 @@ export const AddEditModal = observer(() => {
   ), [supplierData]);
 
   useEffect(() => {
-    if (incomeProductsStore.singleIncomeOrder) {
-      form.setFieldsValue({
-        ...incomeProductsStore.singleIncomeOrder,
-      });
-    }
-  }, [incomeProductsStore.singleIncomeOrder]);
-
-  useEffect(() => {
-    if (incomeProductsStore.singleIncomeOrder) {
-      setSearchSupplierOption(incomeProductsStore?.singleIncomeOrder?.supplier?.phone);
+    if (incomeProductsStore.singleIncomeOrder && incomeProductsStore?.incomeOrder) {
+      setSearchClients(incomeProductsStore?.incomeOrder?.supplier?.phone!);
 
       form.setFieldsValue({
-        cash: incomeProductsStore.singleIncomeOrder?.payment?.cash,
-        card: incomeProductsStore.singleIncomeOrder?.payment?.card,
-        transfer: incomeProductsStore.singleIncomeOrder?.payment?.transfer,
-        other: incomeProductsStore.singleIncomeOrder?.payment?.other,
-        createdAt: dayjs(incomeProductsStore.singleIncomeOrder?.createdAt),
-        supplierId: incomeProductsStore?.singleIncomeOrder?.supplier?.id,
+        cash: incomeProductsStore.incomeOrder?.payment?.cash,
+        card: incomeProductsStore.incomeOrder?.payment?.card,
+        transfer: incomeProductsStore.incomeOrder?.payment?.transfer,
+        other: incomeProductsStore.incomeOrder?.payment?.other,
+        sellingDate: dayjs(incomeProductsStore.incomeOrder?.sellingDate),
+        supplierId: incomeProductsStore?.incomeOrder?.supplier?.id,
       });
-
-      const orderProducts: IAddIncomeOrderProducts[] = incomeProductsStore?.singleIncomeOrder?.incomingProducts?.map(product => ({
-        product_name: product?.product?.name,
-        product_id: product?.id,
-        count: product?.count,
-        cost: product?.cost,
-        productOldId: product?.product?.id,
-      }));
-
-      setUpdateOrderOldProducts(orderProducts);
-      incomeProductsStore.setAddIncomeProducts(orderProducts);
+    } else if (singleClientStore.activeClient?.id) {
+      setSearchClients(singleClientStore.activeClient?.phone);
+      form.setFieldValue('supplierId', singleClientStore.activeClient?.id);
     }
-  }, [incomeProductsStore.singleIncomeOrder]);
+  }, [incomeProductsStore.incomeOrder, singleClientStore.activeClient]);
 
   const countColor = (count: number, min_amount: number): string =>
     count < 0 ? 'red' : count < min_amount ? 'orange' : 'green';
 
+  // TABLE ACTIONS
+  const handleEditProduct = (orderProduct: IIncomeProduct) => {
+    setIsUpdatingProduct(orderProduct);
+  };
+
+  const handleDeleteProduct = (orderId: string) => {
+    ordersApi.deleteOrderProduct(orderId)
+      .then(() => {
+        incomeProductsStore.getSingleIncomeOrder(incomeProductsStore.incomeOrder?.id!)
+          .finally(() => {
+            setLoading(false);
+          });
+      })
+      .catch(addNotification);
+  };
+
+  const handleChangePrice = (value: number | null) => {
+    setIsUpdatingProduct({ ...isUpdatingProduct!, cost: value || 0 });
+  };
+
+  const handleChangeCount = (value: number | null) => {
+    setIsUpdatingProduct({ ...isUpdatingProduct!, count: value || 0 });
+  };
+
+  const handleChangeSellingPrice = (value: number | null) => {
+    setIsUpdatingProduct({ ...isUpdatingProduct!, selling_price: value || 0 });
+  };
+
+  const handleSaveAndUpdateOrderProduct = () => {
+    if (isUpdatingProduct) {
+      incomeProductsApi.updateOrderProduct({
+        id: isUpdatingProduct?.id,
+        cost: isUpdatingProduct?.cost,
+        count: isUpdatingProduct?.count,
+        selling_price: isUpdatingProduct?.selling_price,
+      })
+        .then(res => {
+          if (res) {
+            incomeProductsStore.getSingleIncomeOrder(incomeProductsStore.incomeOrder?.id!)
+              .then(() => {
+                setIsUpdatingProduct(null);
+              })
+              .finally(() => {
+                setLoading(false);
+              });
+            addNotification('Mahsulot muvaffaqiyatli o\'zgartildi!');
+          }
+        })
+        .catch(addNotification);
+    }
+  };
+
+  const addOrderProductsColumns: ColumnType<IIncomeProduct>[] = [
+    {
+      key: 'index',
+      dataIndex: 'index',
+      title: '#',
+      align: 'center',
+      render: (value, record, index) => index + 1,
+    },
+    {
+      key: 'product_name',
+      dataIndex: 'product_name',
+      title: 'Mahsulot nomi',
+      align: 'center',
+      render: (value, record) => record?.product?.name,
+    },
+    {
+      key: 'count',
+      dataIndex: 'count',
+      title: 'Soni',
+      align: 'center',
+      render: (value, record) => (
+        isUpdatingProduct?.id === record?.id ? (
+          <InputNumber
+            defaultValue={record?.count}
+            placeholder="Soni"
+            disabled={isUpdatingProduct?.id !== record?.id}
+            onChange={handleChangeCount}
+          />
+        ) : <span>{record?.count}</span>
+      ),
+    },
+    {
+      key: 'cost',
+      dataIndex: 'cost',
+      title: 'Narxi',
+      align: 'center',
+      render: (value, record) => (
+        isUpdatingProduct?.id === record?.id ? (
+          <InputNumber
+            defaultValue={record?.cost}
+            placeholder="Narxi"
+            disabled={isUpdatingProduct?.id !== record?.id}
+            onChange={handleChangePrice}
+          />
+        ) : <span>{record?.cost}$</span>
+      ),
+    },
+    {
+      key: 'cost',
+      dataIndex: 'cost',
+      title: 'Sotish narxi',
+      align: 'center',
+      render: (value, record) => (
+        isUpdatingProduct?.id === record?.id ? (
+          <InputNumber
+            defaultValue={record?.selling_price}
+            placeholder="Sotish narxi"
+            disabled={isUpdatingProduct?.id !== record?.id}
+            onChange={handleChangeSellingPrice}
+          />
+        ) : <span>{record?.selling_price}$</span>
+      ),
+    },
+    {
+      key: 'totalCost',
+      dataIndex: 'totalCost',
+      title: 'Jami narxi',
+      align: 'center',
+      render: (value, record) => `${record?.cost * record?.count}$`,
+    },
+    {
+      key: 'action',
+      dataIndex: 'action',
+      title: 'Action',
+      align: 'center',
+      render: (value, record) => (
+        <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', alignItems: 'center' }}>
+          {isUpdatingProduct?.id === record?.id ? (
+            <Button
+              onClick={handleSaveAndUpdateOrderProduct}
+              type="primary"
+              style={{ backgroundColor: 'green' }}
+              icon={<CheckOutlined />}
+            />
+          ) : (
+            <Button
+              onClick={handleEditProduct.bind(null, record)}
+              type="primary"
+              icon={<EditOutlined />}
+            />
+          )
+          }
+          <Popconfirm
+            title="Mahsulotni o'chirish"
+            description="Rostdan ham bu mahsulotni o'chirishni xohlaysizmi?"
+            onConfirm={handleDeleteProduct.bind(null, record?.id)}
+            okText="Ha"
+            okButtonProps={{ style: { background: 'red' } }}
+            cancelText="Yo'q"
+          >
+            <Button type="primary" icon={<DeleteOutlined />} danger />
+          </Popconfirm>
+        </div>
+      ),
+    },
+  ];
+
   return (
     <Modal
       open={incomeProductsStore.isOpenAddEditIncomeProductsModal}
-      title={incomeProductsStore.singleIncomeOrder ? 'Tushurilgan mahsulotni tahrirlash' : 'Yangi mahsulot tushurish'}
+      title={(
+        <div className={cn('order__add-products-header')}>
+          <div style={{display: 'flex', alignItems: 'center', gap: '20px'}}>
+            {incomeProductsStore?.incomeOrder?.id ? 'Sotuvni tahrirlash' : 'Yangi sotuv'}
+            {incomeProductsStore?.incomeOrder?.id && (
+              <Button
+                type="primary"
+                style={{ backgroundColor: 'green' }}
+                onClick={handleSaveAccepted}
+              >
+                To&lsquo;lovsiz saqlash
+              </Button>
+            )
+            }
+          </div>
+          <div>
+            <Button
+              type="primary"
+              onClick={handleOpenPaymentModal}
+            >
+              Yetkazib beruvchiga to&lsquo;lov
+            </Button>
+          </div>
+        </div>
+      )}
       onCancel={handleModalClose}
-      onOk={handleModalOk}
-      okText={incomeProductsStore.singleIncomeOrder ? 'Tushurilgan mahsulotni tahrirlash' : 'Yangi mahsulot tushurish'}
       cancelText="Bekor qilish"
       centered
-      confirmLoading={loading}
-      width={900}
+      width={'95%'}
+      footer={
+        <div>
+          {!incomeProductsStore?.incomeOrder?.accepted && (
+            <Button
+              type="primary"
+              style={{ backgroundColor: '#ff7700' }}
+              onClick={handleModalClose}
+            >
+              Tasdiqlamasdan saqlash
+            </Button>
+          )
+          }
+        </div>
+      }
     >
       {/* PRODUCTS FORM */}
       <Form
-        form={formProduct}
+        form={form}
         onFinish={handleSubmitProduct}
         layout="vertical"
         autoComplete="off"
-        className="income-order__add-products-form"
+        className="order__add-products-form"
       >
+        <Form.Item
+          label="Yetkazib beruvchi"
+          rules={[{ required: true }]}
+          name="supplierId"
+        >
+          <Select
+            showSearch
+            placeholder="Yetkazib beruvchi"
+            loading={loadingClients}
+            optionFilterProp="children"
+            notFoundContent={loadingClients ? <Spin style={{ margin: '10px' }} /> : null}
+            filterOption={filterOption}
+            onSearch={handleSearchSupplier}
+            onClear={handleClearClient}
+            options={supplierOptions}
+            allowClear
+          />
+        </Form.Item>
+        <Form.Item
+          label="Sanasi"
+          rules={[{ required: true }]}
+          name="sellingDate"
+          initialValue={dayjs()}
+        >
+          <DatePicker
+            defaultValue={dayjs()}
+            format="DD.MM.YYYY"
+            style={{ width: '100%' }}
+          />
+        </Form.Item>
         <Form.Item
           label="Mahsulot"
           rules={[{ required: true }]}
@@ -302,9 +478,21 @@ export const AddEditModal = observer(() => {
           </Select>
         </Form.Item>
         <Form.Item
-          label="Sotib olingan narxi"
+          label="Sotib olish narxi"
           rules={[{ required: true }]}
           name="cost"
+          initialValue={0}
+        >
+          <InputNumber
+            placeholder="Sotib olingan narxi"
+            style={{ width: '100%' }}
+            formatter={(value) => priceFormat(value!)}
+          />
+        </Form.Item>
+        <Form.Item
+          label="Sotish narxi"
+          rules={[{ required: true }]}
+          name="selling_price"
           initialValue={0}
         >
           <InputNumber
@@ -325,9 +513,10 @@ export const AddEditModal = observer(() => {
           />
         </Form.Item>
         <Button
-          onClick={handleSubmitProductModal}
+          onClick={handleCreateOrUpdateOrder}
           type="primary"
           icon={<PlusOutlined />}
+          loading={loading}
         >
           Qo&apos;shish
         </Button>
@@ -335,106 +524,18 @@ export const AddEditModal = observer(() => {
 
       {/* PRODUCTS SHOW LIST */}
       <DataTable
-        columns={addIncomeOrderProductsColumns}
-        data={incomeProductsStore?.addIncomeProducts || []}
+        columns={addOrderProductsColumns}
+        data={incomeProductsStore?.incomeOrder?.incomingProducts || []}
         isMobile={isMobile}
         pagination={false}
         scroll={{ y: 300 }}
       />
 
-      <div className="income-order__add-products-form-pay-info">
+      {/* <div className="income-order__add-products-form-pay-info">
         <Alert type="info" message={`Umumiy narx: ${100}$`} />
         <Alert type="error" message={`Qarzga: ${100}$`} />
         <Alert type="warning" message={`Qaytim: ${100}$`} />
-      </div>
-
-      {/* ORDER OTHER INFO */}
-      <Form
-        form={form}
-        onFinish={handleSubmit}
-        layout="vertical"
-        autoComplete="off"
-        className="income-order__add-products-form-info"
-      >
-        <Form.Item
-          label="Yetkazib beruvchi"
-          rules={[{ required: true }]}
-          name="supplierId"
-        >
-          <Select
-            showSearch
-            placeholder="Yetkazib beruvchi"
-            loading={loadingSupplier}
-            optionFilterProp="children"
-            notFoundContent={loadingSupplier ? <Spin style={{ margin: '10px' }} /> : null}
-            filterOption={filterOption}
-            onSearch={handleSearchSupplier}
-            options={supplierOptions}
-          />
-        </Form.Item>
-        <Form.Item
-          label="Tushurish sanasi"
-          rules={[{ required: true }]}
-          name="createdAt"
-          initialValue={dayjs()}
-        >
-          <DatePicker
-            defaultValue={dayjs()}
-            format="DD.MM.YYYY"
-            style={{ width: '100%' }}
-          />
-        </Form.Item>
-        <Form.Item
-          label="Naqd to'lov"
-          rules={[{ required: true }]}
-          name="cash"
-          initialValue={0}
-        >
-          <InputNumber
-            placeholder="Naqd to'lov"
-            defaultValue={0}
-            style={{ width: '100%' }}
-            formatter={(value) => priceFormat(value!)}
-          />
-        </Form.Item>
-        <Form.Item
-          label="Bank kartasi orqali to'lov"
-          rules={[{ required: true }]}
-          name="card"
-          initialValue={0}
-        >
-          <InputNumber
-            placeholder="Bank kartasi orqali to'lov"
-            defaultValue={0}
-            style={{ width: '100%' }}
-            formatter={(value) => priceFormat(value!)}
-          />
-        </Form.Item>
-        <Form.Item
-          label="Bank o'tkazmasi orqali to'lov"
-          rules={[{ required: true }]}
-          name="transfer"
-          initialValue={0}
-        >
-          <InputNumber
-            placeholder="Bank o'tkazmasi orqali to'lov"
-            style={{ width: '100%' }}
-            formatter={(value) => priceFormat(value!)}
-          />
-        </Form.Item>
-        <Form.Item
-          label="Boshqa usullar bilan to'lov"
-          rules={[{ required: true }]}
-          name="other"
-          initialValue={0}
-        >
-          <InputNumber
-            placeholder="Boshqa usullar bilan to'lov"
-            style={{ width: '100%' }}
-            formatter={(value) => priceFormat(value!)}
-          />
-        </Form.Item>
-      </Form>
+      </div> */}
     </Modal>
   );
 });

@@ -3,7 +3,7 @@ import { ColumnType } from 'antd/es/table';
 import { IClientsInfo, ISupplierInfo } from '@/api/clients';
 import { Action } from './Action';
 import { formatPhoneNumber } from '@/utils/phoneFormat';
-import { IOrder, IOrderProducts } from '@/api/order/types';
+import { IOrder, IOrderProducts, ITotalOrderPaymentCalc } from '@/api/order/types';
 import { Tag } from 'antd';
 import { getFullDateFormat } from '@/utils/getDateFormat';
 import { priceFormat } from '@/utils/priceFormat';
@@ -307,5 +307,65 @@ export const ordersInfoProductsColumns: ColumnType<IOrderProducts>[] = [
     align: 'center',
     width: '150px',
     render: (value, record) => `${priceFormat(record?.count * record?.cost)}$`,
+  },
+];
+
+
+export const ordersTotalCalc: ColumnType<ITotalOrderPaymentCalc>[] = [
+  {
+    key: 'totalPrice',
+    dataIndex: 'totalPrice',
+    title: 'Jami narxi',
+    align: 'center',
+    width: '150px',
+    render: (value, record) => `${priceFormat(record?.totalSum)}$`,
+  },
+  {
+    key: 'totalPay',
+    dataIndex: 'totalPay',
+    title: 'Jami to\'lov',
+    align: 'center',
+    width: '150px',
+    render: (value, record) => `${priceFormat(record?.totalPay)}$`,
+  },
+  {
+    key: 'cash',
+    dataIndex: 'cash',
+    title: 'Jami - Naqd to\'lov',
+    align: 'center',
+    width: '150px',
+    render: (value, record) => `${priceFormat(record?.totalCash)}$`,
+  },
+  {
+    key: 'card',
+    dataIndex: 'card',
+    title: 'Jami - Bank kartasi orqali to\'lov',
+    align: 'center',
+    width: '150px',
+    render: (value, record) => `${priceFormat(record?.totalCard)}$`,
+  },
+  {
+    key: 'transfer',
+    dataIndex: 'transfer',
+    title: 'Jami - Bank o\'tkazmasi orqali to\'lov',
+    align: 'center',
+    width: '150px',
+    render: (value, record) => `${priceFormat(record?.totalTransfer)}$`,
+  },
+  {
+    key: 'other',
+    dataIndex: 'other',
+    title: 'Jami - Boshqa usullar bilan to\'lov',
+    align: 'center',
+    width: '150px',
+    render: (value, record) => `${priceFormat(record?.totalOther)}$`,
+  },
+  {
+    key: 'debt',
+    dataIndex: 'debt',
+    title: 'Jami - Qarzga',
+    align: 'center',
+    width: '150px',
+    render: (value, record) => `${priceFormat(record?.totalDebt)}$`,
   },
 ];

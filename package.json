@@ -48,6 +48,7 @@
     "react-dom": "18.2.0",
     "react-gallery-carousel": "^0.4.0",
     "react-hydration-provider": "^2.1.0",
+    "react-phone-input-2": "^2.15.1",
     "react-query": "^3.39.3",
     "react-quill": "2.0.0",
     "react-router-dom": "6.11.1",

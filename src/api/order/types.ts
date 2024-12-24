@@ -84,3 +84,13 @@ export interface IOrderStatisticChart {
   date: string;
   sum: number;
 }
+
+export interface ITotalOrderPaymentCalc {
+  totalCard: number | null
+  totalCash: number |null
+  totalDebt: number | null
+  totalOther: number | null
+  totalPay: number | null
+  totalSum: number | null
+  totalTransfer: number | null
+}

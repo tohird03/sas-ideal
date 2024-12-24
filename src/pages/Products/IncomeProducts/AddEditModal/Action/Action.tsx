@@ -15,9 +15,7 @@ export const Action: FC<Props> = observer(({incomeProduc}) => {
   };
 
   const handleDeleteAddEditProduct = () => {
-    const filterProducts = incomeProductsStore.addIncomeProducts.filter(product => product?.product_id !== incomeProduc?.product_id);
-
-    incomeProductsStore.setAddIncomeProducts(filterProducts);
+    // TODO 
   };
 
   return (

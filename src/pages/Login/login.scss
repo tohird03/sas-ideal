@@ -1,10 +1,57 @@
 .login {
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex-direction: column;
+  background-color: #EFEFEF;
+  // justify-content: center;
+  // flex-direction: column;
   height: 100vh;
-  padding: 0 10px;
+  &__ui {
+    width: 30%;
+    height: 100%;
+  }
+  &__ui-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    background-color: #0880C4;
+    // background: linear-gradient(90deg, #0880C4, #42A5F5);
+
+    height: 100%;
+    width: 700px;
+    border-radius: 50%;
+    position: relative;
+    left: -350px;
+  }
+  &__logo-wrapper {
+    // background-color: blue;
+    background-color: #0880C4;
+
+    position: absolute;
+    width: 300px;
+    text-align: center;
+    right: -120px;
+    border-radius: 100px;
+    border: 10px solid #EFEFEF;
+    padding: 20px 0;
+    p {
+      margin: 0;
+      font-size: 50px;
+      color: rgb(255, 191, 71);
+    }
+  }
+  &__form-wrapper {
+    display: flex;
+    align-items: center;
+    // background-image: url("../../assets/img/logo.png");
+    background-image: url("https://images.uzum.uz/cnmt24su2hhlb05hest0/original.jpg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: 250px 0;
+    width: 70%;
+    height: 100%;
+    padding-left: 200px;
+  }
   &__form {
     width: 100%;
     max-width: 400px;
@@ -12,4 +59,31 @@
   &__form__submit {
     margin-top: 10px;
   }
+}
+
+
+.form__phone-input {
+  padding-left: 44px !important;
+}
+.form__password-input {
+  font-size: 14px;
+  letter-spacing: .01rem;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding: 0 12px;
+  margin-left: 0;
+  background: #FFFFFF;
+  border: 1px solid #CACACA;
+  border-radius: 5px;
+  line-height: 25px;
+  height: 35px;
+  outline: none;
+  width: 100%;
+}
+.form__pass-icon {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translate(0, -50%);
+  size: 12px;
 }

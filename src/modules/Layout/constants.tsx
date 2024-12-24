@@ -75,6 +75,7 @@ export const mainMenuList: IMenuItems[] = [
       {
         label: <><AppstoreAddOutlined /> Statistika</>,
         key: ROUTES.home,
+        roleKey: IStaffPerKey.GET_STATISTIC,
       },
     ],
   },
@@ -109,10 +110,12 @@ export const mainMenuList: IMenuItems[] = [
       {
         label: 'Mijozlar ro\'yxati',
         key: ROUTES.clientsInfo,
+        roleKey: IStaffPerKey.GET_CLIENTS,
       },
       {
         label: 'To\'lovlar ro\'yxati',
         key: ROUTES.clientsPayments,
+        roleKey: IStaffPerKey.GET_PAYMENTS,
       },
     ],
   },
@@ -125,6 +128,7 @@ export const mainMenuList: IMenuItems[] = [
       {
         label: <><ContactsOutlined /> Yetkazib beruvchilar ro&apos;yxati</>,
         key: ROUTES.supplierInfo,
+        roleKey: IStaffPerKey.GET_SUPPLIERS,
       },
     ],
   },
@@ -137,6 +141,7 @@ export const mainMenuList: IMenuItems[] = [
       {
         label: <><SolutionOutlined /> Xodimlar ro&apos;yxati</>,
         key: ROUTES.workersStaffs,
+        roleKey: IStaffPerKey.GET_STAFFS,
       },
     ],
   },

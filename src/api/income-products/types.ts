@@ -1,7 +1,7 @@
 import { ISupplierInfo } from "../clients";
 import { IProducts } from "../product/types"
 import { IStaffs } from "../staffs";
-import { IPagination, IPayment, IPaymentType } from "../types";
+import { IPagination, IPayment } from "../types";
 
 export interface IIncomeOrder {
   id: string,
@@ -13,6 +13,7 @@ export interface IIncomeOrder {
   payment: IPayment;
   incomingProducts: IIncomeProduct[];
   createdAt: string;
+  sellingDate: string;
 }
 
 export interface IIncomeProduct {
@@ -32,39 +33,42 @@ export interface IGetIncomeOrdersParams extends IPagination {
 
 
 export interface IAddIncomeOrderProducts {
-  product_name: string;
   product_id: string;
-  productOldId: string;
   count: number;
   cost: number;
+  selling_price: number;
 }
 
-export interface IAddIncomeOrderForm extends IPaymentType {
+export interface IAddIncomeOrderForm extends IAddIncomeOrderProducts {
   supplierId: string;
-  createdAt: string;
+  sellingDate: string;
 }
 
 export interface IAddEditIncomeOrder {
   supplierId: string;
-  payment: IPaymentType;
   products: IAddIncomeOrderProducts[];
-  createdAt: string;
-  accepted: boolean;
+  sellingDate: string;
 }
 
 export interface IUpdateIncomeOrder {
   id: string;
-  supplierId: string;
-  payment: IPaymentType;
-  addProducts: IAddIncomeOrderProducts[];
-  updateProducts?: IAddIncomeOrderProducts[];
-  removeProducts: IUpdateOrderRemoveProducts[];
-  createdAt: string;
+  supplierId?: string;
+  sellingDate?: string;
 }
 
-export interface IUpdateOrderRemoveProducts {
+export interface IIncomeOrderPayment {
+  supplierId?: string;
+  orderId: string;
+  payment: IPayment | undefined;
+}
+
+export interface IIncomeOrderProductAdd extends IAddIncomeOrderProducts {
+  incomingOrderId: string;
+}
+
+export interface IIncomeUpdateOrderProduct {
   id: string;
-  product_id: string;
   count: number;
   cost: number;
+  selling_price: number;
 }

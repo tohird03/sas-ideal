@@ -12,6 +12,7 @@ import styles from './income-products.scss';
 import { incomeOrdersColumns } from './constants';
 import { incomeProductsStore } from '@/stores/products';
 import { OrderShowInfoModal } from './OrderShowInfoModal';
+import { PaymentModal } from './PaymentModal';
 
 const cn = classNames.bind(styles);
 
@@ -78,6 +79,7 @@ export const IncomeProducts = observer(() => {
 
       {incomeProductsStore.isOpenAddEditIncomeProductsModal && <AddEditModal />}
       {incomeProductsStore.isOpenShowIncomeOrderModal && <OrderShowInfoModal />}
+      {incomeProductsStore.isOpenIncomeOrderPaymentModal && <PaymentModal />}
     </main>
   );
 });

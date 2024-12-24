@@ -1,7 +1,8 @@
-import {makeAutoObservable} from 'mobx';
-import {addNotification} from '@/utils';
-import {IAddIncomeOrderProducts, IGetIncomeOrdersParams, IIncomeOrder} from '@/api/income-products/types';
+import { makeAutoObservable } from 'mobx';
+import { addNotification } from '@/utils';
+import { IAddIncomeOrderProducts, IGetIncomeOrdersParams, IIncomeOrder, IIncomeOrderPayment } from '@/api/income-products/types';
 import { incomeProductsApi } from '@/api/income-products';
+import { IOrderPayment } from '../orders-list/types';
 
 class IncomeProductsStore {
   pageNumber = 1;
@@ -10,7 +11,9 @@ class IncomeProductsStore {
   isOpenAddEditIncomeProductsModal = false;
   isOpenShowIncomeOrderModal = false;
   singleIncomeOrder: IIncomeOrder | null = null;
-  addIncomeProducts: IAddIncomeOrderProducts[] = [];
+  incomeOrder: IIncomeOrder | null = null;
+  incomeOrderPayment: IIncomeOrderPayment | null = null;
+  isOpenIncomeOrderPaymentModal = false;
 
   constructor() {
     makeAutoObservable(this);
@@ -19,6 +22,16 @@ class IncomeProductsStore {
   getIncomeOrders = (params: IGetIncomeOrdersParams) =>
     incomeProductsApi.getIncomeOrder(params)
       .then(res => res)
+      .catch(addNotification);
+
+
+  getSingleIncomeOrder = (orderId: string) =>
+    incomeProductsApi.getSingleIncomeOrder(orderId)
+      .then(res => {
+        this.setIncomeOrder(res);
+
+        return res;
+      })
       .catch(addNotification);
 
   setPageNumber = (pageNumber: number) => {
@@ -45,8 +58,16 @@ class IncomeProductsStore {
     this.singleIncomeOrder = singleIncomeOrder;
   };
 
-  setAddIncomeProducts = (addIncomeProducts: IAddIncomeOrderProducts[]) => {
-    this.addIncomeProducts = addIncomeProducts;
+  setIncomeOrder = (order: IIncomeOrder | null) => {
+    this.incomeOrder = order;
+  };
+
+  setIncomeOrderPayment = (incomeOrderPayment: IIncomeOrderPayment | null) => {
+    this.incomeOrderPayment = incomeOrderPayment;
+  };
+
+  setIsOpenIncomePaymentModal = (isOpenIncomeOrderPaymentModal: boolean) => {
+    this.isOpenIncomeOrderPaymentModal = isOpenIncomeOrderPaymentModal;
   };
 
   reset() {

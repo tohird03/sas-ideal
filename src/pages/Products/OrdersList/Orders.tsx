@@ -9,7 +9,7 @@ import { getPaginationParams } from '@/utils/getPaginationParams';
 import { useMediaQuery } from '@/utils/mediaQuery';
 import { AddEditModal } from './AddEditModal';
 import styles from './orders.scss';
-import { ordersColumns } from './constants';
+import { ordersColumns, ordersTotalCalc } from './constants';
 import { ordersStore } from '@/stores/products';
 import dayjs from 'dayjs';
 import { OrderShowInfoModal } from './OrderShowInfoModal';
@@ -20,7 +20,7 @@ import { useParams } from 'react-router-dom';
 const cn = classNames.bind(styles);
 
 export const Orders = observer(() => {
-  const {clientId} = useParams();
+  const { clientId } = useParams();
   const isMobile = useMediaQuery('(max-width: 800px)');
 
   const { data: ordersData, isLoading: loading } = useQuery({
@@ -112,6 +112,18 @@ export const Orders = observer(() => {
           ...getPaginationParams(ordersData?.totalCount),
         }}
       />
+
+      <div>
+        <DataTable
+          columns={ordersTotalCalc}
+          data={[ordersData?.totalCalc || {}]}
+          isMobile
+          loading={loading}
+          cardStyle={{ width: '500px' }}
+          className="total-calc"
+          loadingLength={1}
+        />
+      </div>
 
       {ordersStore.isOpenAddEditNewOrderModal && <AddEditModal />}
       {ordersStore.isOpenShowOrderModal && <OrderShowInfoModal />}
