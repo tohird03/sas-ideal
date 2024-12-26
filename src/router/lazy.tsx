@@ -35,6 +35,12 @@ export const ClientsPayments = lazy(() =>
 export const SupplierInfo = lazy(() =>
   import('@/pages/Supplier').then(({SupplierInfo}) => ({default: SupplierInfo})).catch(handleCatchChunkError));
 
+export const SupplierPayments = lazy(() =>
+  import('@/pages/Supplier').then(({SupplierPayments}) => ({default: SupplierPayments})).catch(handleCatchChunkError));
+
+export const SingleSupplier = lazy(() =>
+  import('@/pages/Supplier').then(({SingleSupplier}) => ({default: SingleSupplier})).catch(handleCatchChunkError));
+
 // PRODUCTS
 export const ProductsList = lazy(() =>
   import('@/pages/Products').then(({ProductsList}) => ({default: ProductsList})).catch(handleCatchChunkError));

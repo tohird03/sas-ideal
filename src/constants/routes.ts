@@ -16,6 +16,8 @@ export const ROUTES = {
   // SUPPLIER
   supplier: '/supplier',
   supplierInfo: '/supplier/supplier-info',
+  supplierPayments: '/supplier/supplier-payments',
+  supplierSingleSupplier: '/supplier/single-supplier/:supplierId',
 
   // PRODUCTS
   products: '/products',

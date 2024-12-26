@@ -67,3 +67,9 @@ export interface IGetClientDeedParams {
   startDate?: string;
   endDate?: string;
 }
+
+export interface IGeSupplierDeedParams {
+  id: string;
+  startDate?: string;
+  endDate?: string;
+}

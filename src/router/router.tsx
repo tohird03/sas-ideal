@@ -13,9 +13,11 @@ import {
   Orders,
   ProductsList,
   SingleClient,
+  SingleSupplier,
   Staffs,
   Statistic,
   SupplierInfo,
+  SupplierPayments,
 } from './lazy';
 import {ProtectedRoutes} from './ProtectedRoutes';
 import {PublicRoutes} from './PublicRoutes';
@@ -61,6 +63,14 @@ export const Router = ({isAuth}: Props) => useRoutes([
           {
             element: <Suspense fallback={<Loading />}><SupplierInfo /></Suspense>,
             path: ROUTES.supplierInfo,
+          },
+          {
+            element: <Suspense fallback={<Loading />}><SupplierPayments /></Suspense>,
+            path: ROUTES.supplierPayments,
+          },
+          {
+            element: <Suspense fallback={<Loading />}><SingleSupplier /></Suspense>,
+            path: ROUTES.supplierSingleSupplier,
           },
           // PRODUCTS
           {

@@ -130,6 +130,11 @@ export const mainMenuList: IMenuItems[] = [
         key: ROUTES.supplierInfo,
         roleKey: IStaffPerKey.GET_SUPPLIERS,
       },
+      {
+        label: <><ContactsOutlined /> To&apos;langan qarzlar ro&apos;yxati</>,
+        key: ROUTES.supplierPayments,
+        roleKey: IStaffPerKey.GET_SUPPLIERS,
+      },
     ],
   },
   {

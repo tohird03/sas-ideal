@@ -196,7 +196,7 @@ export const AddEditModal = observer(() => {
   };
 
   const handleDeleteProduct = (orderId: string) => {
-    ordersApi.deleteOrderProduct(orderId)
+    incomeProductsApi.deleteOrderProduct(orderId)
       .then(() => {
         incomeProductsStore.getSingleIncomeOrder(incomeProductsStore.incomeOrder?.id!)
           .finally(() => {
@@ -355,7 +355,7 @@ export const AddEditModal = observer(() => {
       title={(
         <div className={cn('order__add-products-header')}>
           <div style={{display: 'flex', alignItems: 'center', gap: '20px'}}>
-            {incomeProductsStore?.incomeOrder?.id ? 'Sotuvni tahrirlash' : 'Yangi sotuv'}
+            {incomeProductsStore?.incomeOrder?.id ? 'Tushurilgan mahsulotlarni tahrirlash' : 'Yangi mahsulot tushurish sotuv'}
             {incomeProductsStore?.incomeOrder?.id && (
               <Button
                 type="primary"
@@ -381,20 +381,6 @@ export const AddEditModal = observer(() => {
       cancelText="Bekor qilish"
       centered
       width={'95%'}
-      footer={
-        <div>
-          {!incomeProductsStore?.incomeOrder?.accepted && (
-            <Button
-              type="primary"
-              style={{ backgroundColor: '#ff7700' }}
-              onClick={handleModalClose}
-            >
-              Tasdiqlamasdan saqlash
-            </Button>
-          )
-          }
-        </div>
-      }
     >
       {/* PRODUCTS FORM */}
       <Form

@@ -4,7 +4,7 @@ import {breadcrumbStore} from './breadcrumb';
 import {profileStore} from './profile';
 import {clientsInfoStore, paymentsStore, singleClientStore} from './clients';
 import {staffsStore} from './workers';
-import {supplierInfoStore} from './supplier';
+import {supplierInfoStore, supplierPaymentsStore, singleSupplierStore} from './supplier';
 import {productsListStore, incomeProductsStore, ordersStore} from './products';
 
 export const stores = {
@@ -17,6 +17,8 @@ export const stores = {
   paymentsStore,
   singleClientStore,
   supplierInfoStore,
+  supplierPaymentsStore,
+  singleSupplierStore,
   productsListStore,
   incomeProductsStore,
   ordersStore,
@@ -32,6 +34,8 @@ export const resetStores = () => {
   paymentsStore.reset();
   singleClientStore.reset();
   supplierInfoStore.reset();
+  supplierPaymentsStore.reset();
+  singleSupplierStore.reset();
   productsListStore.reset();
   incomeProductsStore.reset();
   ordersStore.reset();
