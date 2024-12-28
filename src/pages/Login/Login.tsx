@@ -27,6 +27,8 @@ export const Login = observer(() => {
 
   const handleSubmit = (values: ILoginForm) => {
     setLoading(true);
+    console.log(values);
+
     authStore.getSignIn(values)
       .then(res => {
         if (res?.data) {
@@ -46,26 +48,22 @@ export const Login = observer(() => {
     <main>
       {/* <BackgroundAnimate count={20} /> */}
       <section className={cn('login')}>
-        <div className={cn('login__ui')}>
-          <div className={cn('login__ui-wrapper')}>
-            <div className={cn('login__logo-wrapper')}>
-              <p>SAS</p>
-              <svg
-                version="1.0"
-                xmlns="http://www.w3.org/2000/svg"
-                width="1280.000000pt"
-                height="644.000000pt"
-                viewBox="0 0 1280.000000 644.000000"
-                preserveAspectRatio="xMidYMid meet"
-              >
+        <div className={cn('login__logo')}>
+          <svg
+            version="1.0"
+            xmlns="http://www.w3.org/2000/svg"
+            width="600px"
+            viewBox="0 0 1280.000000 644.000000"
+            preserveAspectRatio="xMidYMid meet"
+          >
 
-                <g
-                  transform="translate(0.000000,644.000000) scale(0.100000,-0.100000)"
-                  fill="#fff"
-                  stroke="none"
-                >
-                  <path
-                    d="M0 3220 l0 -3220 6400 0 6400 0 0 3220 0 3220 -6400 0 -6400 0 0
+            <g
+              transform="translate(0.000000,644.000000) scale(0.100000,-0.100000)"
+              fill="#f0f0f0"
+              stroke="none"
+            >
+              <path
+                d="M0 3220 l0 -3220 6400 0 6400 0 0 3220 0 3220 -6400 0 -6400 0 0
 -3220z m2988 2410 c512 -84 917 -393 1101 -839 l30 -72 -70 75 c-94 101 -172
 158 -304 222 -187 90 -396 134 -640 134 -152 0 -236 -13 -350 -51 -175 -60
 -329 -156 -465 -290 -197 -195 -283 -395 -284 -664 0 -149 12 -201 76 -329 69
@@ -105,12 +103,9 @@ l-571 -13 -185 82 c-102 45 -189 85 -193 89 -4 4 56 59 134 122 78 63 153 124
 m-4272 -7 c81 -86 112 -188 82 -268 -20 -50 -84 -113 -150 -145 -42 -20 -53
 -20 -880 -18 l-837 3 43 51 c24 28 92 111 151 183 l109 131 679 0 679 0 37 50
 c20 28 41 50 45 50 3 0 23 -17 42 -37z"
-                  />
-                </g>
-              </svg>
-
-            </div>
-          </div>
+              />
+            </g>
+          </svg>
         </div>
         <div className={cn('login__form-wrapper')}>
           <Form
@@ -122,24 +117,20 @@ c20 28 41 50 45 50 3 0 23 -17 42 -37z"
           >
             <Form.Item
               name="phone"
-              label="Username"
+              label="Phone"
               rules={[{ required: true }]}
             >
-              <Input placeholder="Username" />
+              <PhoneInput
+                country={'uz'}
+                inputProps={{
+                  name: 'phone',
+                  required: true,
+                  autoFocus: true,
+                  className: 'form__password-input form__phone-input',
+                  autocomplete: 'off',
+                }}
+              />
             </Form.Item>
-            <PhoneInput
-              country={'uz'}
-              // onChange={formik.handleChange}
-              // value={formik.values.phoneNumber}
-              inputProps={{
-                name: 'phone',
-                required: true,
-                autoFocus: true,
-                // onChange: formik.handleChange,
-                className: 'form__password-input form__phone-input',
-                autocomplete: 'off',
-              }}
-            />
             <Form.Item
               name="password"
               label="Password"

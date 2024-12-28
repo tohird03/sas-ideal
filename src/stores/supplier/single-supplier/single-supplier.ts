@@ -66,8 +66,8 @@ class SingleSupplierStore {
   };
 
   // DEED
-  getClientDeed = (params: IGetClientDeedParams) =>
-    clientsInfoApi.getClientDeed(params)
+  getSupplierDeed = (params: IGetClientDeedParams) =>
+    clientsInfoApi.getSupplierDeed(params)
       .then(res => res)
       .catch(addNotification);
 

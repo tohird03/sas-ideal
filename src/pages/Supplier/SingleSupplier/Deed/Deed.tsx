@@ -8,18 +8,19 @@ import { deedColumns } from './constants';
 import { singleClientStore } from '@/stores/clients';
 import { useParams } from 'react-router-dom';
 import styles from './deed.scss';
+import { singleSupplierStore } from '@/stores/supplier';
 
 const cn = classNames.bind(styles);
 
 export const Deed = observer(() => {
   const isMobile = useMediaQuery('(max-width: 800px)');
-  const { clientId } = useParams();
+  const { supplierId } = useParams();
 
-  const { data: clientDeedData, isLoading: loading } = useQuery({
-    queryKey: ['getDeed', clientId],
+  const { data: supplierDeedData, isLoading: loading } = useQuery({
+    queryKey: ['getSupplierDeed', supplierId],
     queryFn: () =>
-      singleClientStore.getClientDeed({
-        id: clientId!,
+      singleSupplierStore.getSupplierDeed({
+        id: supplierId!,
       }),
   });
 
@@ -34,7 +35,7 @@ export const Deed = observer(() => {
 
       <Table
         columns={deedColumns}
-        dataSource={clientDeedData?.data || []}
+        dataSource={supplierDeedData?.data || []}
         loading={loading}
         bordered
         summary={(pageData) => (

@@ -43,7 +43,7 @@ class ClientsInfoApi extends Instance {
     this.post(Endpoints.Supplier, params);
 
   getSupplierDeed = (params: IGetClientDeedParams): Promise<IResponse<IDeed[]>> =>
-    this.get(Endpoints.ClientsDeed, { params });
+    this.get(Endpoints.SupplierDeed, { params });
 
   // UPDATE
   updateUser = (params: IUpdateUser): Promise<AxiosResponse> =>

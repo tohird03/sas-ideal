@@ -3,8 +3,6 @@
   display: flex;
   align-items: center;
   background-color: #EFEFEF;
-  // justify-content: center;
-  // flex-direction: column;
   height: 100vh;
   &__ui {
     width: 30%;
@@ -14,8 +12,7 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    background-color: #0880C4;
-    // background: linear-gradient(90deg, #0880C4, #42A5F5);
+    // background-color: #0880C4;
 
     height: 100%;
     width: 700px;
@@ -23,34 +20,26 @@
     position: relative;
     left: -350px;
   }
-  &__logo-wrapper {
-    // background-color: blue;
-    background-color: #0880C4;
-
-    position: absolute;
-    width: 300px;
-    text-align: center;
-    right: -120px;
-    border-radius: 100px;
-    border: 10px solid #EFEFEF;
-    padding: 20px 0;
-    p {
-      margin: 0;
-      font-size: 50px;
-      color: rgb(255, 191, 71);
+  &__logo {
+    background-color: #d4a706;
+    display: inline-block;
+    padding-bottom: -10px;
+    margin-bottom: -20px;
+    margin-left: 150px;
+    svg {
+      margin-bottom: -20px;
     }
   }
   &__form-wrapper {
     display: flex;
     align-items: center;
-    // background-image: url("../../assets/img/logo.png");
     background-image: url("https://images.uzum.uz/cnmt24su2hhlb05hest0/original.jpg");
     background-size: contain;
     background-repeat: no-repeat;
-    background-position: 250px 0;
+    background-position: 200px -50px;
     width: 70%;
     height: 100%;
-    padding-left: 200px;
+    padding-left: 100px;
   }
   &__form {
     width: 100%;
