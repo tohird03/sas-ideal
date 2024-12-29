@@ -49,6 +49,16 @@ class OrdersApi extends Instance {
   deleteOrderProduct = (productId: string): Promise<AxiosResponse> =>
     this.delete(`${Endpoints.productsOrderProduct}/${productId}`);
 
+  getAllUploadOrderToExel = (params: IGetOrdersParams): Promise<any> =>
+    this.get(`${Endpoints.productsOrderExel}`, {
+      params,
+      responseType: 'arraybuffer',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/xlsx',
+      },
+    });
+
   getUploadOrderToExel = (params: IUploadOrderToExelParams): Promise<any> =>
     this.get(`${Endpoints.productsOrderExel}/${params?.orderId}`, {
       params,

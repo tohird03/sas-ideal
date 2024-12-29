@@ -369,3 +369,28 @@ export const ordersTotalCalc: ColumnType<ITotalOrderPaymentCalc>[] = [
     render: (value, record) => `${priceFormat(record?.totalDebt)}$`,
   },
 ];
+
+export const FilterOrderStatusOptions = [
+  {
+    value: true,
+    label: (
+      <Tag
+        color={OrderStatusColor[String(true)]}
+        style={{width: '100%', fontSize: '14px'}}
+      >
+        {OrderStatus[String(true)]}
+      </Tag>
+    ),
+  },
+  {
+    value: false,
+    label: (
+      <Tag
+        color={OrderStatusColor[String(false)]}
+        style={{width: '100%', fontSize: '14px'}}
+      >
+        {OrderStatus[String(false)]}
+      </Tag>
+    ),
+  },
+];

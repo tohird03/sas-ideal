@@ -6,6 +6,7 @@ import { priceFormat } from '@/utils/priceFormat';
 import { dateFormatterWithStringMonth } from '@/utils/dateFormat';
 import { Tag } from 'antd';
 import { getFullDateFormat } from '@/utils/getDateFormat';
+import { SupplierNameLink } from '@/pages/ActionComponents/SupplierNameLink';
 
 export const incomeOrdersColumns: ColumnType<IIncomeOrder>[] = [
   {
@@ -20,12 +21,7 @@ export const incomeOrdersColumns: ColumnType<IIncomeOrder>[] = [
     dataIndex: 'supplier',
     title: 'Yetkazib beruvchi',
     align: 'center',
-    render: (value, record) => (
-      <div>
-        <p style={{margin: 0, fontWeight: 'bold'}}>{record?.supplier?.name}</p>
-        <i>+{record?.supplier?.phone}</i>
-      </div>
-    ),
+    render: (value, record) => <SupplierNameLink supplier={record?.supplier} />,
   },
   {
     key: 'staff',

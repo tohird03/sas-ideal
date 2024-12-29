@@ -33,7 +33,7 @@ export const deedColumns: ColumnType<IDeed>[] = [
     width: '250px',
     render: (value, record) => (
       <>
-        {record?.type === 'order' ? 'Sotuv' : 'Qarzga to\'lov'}
+        {record?.type === 'order' ? 'Tushirish' : 'Qarzga to\'lov'}
         {<ArrowRightOutlined />}
         <p
           style={{ margin: 0, color: 'blue', display: 'inline' }}

@@ -1,27 +1,30 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
-import { PlusCircleOutlined } from '@ant-design/icons';
+import { DownloadOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
-import { Button, DatePicker, Input, Typography } from 'antd';
+import { Button, DatePicker, Input, Select, Tooltip, Typography } from 'antd';
 import classNames from 'classnames';
 import { DataTable } from '@/components/Datatable/datatable';
 import { getPaginationParams } from '@/utils/getPaginationParams';
 import { useMediaQuery } from '@/utils/mediaQuery';
 import { AddEditModal } from './AddEditModal';
 import styles from './orders.scss';
-import { ordersColumns, ordersTotalCalc } from './constants';
+import { FilterOrderStatusOptions, ordersColumns, ordersTotalCalc } from './constants';
 import { ordersStore } from '@/stores/products';
 import dayjs from 'dayjs';
 import { OrderShowInfoModal } from './OrderShowInfoModal';
 import { PaymentModal } from './PaymentModal';
 import { singleClientStore } from '@/stores/clients';
 import { useParams } from 'react-router-dom';
+import { ordersApi } from '@/api/order';
+import { addNotification } from '@/utils';
 
 const cn = classNames.bind(styles);
 
 export const Orders = observer(() => {
   const { clientId } = useParams();
   const isMobile = useMediaQuery('(max-width: 800px)');
+  const [downloadLoading, setDownLoadLoading] = useState(false);
 
   const { data: ordersData, isLoading: loading } = useQuery({
     queryKey: [
@@ -31,6 +34,7 @@ export const Orders = observer(() => {
       ordersStore.search,
       ordersStore.startDate,
       ordersStore.endDate,
+      ordersStore.accepted,
       clientId,
     ],
     queryFn: () =>
@@ -40,12 +44,38 @@ export const Orders = observer(() => {
         search: ordersStore.search!,
         startDate: ordersStore.startDate!,
         endDate: ordersStore.endDate!,
+        ...(ordersStore.accepted ? {accepted: Boolean(ordersStore.accepted)} : {}),
         clientId,
       }),
   });
 
   const handleAddNewOrder = () => {
     ordersStore.setIsOpenAddEditNewOrderModal(true);
+  };
+
+  const handleDownloadExcel = () => {
+    setDownLoadLoading(true);
+    ordersApi.getAllUploadOrderToExel({
+      pageNumber: ordersStore.pageNumber,
+      pageSize: ordersStore.pageSize,
+      search: ordersStore.search!,
+      startDate: ordersStore.startDate!,
+      endDate: ordersStore.endDate!,
+      clientId,
+    })
+      .then(res => {
+        const url = URL.createObjectURL(new Blob([res]));
+        const a = document.createElement('a');
+
+        a.href = url;
+        a.download = 'order.xlsx';
+        a.click();
+        URL.revokeObjectURL(url);
+      })
+      .catch(addNotification)
+      .finally(() => {
+        setDownLoadLoading(false);
+      });
   };
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -60,6 +90,16 @@ export const Orders = observer(() => {
       ordersStore.setStartDate(null);
       ordersStore.setEndDate(null);
     }
+  };
+
+  const handleChangeFilter = (value: string) => {
+    if (value) {
+      ordersStore.setAccepted(Boolean(value));
+
+      return;
+    }
+
+    ordersStore.setAccepted(null);
   };
 
   const handlePageChange = (page: number, pageSize: number | undefined) => {
@@ -88,6 +128,13 @@ export const Orders = observer(() => {
             placeholder={['Boshlanish sanasi', 'Tugash sanasi']}
             defaultValue={[dayjs(ordersStore.startDate), dayjs(ordersStore.endDate)]}
           />
+          <Select
+            options={FilterOrderStatusOptions}
+            onChange={handleChangeFilter}
+            style={{width: '200px'}}
+            placeholder="Sotuv holati"
+            allowClear
+          />
           <Button
             onClick={handleAddNewOrder}
             type="primary"
@@ -95,6 +142,16 @@ export const Orders = observer(() => {
           >
             Yangi sotuv qo&apos;shish
           </Button>
+          <Tooltip placement="top" title="Excelda yuklash">
+            <Button
+              onClick={handleDownloadExcel}
+              type="primary"
+              icon={<DownloadOutlined />}
+              loading={downloadLoading}
+            >
+              Exelda Yuklash
+            </Button>
+          </Tooltip>
         </div>
       </div>
 
