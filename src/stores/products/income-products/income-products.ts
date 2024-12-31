@@ -5,9 +5,13 @@ import { incomeProductsApi } from '@/api/income-products';
 import { IOrderPayment } from '../orders-list/types';
 
 class IncomeProductsStore {
+  #today = new Date();
+
   pageNumber = 1;
   pageSize = 10;
   search: string | null = null;
+  startDate: Date | null = this.#today;
+  endDate: Date | null = this.#today;
   isOpenAddEditIncomeProductsModal = false;
   isOpenShowIncomeOrderModal = false;
   singleIncomeOrder: IIncomeOrder | null = null;
@@ -44,6 +48,14 @@ class IncomeProductsStore {
 
   setSearch = (search: string | null) => {
     this.search = search;
+  };
+
+  setStartDate = (startDate: Date | null) => {
+    this.startDate = startDate;
+  };
+
+  setEndDate = (endDate: Date | null) => {
+    this.endDate = endDate;
   };
 
   setIsOpenAddEditIncomeProductsModal = (isOpenAddEditIncomeProductsModal: boolean) => {

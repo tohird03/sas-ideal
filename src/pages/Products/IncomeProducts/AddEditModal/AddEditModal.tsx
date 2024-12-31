@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { observer } from 'mobx-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Alert, Button, DatePicker, Form, InputNumber, Modal, Popconfirm, Select, Spin, Tag } from 'antd';
+import { Button, DatePicker, Form, InputNumber, Modal, Popconfirm, Select, Spin, Tag } from 'antd';
 import classNames from 'classnames';
 import { addNotification } from '@/utils';
 import { incomeProductsStore, productsListStore } from '@/stores/products';
@@ -10,17 +10,12 @@ import { CheckOutlined, DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-
 import { DataTable } from '@/components/Datatable/datatable';
 import { useMediaQuery } from '@/utils/mediaQuery';
 import dayjs from 'dayjs';
-import { clientsInfoStore, singleClientStore } from '@/stores/clients';
-import { ordersApi } from '@/api/order';
 import styles from '../income-products.scss';
-import {
-  IOrderProducts,
-} from '@/api/order/types';
 import { ColumnType } from 'antd/es/table';
 import { incomeProductsApi } from '@/api/income-products';
 import { IAddEditIncomeOrder, IAddIncomeOrderForm, IAddIncomeOrderProducts, IIncomeOrderProductAdd, IIncomeProduct } from '@/api/income-products/types';
-import { staffsStore } from '@/stores/workers';
-import { supplierInfoStore } from '@/stores/supplier';
+import { singleSupplierStore, supplierInfoStore } from '@/stores/supplier';
+import { useParams } from 'react-router-dom';
 
 const cn = classNames.bind(styles);
 
@@ -29,6 +24,7 @@ const filterOption = (input: string, option?: { label: string, value: string }) 
 
 export const AddEditModal = observer(() => {
   const [form] = Form.useForm();
+  const {supplierId} = useParams();
   const queryClient = useQueryClient();
   const isMobile = useMediaQuery('(max-width: 800px)');
   const [loading, setLoading] = useState(false);
@@ -170,6 +166,10 @@ export const AddEditModal = observer(() => {
   ), [supplierData]);
 
   useEffect(() => {
+    if (supplierId) {
+      form.setFieldValue('supplierId', singleSupplierStore.activeClient?.id);
+    }
+
     if (incomeProductsStore.singleIncomeOrder && incomeProductsStore?.incomeOrder) {
       setSearchClients(incomeProductsStore?.incomeOrder?.supplier?.phone!);
 
@@ -181,11 +181,11 @@ export const AddEditModal = observer(() => {
         sellingDate: dayjs(incomeProductsStore.incomeOrder?.sellingDate),
         supplierId: incomeProductsStore?.incomeOrder?.supplier?.id,
       });
-    } else if (singleClientStore.activeClient?.id) {
-      setSearchClients(singleClientStore.activeClient?.phone);
-      form.setFieldValue('supplierId', singleClientStore.activeClient?.id);
+    } else if (singleSupplierStore.activeClient?.id) {
+      setSearchClients(singleSupplierStore.activeClient?.phone);
+      form.setFieldValue('supplierId', singleSupplierStore.activeClient?.id);
     }
-  }, [incomeProductsStore.incomeOrder, singleClientStore.activeClient]);
+  }, [incomeProductsStore.incomeOrder, singleSupplierStore.activeClient, supplierId]);
 
   const countColor = (count: number, min_amount: number): string =>
     count < 0 ? 'red' : count < min_amount ? 'orange' : 'green';

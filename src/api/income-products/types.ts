@@ -29,6 +29,7 @@ export interface IGetIncomeOrdersParams extends IPagination {
   search?: string;
   startDate?: Date;
   endDate?: Date;
+  supplierId?: string;
 }
 
 

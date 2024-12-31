@@ -11,11 +11,13 @@ import {AddEditModal} from './AddEditModal';
 import styles from './payments.scss';
 import {paymentsColumns} from './constants';
 import { supplierPaymentsStore } from '@/stores/supplier';
+import { useParams } from 'react-router-dom';
 
 const cn = classNames.bind(styles);
 
 export const SupplierPayments = observer(() => {
   const isMobile = useMediaQuery('(max-width: 800px)');
+  const {supplierId} = useParams();
 
   const {data: clientsInfoData, isLoading: loading} = useQuery({
     queryKey: [
@@ -23,12 +25,14 @@ export const SupplierPayments = observer(() => {
       supplierPaymentsStore.pageNumber,
       supplierPaymentsStore.pageSize,
       supplierPaymentsStore.search,
+      supplierId,
     ],
     queryFn: () =>
       supplierPaymentsStore.getSupplierPayments({
         pageNumber: supplierPaymentsStore.pageNumber,
         pageSize: supplierPaymentsStore.pageSize,
         search: supplierPaymentsStore.search!,
+        supplierId,
       }),
   });
 

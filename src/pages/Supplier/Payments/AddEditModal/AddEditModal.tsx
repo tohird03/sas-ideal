@@ -7,12 +7,14 @@ import { priceFormat } from '@/utils/priceFormat';
 import { supplierInfoStore, supplierPaymentsStore } from '@/stores/supplier';
 import { incomePaymentApi } from '@/api/payment-income';
 import { IIncomeAddEditPaymentParams } from '@/api/payment-income/types';
+import { useParams } from 'react-router-dom';
 
 const filterOption = (input: string, option?: { label: string, value: string }) =>
   (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
 
 export const AddEditModal = observer(() => {
   const [form] = Form.useForm();
+  const {supplierId} = useParams();
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
   const [searchSupplier, setSearchSupplier] = useState<string | null>(null);
@@ -93,8 +95,10 @@ export const AddEditModal = observer(() => {
         ...supplierPaymentsStore.singlePayment,
         supplierId: supplierPaymentsStore?.singlePayment?.supplier?.id,
       });
+    } else if (supplierId) {
+      form.setFieldValue('supplierId', supplierId);
     }
-  }, [supplierPaymentsStore.singlePayment]);
+  }, [supplierPaymentsStore.singlePayment, supplierId]);
 
   return (
     <Modal

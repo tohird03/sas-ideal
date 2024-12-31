@@ -18,6 +18,8 @@ export enum Endpoints {
   ClientsDeed = '/user/client/deed',
   SupplierDeed = '/user/supplier/deed',
   Supplier = '/user/supplier',
+  ClientDeedExcelUpload = '/user/client/deed/upload',
+  SupplierDeedExcelUpload = '/user/supplier/deed/upload',
 
   // PRODUCTS
   products = '/product',
@@ -27,6 +29,7 @@ export enum Endpoints {
   productsOrderStatistic = '/Order/statistica',
   productsOrderProduct = '/orderProduct',
   productsOrderExel = '/Order/upload',
+  productsIncomeOrderExel = '/incomingOrder/upload',
 
   // PAYMENT
   payment = '/payment',

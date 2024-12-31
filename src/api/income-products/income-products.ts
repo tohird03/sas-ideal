@@ -37,6 +37,16 @@ class IncomeProductsApi extends Instance {
   deleteOrderProduct = (productId: string): Promise<AxiosResponse> =>
     this.delete(`${Endpoints.productsIncomeOrderProduct}/${productId}`);
 
+  getAllUploadIncomeOrderToExel = (params: IGetIncomeOrdersParams): Promise<any> =>
+    this.get(`${Endpoints.productsIncomeOrderExel}`, {
+      params,
+      responseType: 'arraybuffer',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/xlsx',
+      },
+    });
+
 }
 
 export const incomeProductsApi = new IncomeProductsApi(config);

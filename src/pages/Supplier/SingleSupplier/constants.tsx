@@ -1,8 +1,8 @@
 import React from 'react';
 import { Deed } from './Deed';
-import { Payments } from './Payment';
 import { IncomeProducts } from '@/pages/Products';
 import { ISingleSupplierTabs } from '@/stores/supplier';
+import { SupplierPayments } from '../Payments';
 
 export const singleSupplierTabOptions = [
   {
@@ -21,6 +21,6 @@ export const singleSupplierTabOptions = [
 
 export const SegmentComponents: Record<ISingleSupplierTabs, any> = {
   [ISingleSupplierTabs.ORDER]: <IncomeProducts />,
-  [ISingleSupplierTabs.PAYMENT]: <Payments />,
+  [ISingleSupplierTabs.PAYMENT]: <SupplierPayments />,
   [ISingleSupplierTabs.DEED]: <Deed />,
 };
