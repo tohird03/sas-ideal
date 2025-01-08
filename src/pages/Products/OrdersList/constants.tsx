@@ -7,7 +7,6 @@ import { IOrder, IOrderProducts, ITotalOrderPaymentCalc } from '@/api/order/type
 import { Tag } from 'antd';
 import { getFullDateFormat } from '@/utils/getDateFormat';
 import { priceFormat } from '@/utils/priceFormat';
-import { dateFormatterWithStringMonth } from '@/utils/dateFormat';
 import { ClientNameLink } from '@/pages/ActionComponents/ClientNameLink';
 import { PaymentStatus } from './PaymentStatus';
 
@@ -19,14 +18,6 @@ export const ordersColumns: ColumnType<IOrder>[] = [
     align: 'center',
     render: (value, record, index) => index + 1,
   },
-  // {
-  //   key: 'articl',
-  //   dataIndex: 'articl',
-  //   title: 'Sotuv raqami',
-  //   align: 'center',
-  //   width: '150px',
-  //   render: (value, record) => record?.articl,
-  // },
   {
     key: 'client',
     dataIndex: 'client',
@@ -306,7 +297,7 @@ export const ordersInfoProductsColumns: ColumnType<IOrderProducts>[] = [
     title: 'Jami narxi',
     align: 'center',
     width: '150px',
-    render: (value, record) => `${priceFormat(record?.count * record?.cost)}$`,
+    render: (value, record) => `${priceFormat(record?.count * record?.price)}$`,
   },
 ];
 

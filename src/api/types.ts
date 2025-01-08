@@ -38,4 +38,5 @@ export interface IPaymentType {
   cash: number,
   transfer: number,
   other: number,
+  description: string,
 }

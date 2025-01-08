@@ -1,7 +1,7 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { observer } from 'mobx-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Alert, Button, DatePicker, Form, InputNumber, Modal, Popconfirm, Select, Spin, Tag } from 'antd';
+import { Alert, Button, DatePicker, Form, InputNumber, InputNumberProps, Modal, Popconfirm, Select, Spin, Tag } from 'antd';
 import classNames from 'classnames';
 import { addNotification } from '@/utils';
 import { ordersStore, productsListStore } from '@/stores/products';
@@ -36,6 +36,8 @@ export const AddEditModal = observer(() => {
   const [searchClients, setSearchClients] = useState<string | null>(null);
   const [searchProducts, setSearchProducts] = useState<string | null>(null);
   const [isUpdatingProduct, setIsUpdatingProduct] = useState<IOrderProducts | null>(null);
+  const [isOpenProductSelect, setIsOpenProductSelect] = useState(false);
+  const countInputRef = useRef<HTMLInputElement>(null);
 
   // GET DATAS
   const { data: clientsData, isLoading: loadingClients } = useQuery({
@@ -152,10 +154,17 @@ export const AddEditModal = observer(() => {
     setSearchProducts(value);
   };
 
+  const handleChangeClientSelect = () => {
+    setIsOpenProductSelect(true);
+  };
+
   const handleChangeProduct = (productId: string) => {
     const findProduct = productsData?.data?.find(product => product?.id === productId);
 
     form.setFieldValue('price', findProduct?.selling_price);
+
+    setIsOpenProductSelect(false);
+    countInputRef.current?.focus();
   };
 
   const handleClearClient = () => {
@@ -333,7 +342,7 @@ export const AddEditModal = observer(() => {
       open={ordersStore.isOpenAddEditNewOrderModal}
       title={(
         <div className={cn('order__add-products-header')}>
-          <div style={{display: 'flex', alignItems: 'center', gap: '20px'}}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
             {ordersStore?.order?.id ? 'Sotuvni tahrirlash' : 'Yangi sotuv'}
             {ordersStore?.order?.id && (
               <Button
@@ -364,7 +373,12 @@ export const AddEditModal = observer(() => {
       onCancel={handleModalClose}
       cancelText="Bekor qilish"
       centered
-      width={'95%'}
+      style={{ top: 0, padding: 0 }}
+      bodyStyle={{
+        height: '85vh',
+        overflow: 'auto',
+      }}
+      width="100vw"
       footer={
         <div>
           {!ordersStore?.order?.accepted && (
@@ -403,6 +417,7 @@ export const AddEditModal = observer(() => {
             onSearch={handleSearchSupplier}
             onClear={handleClearClient}
             options={supplierOptions}
+            onChange={handleChangeClientSelect}
             allowClear
           />
         </Form.Item>
@@ -433,6 +448,7 @@ export const AddEditModal = observer(() => {
             onSearch={handleSearchProducts}
             onChange={handleChangeProduct}
             optionLabelProp="label"
+            open={isOpenProductSelect}
           >
             {productsData?.data.map((product) => (
               <Select.Option
@@ -479,8 +495,9 @@ export const AddEditModal = observer(() => {
           name="count"
         >
           <InputNumber
-            placeholder="Tushuriladigan mahsulot sonini kiriting"
+            placeholder="Mahsulot sonini kiriting"
             style={{ width: '100%' }}
+            ref={countInputRef}
             formatter={(value) => priceFormat(value!)}
           />
         </Form.Item>

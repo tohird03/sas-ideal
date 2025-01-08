@@ -70,7 +70,10 @@ export const DataTable = (props: DataTableProps) => {
 
   return !isMobile ? (
     <Table
-      pagination={pagination}
+      pagination={{
+        ...pagination,
+        pageSizeOptions: [20, 50, 100, 500, 1000],
+      }}
       loading={loading}
       columns={columns}
       dataSource={data}
@@ -151,6 +154,7 @@ export const DataTable = (props: DataTableProps) => {
             onChange={onChange}
             current={pagination?.current}
             total={pagination?.total}
+            pageSizeOptions={[20, 50, 100, 500, 1000]}
           />
         )}
       </div>

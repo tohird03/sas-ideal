@@ -28,8 +28,6 @@ export const Menu = observer(() => {
       theme="dark"
       mode="inline"
       defaultSelectedKeys={[pathname]}
-
-      defaultOpenKeys={isMobile ? [] : [selectedMenuOpenKey]}
       items={authStore?.mainMenuItems!}
       onClick={handleClick}
     />

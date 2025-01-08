@@ -11,7 +11,7 @@ class SingleSupplierStore {
 
   // PAYMENTS
   paymentPage = 1;
-  paymentPageSize = 10;
+  paymentPageSize = 20;
   paymentSearch: string | null = null;
   isOpenAddEditPaymentModal = false;
   singlePayment: IClientsPayments | null = null;

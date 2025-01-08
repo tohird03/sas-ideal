@@ -1,13 +1,17 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useRef, useState } from 'react';
 import { observer } from 'mobx-react';
-import { DeleteOutlined, DownOutlined, DownloadOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
+import { DeleteOutlined, DownOutlined, DownloadOutlined, EditOutlined, EyeOutlined, MoreOutlined, PrinterOutlined } from '@ant-design/icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button, Popconfirm, Tooltip } from 'antd';
+import { Button, Dropdown, Menu, Popconfirm, Tooltip } from 'antd';
 import { clientsInfoApi, ISupplierInfo } from '@/api/clients';
 import { addNotification } from '@/utils';
 import { IOrder } from '@/api/order/types';
 import { ordersStore } from '@/stores/products';
 import { ordersApi } from '@/api/order';
+// @ts-ignore
+import { jsPDF as JsPdf } from 'jspdf';
+import { Pdf } from './PDF/pdf';
+import Item from 'antd/es/list/Item';
 
 type Props = {
   orders: IOrder;
@@ -64,23 +68,56 @@ export const Action: FC<Props> = observer(({ orders }) => {
     deleteOrder(orders?.id);
   };
 
-  return (
-    <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', alignItems: 'center' }}>
-      <Tooltip placement="top" title="Sotuvni ko'rish">
-        <Button onClick={handleShowOrder} icon={<EyeOutlined />} />
-      </Tooltip>
-      <Tooltip placement="top" title="Sotuvni tahrirlash">
-        <Button onClick={handleEditOrder} type="primary" icon={<EditOutlined />} />
-      </Tooltip>
-      <Tooltip placement="top" title="Excelda yuklash">
+  const targetRef = useRef<HTMLDivElement>(null);
+
+  const generatePDF = () => {
+    if (targetRef.current) {
+      const doc = new JsPdf({ unit: 'mm', format: 'a4' }); // You can change 'a4' to 'letter', 'a3', etc.
+
+      const fontSize = 40;
+
+      doc.setFontSize(fontSize);
+
+      doc.html(targetRef.current, {
+        callback: (doc) => {
+          doc.save(`${orders?.client?.name}.pdf`);
+        },
+        x: 10,
+        y: 10,
+      });
+    }
+  };
+
+  const menuSaveOptions = (
+    <Menu style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+      <Item key="excel">
         <Button
           onClick={handleDownloadExcel}
-          type="primary"
           icon={<DownloadOutlined />}
           loading={downloadLoading}
-        />
-      </Tooltip>
-      <Tooltip placement="top" title="Sotuvni o'chirish">
+        >
+          Excelda yuklash
+        </Button>
+      </Item>
+      <Item key="check">
+        <Button
+          onClick={generatePDF}
+          icon={<PrinterOutlined />}
+        >
+          Chekka chiqarish
+        </Button>
+      </Item>
+    </Menu>
+  );
+
+  const menuOrderOptions = (
+    <Menu style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+      <Item key="edit">
+        <Button onClick={handleEditOrder} icon={<EditOutlined />} >
+          Sotuvni tahrirlash
+        </Button>
+      </Item>
+      <Item key="delete">
         <Popconfirm
           title="Sotuvni o'chirish"
           description="Rostdan ham bu sotuvni o'chirishni xohlaysizmi?"
@@ -89,9 +126,29 @@ export const Action: FC<Props> = observer(({ orders }) => {
           okButtonProps={{ style: { background: 'red' } }}
           cancelText="Yo'q"
         >
-          <Button type="primary" icon={<DeleteOutlined />} danger />
+          <Button icon={<DeleteOutlined />} danger >
+            Sotuvni o&lsquo;chirish
+          </Button>
         </Popconfirm>
+      </Item>
+    </Menu>
+  );
+
+  return (
+    <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', alignItems: 'center' }}>
+      <Tooltip placement="top" title="Sotuvni ko'rish">
+        <Button onClick={handleShowOrder} icon={<EyeOutlined />} />
       </Tooltip>
+      <Dropdown placement="bottomRight" overlay={menuSaveOptions} trigger={['click']}>
+        <Button icon={<DownloadOutlined />} />
+      </Dropdown>
+      <Dropdown placement="bottomRight" overlay={menuOrderOptions} trigger={['click']}>
+        <Button icon={<MoreOutlined />} />
+      </Dropdown>
+
+      <div >
+        <Pdf order={orders} ref={targetRef} />
+      </div>
     </div>
   );
 });

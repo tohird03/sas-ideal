@@ -4,7 +4,7 @@ import {addNotification} from '@/utils';
 
 class SupplierInfoStore {
   pageNumber = 1;
-  pageSize = 10;
+  pageSize = 20;
   search: string | null = null;
   isOpenAddEditSupplierModal = false;
   singleSupplierInfo: ISupplierInfo | null = null;

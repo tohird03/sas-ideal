@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Button, Form, InputNumber, Modal, Select, Spin, notification } from 'antd';
+import { Button, Form, Input, InputNumber, Modal, Select, Spin, notification } from 'antd';
 import { observer } from 'mobx-react';
 import { ordersStore } from '@/stores/products';
 import { priceFormat } from '@/utils/priceFormat';
@@ -59,6 +59,7 @@ export const PaymentModal = observer(() => {
       card: ordersStore.orderPayment?.payment?.card,
       transfer: ordersStore.orderPayment?.payment?.transfer,
       other: ordersStore.orderPayment?.payment?.other,
+      description: ordersStore.orderPayment?.payment?.description,
       clientId: ordersStore.orderPayment?.client?.id,
     });
   }, [ordersStore.orderPayment]);
@@ -70,7 +71,12 @@ export const PaymentModal = observer(() => {
       onCancel={handleModalClose}
       cancelText="Bekor qilish"
       centered
-      width={1200}
+      style={{ top: 0, padding: '20px' }}
+      bodyStyle={{
+        height: '85vh',
+        overflow: 'auto',
+      }}
+      width="100vw"
       footer={
         <Button
           onClick={handleSavePayment}
@@ -148,6 +154,19 @@ export const PaymentModal = observer(() => {
             placeholder="Boshqa usullar bilan to'lov"
             style={{ width: '100%' }}
             formatter={(value) => priceFormat(value!)}
+          />
+        </Form.Item>
+        <Form.Item
+          label="To'lov haqida ma'lumot"
+          name="description"
+        >
+          <Input.TextArea
+            placeholder="To'lov haqida ma'lumot"
+            style={{ width: '100%' }}
+            rows={4}
+            maxLength={100}
+            showCount
+            autoSize={{ minRows: 2, maxRows: 6 }}
           />
         </Form.Item>
       </Form>

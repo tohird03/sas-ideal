@@ -6,7 +6,7 @@ import { incomePaymentApi } from '@/api/payment-income';
 
 class SupplierPaymentsStore {
   pageNumber = 1;
-  pageSize = 10;
+  pageSize = 20;
   search: string | null = null;
   isOpenAddEditPaymentModal = false;
   singlePayment: ISupplierPayments | null = null;
