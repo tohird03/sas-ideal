@@ -5,6 +5,7 @@ import { Action } from './Action';
 import { formatPhoneNumber } from '@/utils/phoneFormat';
 import { priceFormat } from '@/utils/priceFormat';
 import { dateFormatterWithStringMonth } from '@/utils/dateFormat';
+import { ClientNameLink } from '@/pages/ActionComponents/ClientNameLink';
 
 export const clientsColumns: ColumnType<IClientsInfo>[] = [
   {
@@ -19,7 +20,7 @@ export const clientsColumns: ColumnType<IClientsInfo>[] = [
     dataIndex: 'name',
     title: 'Xodim',
     align: 'center',
-    render: (value, record) => record?.name,
+    render: (value, record) => <ClientNameLink client={record} />,
   },
   {
     key: 'phone',

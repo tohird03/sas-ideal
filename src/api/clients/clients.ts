@@ -62,6 +62,16 @@ class ClientsInfoApi extends Instance {
         'Accept': 'application/xlsx',
       },
     });
+
+  getUploadSupplierDeedToExel = (params: IGetClientDeedExcelParams): Promise<any> =>
+    this.get(`${Endpoints.SupplierDeedExcelUpload}`, {
+      params,
+      responseType: 'arraybuffer',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/xlsx',
+      },
+    });
 }
 
 export const clientsInfoApi = new ClientsInfoApi(config);

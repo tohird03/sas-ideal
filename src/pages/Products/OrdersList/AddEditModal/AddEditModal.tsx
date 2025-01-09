@@ -106,6 +106,19 @@ export const AddEditModal = observer(() => {
         order_id: ordersStore?.order?.id,
       };
 
+      ordersApi.updateOrder({
+        id: ordersStore?.order?.id,
+        clientId: values?.clientId,
+        sellingDate: values?.sellingDate,
+      })
+        .then(() => {
+          ordersStore.getSingleOrder(ordersStore.order?.id!);
+        })
+        .catch(addNotification)
+        .finally(() => {
+          setLoading(false);
+        });
+
       ordersApi.orderProductAdd(addOrderProduct)
         .then(() => {
           form.resetFields(['product_id', 'price', 'count']);

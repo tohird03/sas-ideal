@@ -23,7 +23,7 @@ export const Deed = observer(() => {
 
 
   const { data: clientDeedData, isLoading: loading } = useQuery({
-    queryKey: ['getDeed', clientId],
+    queryKey: ['getDeed', clientId, singleClientStore.startDate, singleClientStore.endDate],
     queryFn: () =>
       singleClientStore.getClientDeed({
         id: clientId!,

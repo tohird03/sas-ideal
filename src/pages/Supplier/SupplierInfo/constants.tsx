@@ -5,6 +5,7 @@ import {Action} from './Action';
 import { formatPhoneNumber } from '@/utils/phoneFormat';
 import { priceFormat } from '@/utils/priceFormat';
 import { dateFormatterWithStringMonth } from '@/utils/dateFormat';
+import { SupplierNameLink } from '@/pages/ActionComponents/SupplierNameLink';
 
 export const supplierColumns: ColumnType<ISupplierInfo>[] = [
   {
@@ -19,7 +20,7 @@ export const supplierColumns: ColumnType<ISupplierInfo>[] = [
     dataIndex: 'name',
     title: 'Yetkazib beruvchi',
     align: 'center',
-    render: (value, record) => record?.name,
+    render: (value, record) => <SupplierNameLink supplier={record} />,
   },
   {
     key: 'phone',
