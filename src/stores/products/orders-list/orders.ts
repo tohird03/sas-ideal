@@ -12,7 +12,7 @@ class OrdersStore {
   orderPayment: IOrderPayment | null = null;
   pageNumber = 1;
   pageSize = 10;
-  accepted: boolean | null = null;
+  accepted: string | null = null;
   search: string | null = null;
   isOpenAddEditNewOrderModal = false;
   isOpenShowOrderModal = false;
@@ -60,7 +60,7 @@ class OrdersStore {
     this.pageSize = pageSize;
   };
 
-  setAccepted = (accepted: boolean | null) => {
+  setAccepted = (accepted: string | null) => {
     this.accepted = accepted;
   };
 

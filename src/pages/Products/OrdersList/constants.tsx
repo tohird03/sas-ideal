@@ -363,7 +363,7 @@ export const ordersTotalCalc: ColumnType<ITotalOrderPaymentCalc>[] = [
 
 export const FilterOrderStatusOptions = [
   {
-    value: true,
+    value: 'true',
     label: (
       <Tag
         color={OrderStatusColor[String(true)]}
@@ -374,7 +374,7 @@ export const FilterOrderStatusOptions = [
     ),
   },
   {
-    value: false,
+    value: 'false',
     label: (
       <Tag
         color={OrderStatusColor[String(false)]}

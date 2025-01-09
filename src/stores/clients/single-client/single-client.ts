@@ -8,6 +8,7 @@ import { paymentApi } from '@/api/payment';
 class SingleClientStore {
   activeClient: IClientsInfo | null = null;
   activeTabs: ISingleClientTabs = ISingleClientTabs.ORDER;
+  #today = new Date();
 
   // PAYMENTS
   paymentPage = 1;
@@ -15,6 +16,8 @@ class SingleClientStore {
   paymentSearch: string | null = null;
   isOpenAddEditPaymentModal = false;
   singlePayment: IClientsPayments | null = null;
+  startDate: Date | null = this.#today;
+  endDate: Date | null = this.#today;
 
   constructor() {
     makeAutoObservable(this);
@@ -70,6 +73,14 @@ class SingleClientStore {
     clientsInfoApi.getClientDeed(params)
       .then(res => res)
       .catch(addNotification);
+
+  setStartDate = (startDate: Date | null) => {
+    this.startDate = startDate;
+  };
+
+  setEndDate = (endDate: Date | null) => {
+    this.endDate = endDate;
+  };
 
   reset() {
     this.activeClient = null;

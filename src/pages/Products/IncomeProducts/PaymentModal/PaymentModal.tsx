@@ -71,7 +71,12 @@ export const PaymentModal = observer(() => {
       onCancel={handleModalClose}
       cancelText="Bekor qilish"
       centered
-      width={1200}
+      style={{ top: 0, padding: 0 }}
+      bodyStyle={{
+        height: '90vh',
+        overflow: 'auto',
+      }}
+      width="100vw"
       footer={
         <Button
           onClick={handleSavePayment}
@@ -89,14 +94,14 @@ export const PaymentModal = observer(() => {
         className="income-order__add-products-form-info"
       >
         <Form.Item
-          label="Mijoz"
+          label="Yetkazib beruvchi"
           rules={[{ required: true }]}
           name="supplierId"
           initialValue={incomeProductsStore.incomeOrderPayment?.supplierId}
         >
           <Select
             showSearch
-            placeholder="Mijoz"
+            placeholder="Yetkazib beruvchi"
             optionFilterProp="children"
             options={[{
               value: incomeProductsStore.incomeOrderPayment?.supplierId,

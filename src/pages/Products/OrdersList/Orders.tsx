@@ -44,7 +44,7 @@ export const Orders = observer(() => {
         search: ordersStore.search!,
         startDate: ordersStore.startDate!,
         endDate: ordersStore.endDate!,
-        ...(ordersStore.accepted ? {accepted: Boolean(ordersStore.accepted)} : {}),
+        ...(ordersStore.accepted ? {accepted: ordersStore.accepted} : {}),
         clientId,
       }),
   });
@@ -94,7 +94,7 @@ export const Orders = observer(() => {
 
   const handleChangeFilter = (value: string) => {
     if (value) {
-      ordersStore.setAccepted(Boolean(value));
+      ordersStore.setAccepted(value);
 
       return;
     }

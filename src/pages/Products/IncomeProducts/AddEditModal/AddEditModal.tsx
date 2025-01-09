@@ -380,7 +380,12 @@ export const AddEditModal = observer(() => {
       onCancel={handleModalClose}
       cancelText="Bekor qilish"
       centered
-      width={'95%'}
+      style={{ top: 0, padding: 0 }}
+      bodyStyle={{
+        height: '85vh',
+        overflow: 'auto',
+      }}
+      width="100vw"
     >
       {/* PRODUCTS FORM */}
       <Form

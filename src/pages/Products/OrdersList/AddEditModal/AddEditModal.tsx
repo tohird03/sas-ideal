@@ -158,6 +158,10 @@ export const AddEditModal = observer(() => {
     setIsOpenProductSelect(true);
   };
 
+  const handleFocusToProduct = () => {
+    setIsOpenProductSelect(true);
+  };
+
   const handleChangeProduct = (productId: string) => {
     const findProduct = productsData?.data?.find(product => product?.id === productId);
 
@@ -449,6 +453,7 @@ export const AddEditModal = observer(() => {
             onChange={handleChangeProduct}
             optionLabelProp="label"
             open={isOpenProductSelect}
+            onFocus={handleFocusToProduct}
           >
             {productsData?.data.map((product) => (
               <Select.Option

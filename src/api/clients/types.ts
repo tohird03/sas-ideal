@@ -64,12 +64,19 @@ export type IDeed = IDeedPayment | IDeedOrder;
 
 export interface IGetClientDeedParams {
   id: string;
-  startDate?: string;
-  endDate?: string;
+  startDate?: Date;
+  endDate?: Date;
 }
 
 export interface IGeSupplierDeedParams {
   id: string;
   startDate?: string;
   endDate?: string;
+}
+
+export interface IGetClientDeedExcelParams {
+  id: string;
+  startDate?: Date;
+  endDate?: Date;
+  type: 'deed' | 'product';
 }

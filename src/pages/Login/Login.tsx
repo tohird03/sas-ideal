@@ -33,7 +33,7 @@ export const Login = observer(() => {
       .then(res => {
         if (res?.data) {
           setAccessToken(res.data?.accessToken);
-          navigate(ROUTES.workers);
+          navigate(ROUTES.productsOrder);
           addNotification('Success login');
           authStore.getProfile();
         }

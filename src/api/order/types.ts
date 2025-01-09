@@ -20,7 +20,7 @@ export interface IGetOrdersParams extends IPagination {
   startDate?: Date;
   endDate?: Date;
   clientId?: string;
-  accepted?: boolean;
+  accepted?: string;
   type?: 'excel'
 }
 

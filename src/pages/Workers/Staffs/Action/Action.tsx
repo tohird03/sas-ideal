@@ -20,6 +20,7 @@ export const Action: FC<Props> = observer(({staff}) => {
     mutationFn: (id: string) => staffsApi.deleteStaff(id!),
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['getStaffs']});
+      addNotification('Xodim muvaffaqiyatli o\'chirildi');
     },
     onError: addNotification,
   });

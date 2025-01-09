@@ -7,6 +7,7 @@ import {
   IAddSupplierInfo,
   IClientsInfo,
   IDeed,
+  IGetClientDeedExcelParams,
   IGetClientDeedParams,
   IGetClientsInfoParams,
   IGetSupplierInfoParams,
@@ -51,6 +52,16 @@ class ClientsInfoApi extends Instance {
 
   deleteUser = (id: string): Promise<AxiosResponse> =>
     this.delete(`${Endpoints.Users}/${id}`);
+
+  getUploadDeedToExel = (params: IGetClientDeedExcelParams): Promise<any> =>
+    this.get(`${Endpoints.ClientDeedExcelUpload}`, {
+      params,
+      responseType: 'arraybuffer',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/xlsx',
+      },
+    });
 }
 
 export const clientsInfoApi = new ClientsInfoApi(config);

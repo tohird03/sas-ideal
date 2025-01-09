@@ -7,5 +7,5 @@ type Props = {
 };
 
 export const PublicRoutes=({isAuth}: Props) => isAuth
-  ? <Navigate to={ROUTES.home} />
+  ? <Navigate to={ROUTES.productsOrder} />
   : <Outlet />;

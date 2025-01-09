@@ -27,6 +27,7 @@ export const AddStaffsModal = observer(() => {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['getStaffs'] });
         handleModalClose();
+        addNotification('Xodim muvaffaqiyatli qo\'shildi');
       },
       onError: addNotification,
       onSettled: async () => {
@@ -40,6 +41,7 @@ export const AddStaffsModal = observer(() => {
       mutationFn: (params: IAddOrEditStaff) => staffsApi.updateStaff(params),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['getStaffs'] });
+        addNotification('Xodim muvaffaqiyatli o\'zgartirildi');
         handleModalClose();
       },
       onError: addNotification,

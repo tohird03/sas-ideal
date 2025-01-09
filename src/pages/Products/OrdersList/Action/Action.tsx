@@ -3,12 +3,10 @@ import { observer } from 'mobx-react';
 import { DeleteOutlined, DownOutlined, DownloadOutlined, EditOutlined, EyeOutlined, MoreOutlined, PrinterOutlined } from '@ant-design/icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button, Dropdown, Menu, Popconfirm, Tooltip } from 'antd';
-import { clientsInfoApi, ISupplierInfo } from '@/api/clients';
 import { addNotification } from '@/utils';
 import { IOrder } from '@/api/order/types';
 import { ordersStore } from '@/stores/products';
 import { ordersApi } from '@/api/order';
-// @ts-ignore
 import { jsPDF as JsPdf } from 'jspdf';
 import { Pdf } from './PDF/pdf';
 import Item from 'antd/es/list/Item';
@@ -146,7 +144,7 @@ export const Action: FC<Props> = observer(({ orders }) => {
         <Button icon={<MoreOutlined />} />
       </Dropdown>
 
-      <div >
+      <div style={{display: 'none'}}>
         <Pdf order={orders} ref={targetRef} />
       </div>
     </div>
