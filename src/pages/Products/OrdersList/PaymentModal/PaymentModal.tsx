@@ -27,6 +27,7 @@ export const PaymentModal = observer(() => {
       ...values,
       orderId: ordersStore.orderPayment?.orderId,
       clientId: ordersStore.orderPayment?.client?.id!,
+      sendUser: ordersStore?.isSendUser,
     };
 
     if (ordersStore.orderPayment?.payment) {

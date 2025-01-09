@@ -24,4 +24,5 @@ export interface IAddEditPaymentParams {
   card: number,
   transfer: number,
   other: number,
+  sendUser?: boolean,
 }

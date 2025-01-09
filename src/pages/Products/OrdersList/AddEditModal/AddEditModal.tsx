@@ -39,7 +39,6 @@ export const AddEditModal = observer(() => {
   const [isUpdatingProduct, setIsUpdatingProduct] = useState<IOrderProducts | null>(null);
   const [isOpenProductSelect, setIsOpenProductSelect] = useState(false);
   const countInputRef = useRef<HTMLInputElement>(null);
-  const [sendUser, setSendUser] = useState(false);
 
   // GET DATAS
   const { data: clientsData, isLoading: loadingClients } = useQuery({
@@ -78,6 +77,7 @@ export const AddEditModal = observer(() => {
     ordersApi.updateOrder({
       accepted: true,
       id: ordersStore?.order?.id!,
+      sendUser: ordersStore?.isSendUser,
     })
       .then(() => {
         queryClient.invalidateQueries({ queryKey: ['getOrders'] });
@@ -102,7 +102,6 @@ export const AddEditModal = observer(() => {
     if (ordersStore?.order) {
       const addOrderProduct: IOrderProductAdd = {
         ...addProducts,
-        sendUser,
         order_id: ordersStore?.order?.id,
       };
 
@@ -110,10 +109,8 @@ export const AddEditModal = observer(() => {
         id: ordersStore?.order?.id,
         clientId: values?.clientId,
         sellingDate: values?.sellingDate,
+        sendUser: ordersStore?.isSendUser,
       })
-        .then(() => {
-          ordersStore.getSingleOrder(ordersStore.order?.id!);
-        })
         .catch(addNotification)
         .finally(() => {
           setLoading(false);
@@ -137,7 +134,6 @@ export const AddEditModal = observer(() => {
       clientId: values?.clientId,
       sellingDate: values?.sellingDate,
       products: [addProducts],
-      sendUser,
     };
 
     ordersApi.addNewOrder(createOrderData)
@@ -180,7 +176,7 @@ export const AddEditModal = observer(() => {
   };
 
   const handleChaneCheckbox = (event: CheckboxChangeEvent) => {
-    setSendUser(event.target?.checked);
+    ordersStore.setIsSendUser(event.target?.checked);
   };
 
   const handleChangeProduct = (productId: string) => {

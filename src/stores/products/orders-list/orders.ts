@@ -20,10 +20,15 @@ class OrdersStore {
   singleOrder: IOrder | null = null;
   startDate: Date | null = this.#today;
   endDate: Date | null = this.#today;
+  isSendUser = false;
 
   constructor() {
     makeAutoObservable(this);
   }
+
+  setIsSendUser = (isSendUser: boolean) => {
+    this.isSendUser = isSendUser;
+  };
 
   getOrders = (params: IGetOrdersParams) =>
     ordersApi.getOrders(params)

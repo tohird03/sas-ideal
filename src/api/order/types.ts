@@ -50,7 +50,6 @@ export interface IAddOrder {
   sellingDate: string;
   accepted?: boolean;
   products: IAddOrderProducts[];
-  sendUser: boolean;
 }
 
 export interface IUpdateOrder {
@@ -58,6 +57,7 @@ export interface IUpdateOrder {
   clientId?: string;
   sellingDate?: string;
   accepted?: boolean;
+  sendUser: boolean;
 }
 
 export interface IUploadOrderToExelParams extends IGetOrdersParams {
@@ -66,7 +66,6 @@ export interface IUploadOrderToExelParams extends IGetOrdersParams {
 
 export interface IOrderProductAdd extends IAddOrderProducts {
   order_id: string;
-  sendUser: boolean;
 }
 
 export interface IUpdateOrderProduct {
