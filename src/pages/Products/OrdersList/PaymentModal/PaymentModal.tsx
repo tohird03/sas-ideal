@@ -71,6 +71,7 @@ export const PaymentModal = observer(() => {
       onCancel={handleModalClose}
       cancelText="Bekor qilish"
       centered
+      keyboard
       style={{ top: 0, padding: '20px' }}
       bodyStyle={{
         height: '85vh',

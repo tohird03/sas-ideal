@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { observer } from 'mobx-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Alert, Button, DatePicker, Form, InputNumber, InputNumberProps, Modal, Popconfirm, Select, Spin, Tag } from 'antd';
+import { Alert, Button, Checkbox, DatePicker, Form, InputNumber, InputNumberProps, Modal, Popconfirm, Select, Spin, Tag } from 'antd';
 import classNames from 'classnames';
 import { addNotification } from '@/utils';
 import { ordersStore, productsListStore } from '@/stores/products';
@@ -22,6 +22,7 @@ import {
 } from '@/api/order/types';
 import { ColumnType } from 'antd/es/table';
 import { OrderStatus, OrderStatusColor } from '../constants';
+import { CheckboxChangeEvent } from 'antd/es/checkbox';
 
 const cn = classNames.bind(styles);
 
@@ -38,6 +39,7 @@ export const AddEditModal = observer(() => {
   const [isUpdatingProduct, setIsUpdatingProduct] = useState<IOrderProducts | null>(null);
   const [isOpenProductSelect, setIsOpenProductSelect] = useState(false);
   const countInputRef = useRef<HTMLInputElement>(null);
+  const [sendUser, setSendUser] = useState(false);
 
   // GET DATAS
   const { data: clientsData, isLoading: loadingClients } = useQuery({
@@ -100,6 +102,7 @@ export const AddEditModal = observer(() => {
     if (ordersStore?.order) {
       const addOrderProduct: IOrderProductAdd = {
         ...addProducts,
+        sendUser,
         order_id: ordersStore?.order?.id,
       };
 
@@ -121,6 +124,7 @@ export const AddEditModal = observer(() => {
       clientId: values?.clientId,
       sellingDate: values?.sellingDate,
       products: [addProducts],
+      sendUser,
     };
 
     ordersApi.addNewOrder(createOrderData)
@@ -160,6 +164,10 @@ export const AddEditModal = observer(() => {
 
   const handleFocusToProduct = () => {
     setIsOpenProductSelect(true);
+  };
+
+  const handleChaneCheckbox = (event: CheckboxChangeEvent) => {
+    setSendUser(event.target?.checked);
   };
 
   const handleChangeProduct = (productId: string) => {
@@ -344,6 +352,7 @@ export const AddEditModal = observer(() => {
   return (
     <Modal
       open={ordersStore.isOpenAddEditNewOrderModal}
+      keyboard
       title={(
         <div className={cn('order__add-products-header')}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
@@ -505,6 +514,11 @@ export const AddEditModal = observer(() => {
             ref={countInputRef}
             formatter={(value) => priceFormat(value!)}
           />
+        </Form.Item>
+        <Form.Item
+          name="sendUser"
+        >
+          <Checkbox onChange={handleChaneCheckbox}>Mijozga bu sotuv haqida yuborilsinmi?</Checkbox>
         </Form.Item>
         <Button
           onClick={handleCreateOrUpdateOrder}
