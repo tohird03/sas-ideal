@@ -37,7 +37,7 @@ export const Pdf = forwardRef<HTMLDivElement, Props>(({ order }, ref) => (
               {`${index + 1}) ${product?.product?.name}`}
             </p>
             <p style={{ fontSize: '4px', margin: 0, padding: 0, fontWeight: 'bold', display: 'inline-block' }}>
-              {`${product?.count}x${product?.price}$ ****** ${product?.count * product?.price}$`}
+              {`${product?.count}x${product?.price} ****** ${product?.count * product?.price}`}
             </p>
           </div>
         ))
@@ -50,15 +50,15 @@ export const Pdf = forwardRef<HTMLDivElement, Props>(({ order }, ref) => (
     <div style={{ position: 'relative', top: '-25px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', width: '80px' }}>
         <p style={{ fontSize: '4px', margin: 0, padding: 0, fontWeight: 'bold', display: 'inline-block' }}>Jami narxi:</p>
-        <p style={{ fontSize: '4px', margin: 0, padding: 0, fontWeight: 'bold', display: 'inline-block' }}>{order?.sum}$</p>
+        <p style={{ fontSize: '4px', margin: 0, padding: 0, fontWeight: 'bold', display: 'inline-block' }}>{order?.sum}</p>
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between', width: '80px' }}>
         <p style={{ fontSize: '4px', margin: 0, padding: 0, fontWeight: 'bold', display: 'inline-block' }}>Qarzga:</p>
-        <p style={{ fontSize: '4px', margin: 0, padding: 0, fontWeight: 'bold', display: 'inline-block' }}>{order?.debt}$</p>
+        <p style={{ fontSize: '4px', margin: 0, padding: 0, fontWeight: 'bold', display: 'inline-block' }}>{order?.debt}</p>
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between', width: '80px' }}>
         <p style={{ fontSize: '4px', margin: 0, padding: 0, fontWeight: 'bold', display: 'inline-block' }}>Jami to&lsquo;lov:</p>
-        <p style={{ fontSize: '4px', margin: 0, padding: 0, fontWeight: 'bold', display: 'inline-block' }}>{order?.payment?.totalPay}$</p>
+        <p style={{ fontSize: '4px', margin: 0, padding: 0, fontWeight: 'bold', display: 'inline-block' }}>{order?.payment?.totalPay}</p>
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '80px' }}>
         <p style={{ fontSize: '4px', margin: 0, padding: 0, fontWeight: 'bold', display: 'inline-block' }}>t.me/Sohibjon_ideal</p>

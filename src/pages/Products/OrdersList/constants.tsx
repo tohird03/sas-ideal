@@ -71,7 +71,7 @@ export const ordersColumns: ColumnType<IOrder>[] = [
     title: 'Jami to\'lov',
     align: 'center',
     width: '150px',
-    render: (value, record) => `${priceFormat(record?.payment?.totalPay)}$`,
+    render: (value, record) => priceFormat(record?.payment?.totalPay),
   },
   {
     key: 'cash',
@@ -79,7 +79,7 @@ export const ordersColumns: ColumnType<IOrder>[] = [
     title: 'Naqd to\'lov',
     align: 'center',
     width: '150px',
-    render: (value, record) => `${priceFormat(record?.payment?.cash)}$`,
+    render: (value, record) => priceFormat(record?.payment?.cash),
   },
   {
     key: 'card',
@@ -87,7 +87,7 @@ export const ordersColumns: ColumnType<IOrder>[] = [
     title: 'Bank kartasi orqali to\'lov',
     align: 'center',
     width: '150px',
-    render: (value, record) => `${priceFormat(record?.payment?.card)}$`,
+    render: (value, record) => priceFormat(record?.payment?.card),
   },
   {
     key: 'transfer',
@@ -95,7 +95,7 @@ export const ordersColumns: ColumnType<IOrder>[] = [
     title: 'Bank o\'tkazmasi orqali to\'lov',
     align: 'center',
     width: '150px',
-    render: (value, record) => `${priceFormat(record?.payment?.transfer)}$`,
+    render: (value, record) => priceFormat(record?.payment?.transfer),
   },
   {
     key: 'other',
@@ -103,7 +103,7 @@ export const ordersColumns: ColumnType<IOrder>[] = [
     title: 'Boshqa usullar bilan to\'lov',
     align: 'center',
     width: '150px',
-    render: (value, record) => `${priceFormat(record?.payment?.other)}$`,
+    render: (value, record) => priceFormat(record?.payment?.other),
   },
   {
     key: 'debt',
@@ -206,7 +206,7 @@ export const ordersInfoPaymentColumns: ColumnType<IOrder>[] = [
     title: 'Jami narxi',
     align: 'center',
     width: '150px',
-    render: (value, record) => `${priceFormat(record?.sum)}$`,
+    render: (value, record) => priceFormat(record?.sum),
   },
   {
     key: 'totalPay',
@@ -214,7 +214,7 @@ export const ordersInfoPaymentColumns: ColumnType<IOrder>[] = [
     title: 'Jami to\'lov',
     align: 'center',
     width: '150px',
-    render: (value, record) => `${priceFormat(record?.payment?.totalPay)}$`,
+    render: (value, record) => priceFormat(record?.payment?.totalPay),
   },
   {
     key: 'debt',
@@ -222,7 +222,7 @@ export const ordersInfoPaymentColumns: ColumnType<IOrder>[] = [
     title: 'Qarzga',
     align: 'center',
     width: '150px',
-    render: (value, record) => `${priceFormat(record?.debt)}$`,
+    render: (value, record) => priceFormat(record?.debt),
   },
   {
     key: 'cash',
@@ -230,7 +230,7 @@ export const ordersInfoPaymentColumns: ColumnType<IOrder>[] = [
     title: 'Naqd to\'lov',
     align: 'center',
     width: '150px',
-    render: (value, record) => `${priceFormat(record?.payment?.cash)}$`,
+    render: (value, record) => priceFormat(record?.payment?.cash),
   },
   {
     key: 'card',
@@ -238,7 +238,7 @@ export const ordersInfoPaymentColumns: ColumnType<IOrder>[] = [
     title: 'Bank kartasi orqali to\'lov',
     align: 'center',
     width: '150px',
-    render: (value, record) => `${priceFormat(record?.payment?.card)}$`,
+    render: (value, record) => priceFormat(record?.payment?.card),
   },
   {
     key: 'transfer',
@@ -246,7 +246,7 @@ export const ordersInfoPaymentColumns: ColumnType<IOrder>[] = [
     title: 'Bank o\'tkazmasi orqali to\'lov',
     align: 'center',
     width: '150px',
-    render: (value, record) => `${priceFormat(record?.payment?.transfer)}$`,
+    render: (value, record) => priceFormat(record?.payment?.transfer),
   },
   {
     key: 'other',
@@ -254,7 +254,7 @@ export const ordersInfoPaymentColumns: ColumnType<IOrder>[] = [
     title: 'Boshqa usullar bilan to\'lov',
     align: 'center',
     width: '150px',
-    render: (value, record) => `${priceFormat(record?.payment?.other)}$`,
+    render: (value, record) => priceFormat(record?.payment?.other),
   },
 ];
 
@@ -289,7 +289,7 @@ export const ordersInfoProductsColumns: ColumnType<IOrderProducts>[] = [
     title: 'Sotish narxi',
     align: 'center',
     width: '150px',
-    render: (value, record) => `${priceFormat(record?.price)}$`,
+    render: (value, record) => priceFormat(record?.price),
   },
   {
     key: 'total',
@@ -297,7 +297,7 @@ export const ordersInfoProductsColumns: ColumnType<IOrderProducts>[] = [
     title: 'Jami narxi',
     align: 'center',
     width: '150px',
-    render: (value, record) => `${priceFormat(record?.count * record?.price)}$`,
+    render: (value, record) => priceFormat(record?.count * record?.price),
   },
 ];
 
@@ -309,7 +309,7 @@ export const ordersTotalCalc: ColumnType<ITotalOrderPaymentCalc>[] = [
     title: 'Jami narxi',
     align: 'center',
     width: '150px',
-    render: (value, record) => `${priceFormat(record?.totalSum)}$`,
+    render: (value, record) => priceFormat(record?.totalSum),
   },
   {
     key: 'totalPay',
@@ -317,7 +317,7 @@ export const ordersTotalCalc: ColumnType<ITotalOrderPaymentCalc>[] = [
     title: 'Jami to\'lov',
     align: 'center',
     width: '150px',
-    render: (value, record) => `${priceFormat(record?.totalPay)}$`,
+    render: (value, record) => priceFormat(record?.totalPay),
   },
   {
     key: 'cash',
@@ -325,7 +325,7 @@ export const ordersTotalCalc: ColumnType<ITotalOrderPaymentCalc>[] = [
     title: 'Jami - Naqd to\'lov',
     align: 'center',
     width: '150px',
-    render: (value, record) => `${priceFormat(record?.totalCash)}$`,
+    render: (value, record) => priceFormat(record?.totalCash),
   },
   {
     key: 'card',
@@ -333,7 +333,7 @@ export const ordersTotalCalc: ColumnType<ITotalOrderPaymentCalc>[] = [
     title: 'Jami - Bank kartasi orqali to\'lov',
     align: 'center',
     width: '150px',
-    render: (value, record) => `${priceFormat(record?.totalCard)}$`,
+    render: (value, record) => priceFormat(record?.totalCard),
   },
   {
     key: 'transfer',
@@ -341,7 +341,7 @@ export const ordersTotalCalc: ColumnType<ITotalOrderPaymentCalc>[] = [
     title: 'Jami - Bank o\'tkazmasi orqali to\'lov',
     align: 'center',
     width: '150px',
-    render: (value, record) => `${priceFormat(record?.totalTransfer)}$`,
+    render: (value, record) => priceFormat(record?.totalTransfer),
   },
   {
     key: 'other',
@@ -349,7 +349,7 @@ export const ordersTotalCalc: ColumnType<ITotalOrderPaymentCalc>[] = [
     title: 'Jami - Boshqa usullar bilan to\'lov',
     align: 'center',
     width: '150px',
-    render: (value, record) => `${priceFormat(record?.totalOther)}$`,
+    render: (value, record) => priceFormat(record?.totalOther),
   },
   {
     key: 'debt',
@@ -357,7 +357,7 @@ export const ordersTotalCalc: ColumnType<ITotalOrderPaymentCalc>[] = [
     title: 'Jami - Qarzga',
     align: 'center',
     width: '150px',
-    render: (value, record) => `${priceFormat(record?.totalDebt)}$`,
+    render: (value, record) => priceFormat(record?.totalDebt),
   },
 ];
 

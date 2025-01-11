@@ -130,11 +130,11 @@ export const Deed = observer(() => {
               </Table.Summary.Cell>
               <Table.Summary.Cell index={2}>
                 {/* @ts-ignore */}
-                <div style={{ textAlign: 'center' }}>{supplierDeedData?.totalDebt}$</div>
+                <div style={{ textAlign: 'center' }}>{supplierDeedData?.totalDebt}</div>
               </Table.Summary.Cell>
               <Table.Summary.Cell index={2}>
                 {/* @ts-ignore */}
-                <div style={{ textAlign: 'center' }}>{supplierDeedData?.totalCredit}$</div>
+                <div style={{ textAlign: 'center' }}>{supplierDeedData?.totalCredit}</div>
               </Table.Summary.Cell>
             </Table.Summary.Row>
             <Table.Summary.Row>
@@ -143,7 +143,7 @@ export const Deed = observer(() => {
               </Table.Summary.Cell>
               <Table.Summary.Cell colSpan={2} index={2}>
                 {/* @ts-ignore */}
-                <div style={{ textAlign: 'center' }}>{supplierDeedData?.totalDebt - supplierDeedData?.totalCredit}$</div>
+                <div style={{ textAlign: 'center' }}>{supplierDeedData?.totalDebt - supplierDeedData?.totalCredit}</div>
               </Table.Summary.Cell>
             </Table.Summary.Row>
           </>

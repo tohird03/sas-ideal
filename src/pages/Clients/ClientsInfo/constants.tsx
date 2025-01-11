@@ -34,7 +34,7 @@ export const clientsColumns: ColumnType<IClientsInfo>[] = [
     dataIndex: 'debt',
     title: 'Mijoz qarzi',
     align: 'center',
-    render: (value, record) => `${priceFormat(record?.debt)}$`,
+    render: (value, record) => priceFormat(record?.debt),
   },
   {
     key: 'lastSale',

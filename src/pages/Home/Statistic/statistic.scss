@@ -33,6 +33,7 @@ $small: 500px;
   &__top-card {
     width: 100%;
     display: flex;
+    cursor: pointer;
     .ant-card-body {
       width: 100% !important;
       text-align: center;

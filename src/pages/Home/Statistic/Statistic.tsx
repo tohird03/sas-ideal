@@ -7,14 +7,18 @@ import styles from './statistic.scss';
 import { CalendarOutlined, DollarOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
 import { ordersStore } from '@/stores/products';
-import { dateFormat } from '@/utils/getDateFormat';
+import { dateFormat, getStartAndEndDate, getStartMonthEndDate } from '@/utils/getDateFormat';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import CountUp from 'react-countup';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '@/constants';
 
 const cn = classNames.bind(styles);
 const formatter = (value: number) => <CountUp duration={2} end={value} separator="." />;
 
 export const Statistic = observer(() => {
+
+  const navigate = useNavigate();
   const { data: ordersStatisticData, isLoading: loading } = useQuery({
     queryKey: ['getOrdersStatistic'],
     queryFn: () => ordersStore.getOrdersStatistic(),
@@ -25,11 +29,11 @@ export const Statistic = observer(() => {
       chart: {
         id: 'basic-bar',
         toolbar: {
-          show: true, // Set to false to hide the entire toolbar
+          show: true,
           tools: {
-            zoom: false, // Disables zoom button
-            zoomin: false, // Disables zoom-in button
-            zoomout: false, // Disables zoom-out button
+            zoom: false,
+            zoomin: false,
+            zoomout: false,
             pan: false,
             reset: false,
           },
@@ -37,8 +41,8 @@ export const Statistic = observer(() => {
       },
       stroke: {
         stroke: {
-          curve: 'smooth', // Makes the line smooth
-          dashArray: 0, // Solid line
+          curve: 'smooth',
+          dashArray: 0,
         },
         fill: {
           color: 'red',
@@ -53,19 +57,19 @@ export const Statistic = observer(() => {
         categories: ordersStatisticData?.weeklyChart?.map(value => dateFormat(value?.date)),
       },
       yaxis: {
-        tickAmount: 10, // Adjust the number of Y-axis grid lines
+        tickAmount: 10,
       },
       markers: {
-        size: 6, // Size of markers
-        colors: ['#fff'], // Marker color
-        strokeColors: '#f18024', // Border color of markers
-        strokeWidth: 2, // Border width of markers
+        size: 6,
+        colors: ['#fff'],
+        strokeColors: '#f18024',
+        strokeWidth: 2,
         hover: {
           size: 8,
         },
       },
       dataLabels: {
-        enabled: false, // Yozuvlarni (value) o'chirish
+        enabled: false,
       },
       colors: ['#f18024'],
     },
@@ -77,27 +81,51 @@ export const Statistic = observer(() => {
     ],
   };
 
+  const handleClickTodayOrder = () => {
+    navigate(ROUTES.productsOrder);
+  };
+
+  const handleClickTodayWeek = () => {
+    ordersStore.setStartDate(getStartAndEndDate(7)?.startDate);
+    ordersStore.setEndDate(getStartAndEndDate(7)?.endDate);
+    navigate(ROUTES.productsOrder);
+  };
+
+  const handleClickMonth = () => {
+    ordersStore.setStartDate(getStartMonthEndDate()?.startDate);
+    ordersStore.setEndDate(getStartMonthEndDate()?.endDate);
+    navigate(ROUTES.productsOrder);
+  };
+
+  const handleClickClient = () => {
+    navigate(ROUTES.clientsInfo);
+  };
+
+  const handleClickSupplier = () => {
+    navigate(ROUTES.supplierInfo);
+  };
+
   return (
     <div style={{ backgroundColor: '#F5F5F5', padding: '30px' }}>
       <div className={cn('statistic__top-wrapper')}>
         <div className={cn('statistic__top-order')}>
           <h3 className={cn('statistic__top-heading')}>Sotuvlar</h3>
           <div className={cn('statistic__top-order-card')}>
-            <Card className={cn('statistic__top-card')}>
+            <Card onClick={handleClickTodayOrder} className={cn('statistic__top-card')}>
               <CalendarOutlined style={{ fontSize: '40px', color: '#f18024', marginBottom: 5 }} />
               <p className={cn('statistic__top-card-info')}>Bugun</p>
               <p className={cn('statistic__top-card-value')}>
                 {formatter(ordersStatisticData?.todaySales || 0)}
               </p>
             </Card>
-            <Card className={cn('statistic__top-card')}>
+            <Card onClick={handleClickTodayWeek} className={cn('statistic__top-card')}>
               <CalendarOutlined style={{ fontSize: '40px', color: '#f18024', marginBottom: 5 }} />
               <p className={cn('statistic__top-card-info')}>Shu hafta</p>
               <p className={cn('statistic__top-card-value')}>
                 {formatter(ordersStatisticData?.weeklySales || 0)}
               </p>
             </Card>
-            <Card className={cn('statistic__top-card')}>
+            <Card onClick={handleClickMonth} className={cn('statistic__top-card')}>
               <CalendarOutlined style={{ fontSize: '40px', color: '#f18024', marginBottom: 5 }} />
               <p className={cn('statistic__top-card-info')}>Shu oy</p>
               <p className={cn('statistic__top-card-value')}>
@@ -109,14 +137,14 @@ export const Statistic = observer(() => {
         <div className={cn('statistic__top-order')}>
           <h3 className={cn('statistic__top-heading')}>O&apos;zaro hisob kitoblar</h3>
           <div className={cn('statistic__top-order-card-calc')}>
-            <Card className={cn('statistic__top-card')}>
+            <Card onClick={handleClickClient} className={cn('statistic__top-card')}>
               <DollarOutlined style={{ fontSize: '40px', color: '#f18024', marginBottom: 5 }} />
               <p className={cn('statistic__top-card-info')}>Bizga qarz</p>
               <p className={cn('statistic__top-card-value')}>
                 {formatter(ordersStatisticData?.fromDebt || 0)}
               </p>
             </Card>
-            <Card className={cn('statistic__top-card')}>
+            <Card onClick={handleClickSupplier} className={cn('statistic__top-card')}>
               <DollarOutlined style={{ fontSize: '40px', color: '#f18024', marginBottom: 5 }} />
               <p className={cn('statistic__top-card-info')}>Bizning qarzimiz</p>
               <p className={cn('statistic__top-card-value')}>

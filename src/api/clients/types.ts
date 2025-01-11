@@ -54,10 +54,12 @@ export interface IAddSupplierInfo {
 
 export interface IDeedPayment extends IPayment {
   type: 'payment';
+  description: string;
 }
 
 export interface IDeedOrder extends IOrder {
   type: 'order';
+  description: string;
 }
 
 export type IDeed = IDeedPayment | IDeedOrder;

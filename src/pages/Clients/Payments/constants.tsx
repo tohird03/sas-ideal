@@ -30,7 +30,7 @@ export const paymentsColumns: ColumnType<IClientsPayments>[] = [
     title: 'Naqd to\'lov',
     align: 'center',
     width: '150px',
-    render: (value, record) => `${priceFormat(record?.cash)}$`,
+    render: (value, record) => priceFormat(record?.cash),
   },
   {
     key: 'card',
@@ -38,7 +38,7 @@ export const paymentsColumns: ColumnType<IClientsPayments>[] = [
     title: 'Bank kartasi orqali to\'lov',
     align: 'center',
     width: '150px',
-    render: (value, record) => `${priceFormat(record?.card)}$`,
+    render: (value, record) => priceFormat(record?.card),
   },
   {
     key: 'transfer',
@@ -46,7 +46,7 @@ export const paymentsColumns: ColumnType<IClientsPayments>[] = [
     title: 'Bank o\'tkazmasi orqali to\'lov',
     align: 'center',
     width: '150px',
-    render: (value, record) => `${priceFormat(record?.transfer)}$`,
+    render: (value, record) => priceFormat(record?.transfer),
   },
   {
     key: 'other',
@@ -54,7 +54,14 @@ export const paymentsColumns: ColumnType<IClientsPayments>[] = [
     title: 'Boshqa usullar bilan to\'lov',
     align: 'center',
     width: '150px',
-    render: (value, record) => `${priceFormat(record?.other)}$`,
+    render: (value, record) => priceFormat(record?.other),
+  },
+  {
+    key: 'description',
+    dataIndex: 'description',
+    title: 'Ma\'lumot',
+    align: 'center',
+    render: (value, record) => <span>{record?.description}</span>,
   },
   {
     key: 'createdAt',

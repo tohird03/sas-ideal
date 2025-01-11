@@ -4,11 +4,15 @@ import { IClientsPayments, IGetClientsPaymentsParams } from '@/api/payment/types
 import { paymentApi } from '@/api/payment';
 
 class PaymentsStore {
+  #today = new Date();
+
   pageNumber = 1;
   pageSize = 10;
   search: string | null = null;
   isOpenAddEditPaymentModal = false;
   singlePayment: IClientsPayments | null = null;
+  startDate: Date | null = this.#today;
+  endDate: Date | null = this.#today;
 
   constructor() {
     makeAutoObservable(this);
@@ -37,6 +41,14 @@ class PaymentsStore {
 
   setSinglePayment = (singlePayment: IClientsPayments | null) => {
     this.singlePayment = singlePayment;
+  };
+
+  setStartDate = (startDate: Date | null) => {
+    this.startDate = startDate;
+  };
+
+  setEndDate = (endDate: Date | null) => {
+    this.endDate = endDate;
   };
 
   reset() {

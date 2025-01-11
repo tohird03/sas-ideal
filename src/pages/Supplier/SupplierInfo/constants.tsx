@@ -34,7 +34,7 @@ export const supplierColumns: ColumnType<ISupplierInfo>[] = [
     dataIndex: 'debt',
     title: 'Yetkazib beruvchiga qarz',
     align: 'center',
-    render: (value, record) => `${priceFormat(record?.debt)}$`,
+    render: (value, record) => priceFormat(record?.debt),
   },
   {
     key: 'lastSale',

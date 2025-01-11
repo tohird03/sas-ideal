@@ -286,7 +286,7 @@ export const AddEditModal = observer(() => {
             disabled={isUpdatingProduct?.id !== record?.id}
             onChange={handleChangePrice}
           />
-        ) : <span>{record?.cost}$</span>
+        ) : <span>{record?.cost}</span>
       ),
     },
     {
@@ -302,7 +302,7 @@ export const AddEditModal = observer(() => {
             disabled={isUpdatingProduct?.id !== record?.id}
             onChange={handleChangeSellingPrice}
           />
-        ) : <span>{record?.selling_price}$</span>
+        ) : <span>{record?.selling_price}</span>
       ),
     },
     {
@@ -310,7 +310,7 @@ export const AddEditModal = observer(() => {
       dataIndex: 'totalCost',
       title: 'Jami narxi',
       align: 'center',
-      render: (value, record) => `${record?.cost * record?.count}$`,
+      render: (value, record) => record?.cost * record?.count,
     },
     {
       key: 'action',
@@ -454,7 +454,7 @@ export const AddEditModal = observer(() => {
                   </p>
                   <div className={cn('income-order__add-product-info')}>
                     <p className={cn('income-order__add-product-price')}>
-                      {product?.selling_price}$
+                      {product?.selling_price}
                     </p>
                     <p
                       style={{ backgroundColor: `${countColor(product?.count, product?.min_amount)}` }}
@@ -521,12 +521,6 @@ export const AddEditModal = observer(() => {
         pagination={false}
         scroll={{ y: 300 }}
       />
-
-      {/* <div className="income-order__add-products-form-pay-info">
-        <Alert type="info" message={`Umumiy narx: ${100}$`} />
-        <Alert type="error" message={`Qarzga: ${100}$`} />
-        <Alert type="warning" message={`Qaytim: ${100}$`} />
-      </div> */}
     </Modal>
   );
 });

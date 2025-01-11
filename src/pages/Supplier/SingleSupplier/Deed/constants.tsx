@@ -52,7 +52,7 @@ export const deedColumns: ColumnType<IDeed>[] = [
     className: 'green-col',
     render: (value, record) => (
       record?.type === 'order'
-        ? `${priceFormat(record?.sum)}$`
+        ? priceFormat(record?.sum)
         : null
     ),
   },
@@ -65,7 +65,7 @@ export const deedColumns: ColumnType<IDeed>[] = [
     className: 'red-col',
     render: (value, record) => (
       record?.type === 'payment'
-        ? `${priceFormat(record?.totalPay)}$`
+        ? priceFormat(record?.totalPay)
         : null
     ),
   },

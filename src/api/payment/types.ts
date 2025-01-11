@@ -11,8 +11,8 @@ export interface IClientsPayments extends IPaymentType {
 
 export interface IGetClientsPaymentsParams extends IPagination {
   search?: string;
-  startDate?: string;
-  endDate?: string;
+  startDate?: Date;
+  endDate?: Date;
   clientId?: string;
 }
 
