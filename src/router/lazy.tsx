@@ -50,3 +50,6 @@ export const IncomeProducts = lazy(() =>
 
 export const Orders = lazy(() =>
   import('@/pages/Products').then(({Orders}) => ({default: Orders})).catch(handleCatchChunkError));
+
+export const ReturnedOrders = lazy(() =>
+  import('@/pages/Products').then(({ReturnedOrders}) => ({default: ReturnedOrders})).catch(handleCatchChunkError));

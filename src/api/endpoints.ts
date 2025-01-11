@@ -37,6 +37,9 @@ export enum Endpoints {
 
   // ROLES
   role = '/role',
+
+  // RETURNED ORDER
+  returnedOrder = '/returned-order',
 }
 
 const config: Record<string, TStage> = {

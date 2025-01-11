@@ -24,6 +24,7 @@ export const ROUTES = {
   productsList: '/products/list',
   productsIncome: '/products/income',
   productsOrder: '/products/order',
+  productsReturnedOrder: '/products/returned-order',
 } as const;
 
 export const roleChecker = {

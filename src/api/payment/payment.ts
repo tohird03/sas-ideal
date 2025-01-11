@@ -25,19 +25,6 @@ class PaymentApi extends Instance {
 
   deletePayment = (id: string): Promise<AxiosResponse> =>
     this.delete(`${Endpoints.payment}/${id}`);
-
-  // getSupplierInfo = (params: IGetSupplierInfoParams): Promise<IResponse<ISupplierInfo[]>> =>
-  //   this.get(Endpoints.Supplier, { params });
-
-  // addSupplier = (params: IAddSupplierInfo): Promise<AxiosResponse> =>
-  //   this.post(Endpoints.Supplier, params);
-
-  // // UPDATE
-  // updateUser = (params: IUpdateUser): Promise<AxiosResponse> =>
-  //   this.patch(`${Endpoints.Users}/${params?.id}`, params);
-
-  // deleteUser = (id: string): Promise<AxiosResponse> =>
-  //   this.delete(`${Endpoints.Users}/${id}`);
 }
 
 export const paymentApi = new PaymentApi(config);

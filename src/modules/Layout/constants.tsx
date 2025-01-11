@@ -6,6 +6,7 @@ import {
   ContactsOutlined,
   ControlOutlined,
   DownloadOutlined,
+  FileSyncOutlined,
   HomeOutlined,
   SettingOutlined,
   ShoppingCartOutlined,
@@ -97,6 +98,11 @@ export const mainMenuList: IMenuItems[] = [
       {
         label: <><DownloadOutlined /> Tushurilgan mahsulotlar</>,
         key: ROUTES.productsIncome,
+        roleKey: IStaffPerKey.GET_INCOME_ORDERS,
+      },
+      {
+        label: <><FileSyncOutlined /> Mijozdan qaytgan mahsulotlar</>,
+        key: ROUTES.productsReturnedOrder,
         roleKey: IStaffPerKey.GET_INCOME_ORDERS,
       },
     ],
