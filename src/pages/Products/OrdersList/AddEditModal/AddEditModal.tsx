@@ -20,7 +20,7 @@ import {
   IOrderProductAdd,
   IOrderProducts,
 } from '@/api/order/types';
-import { ColumnType } from 'antd/es/table';
+import Table, { ColumnType } from 'antd/es/table';
 import { OrderStatus, OrderStatusColor } from '../constants';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
 
@@ -540,13 +540,19 @@ export const AddEditModal = observer(() => {
       </Form>
 
       {/* PRODUCTS SHOW LIST */}
-      <DataTable
+      <Table
         columns={addOrderProductsColumns}
-        data={ordersStore?.order?.products || []}
-        isMobile={isMobile}
+        dataSource={ordersStore?.order?.products || []}
         pagination={false}
         scroll={{ y: 300 }}
       />
+
+      <div>
+        <p style={{textAlign: 'end', fontSize: '24px', fontWeight: 'bold'}}>Umumiy qiymati: {
+          priceFormat(ordersStore?.order?.products?.reduce((prev, current) => prev + (current?.price * current?.count), 0))
+        }
+        </p>
+      </div>
     </Modal>
   );
 });

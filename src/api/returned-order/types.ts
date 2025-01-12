@@ -9,11 +9,9 @@ export interface IGetReturnedOrdersParams extends IPagination {
   endDate?: Date;
 }
 
-export interface IReturnedOrder {
+export interface IReturnedOrder extends IReturnedOrderPayments {
   id: string,
   sum: number,
-  cashPayment: number,
-  fromClient: number,
   description: string,
   accepted: boolean,
   createdAt: string,
@@ -41,4 +39,25 @@ export interface IAddReturnedOrderProducts {
   product_id: string,
   count: number,
   price: number
+}
+
+export interface IAddProductsToReturnedOrder extends IAddReturnedOrderProducts {
+  order_id?: string;
+}
+
+export interface IUpdateReturnedOrder extends IReturnedOrderPayments {
+  id: string,
+  accepted?: boolean,
+  description?: string,
+}
+
+export interface IUpdateProductFromReturnedOrders {
+  id: string,
+  price: number,
+  count: number,
+}
+
+export interface IReturnedOrderPayments {
+  cashPayment?: number,
+  fromClient?: number,
 }

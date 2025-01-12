@@ -63,7 +63,7 @@ export const ordersColumns: ColumnType<IOrder>[] = [
     title: 'Jami narxi',
     align: 'center',
     width: '150px',
-    render: (value, record) => record?.sum,
+    render: (value, record) => priceFormat(record?.sum),
   },
   {
     key: 'totalPay',
@@ -111,7 +111,7 @@ export const ordersColumns: ColumnType<IOrder>[] = [
     title: 'Qarzga',
     align: 'center',
     width: '150px',
-    render: (value, record) => record?.debt,
+    render: (value, record) => priceFormat(record?.debt),
   },
   {
     key: 'createdAt',

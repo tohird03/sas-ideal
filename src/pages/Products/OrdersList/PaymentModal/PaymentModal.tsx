@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Form, Input, InputNumber, Modal, Select, Spin, notification } from 'antd';
 import { observer } from 'mobx-react';
 import { ordersStore } from '@/stores/products';
@@ -12,6 +12,7 @@ import { useQueryClient } from '@tanstack/react-query';
 export const PaymentModal = observer(() => {
   const [form] = Form.useForm();
   const queryClient = useQueryClient();
+  const [totalPayment, setTotalPayment] = useState(0);
 
   const handleModalClose = () => {
     ordersStore.setOrderPayment(null);
@@ -65,6 +66,18 @@ export const PaymentModal = observer(() => {
     });
   }, [ordersStore.orderPayment]);
 
+  const handleValuesChange = (changedValues: any, allValues: any) => {
+    const { cash = 0, card = 0, transfer = 0, other = 0 } = allValues;
+    const total = [cash, card, transfer, other].reduce(
+      (sum, value) => sum + Number(value || 0),
+      0
+    );
+
+    setTotalPayment(total);
+  };
+
+  const totalPrice = ordersStore?.order?.products?.reduce((prev, current) => prev + (current?.price * current?.count), 0);
+
   return (
     <Modal
       open={ordersStore.isOpenPaymentModal}
@@ -93,6 +106,7 @@ export const PaymentModal = observer(() => {
         onFinish={handleSubmitPayment}
         layout="vertical"
         autoComplete="off"
+        onValuesChange={handleValuesChange}
         className="income-order__add-products-form-info"
       >
         <Form.Item
@@ -172,6 +186,10 @@ export const PaymentModal = observer(() => {
           />
         </Form.Item>
       </Form>
+      <div>
+        <p style={{ textAlign: 'end', fontSize: '24px', fontWeight: 'bold' }}>Umumiy qiymati: {priceFormat(totalPrice)}</p>
+        <p style={{ textAlign: 'end', fontSize: '24px', fontWeight: 'bold' }}>Qarzga: {Number(totalPrice) - Number(totalPayment) || 0}</p>
+      </div>
     </Modal>
   );
 });

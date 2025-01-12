@@ -10,22 +10,23 @@ import { CheckOutlined, DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-
 import { DataTable } from '@/components/Datatable/datatable';
 import { useMediaQuery } from '@/utils/mediaQuery';
 import dayjs from 'dayjs';
-import { clientsInfoStore, singleClientStore } from '@/stores/clients';
-import { ordersApi } from '@/api/order';
+import { clientsInfoStore } from '@/stores/clients';
 import styles from '../returned-orders.scss';
 import {
   IAddOrderModalForm,
   IOrderProducts,
 } from '@/api/order/types';
 import { ColumnType } from 'antd/es/table';
-import { CheckboxChangeEvent } from 'antd/es/checkbox';
-import { IAddReturnedOrderProducts, IAddReturnedOrders } from '@/api/returned-order/types';
+import { IAddProductsToReturnedOrder, IAddReturnedOrderProducts, IAddReturnedOrders } from '@/api/returned-order/types';
 import { returnedOrderApi } from '@/api/returned-order/returned-order';
 
 const cn = classNames.bind(styles);
 
 const filterOption = (input: string, option?: { label: string, value: string }) =>
   (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
+
+const countColor = (count: number, min_amount: number): string =>
+  count < 0 ? 'red' : count < min_amount ? 'orange' : 'green';
 
 export const AddEditModal = observer(() => {
   const [form] = Form.useForm();
@@ -60,13 +61,12 @@ export const AddEditModal = observer(() => {
   });
 
   const handleOpenPaymentModal = () => {
-    if (ordersStore?.order?.id) {
-      ordersStore.setOrderPayment({
-        payment: ordersStore?.order?.payment,
-        client: ordersStore?.order?.client,
-        orderId: ordersStore?.order?.id,
+    if (returnedOrdersStore?.singleReturnedOrder?.id) {
+      returnedOrdersStore.setSinglePayment({
+        cashPayment: returnedOrdersStore?.singleReturnedOrder?.cashPayment,
+        fromClient: returnedOrdersStore?.singleReturnedOrder?.fromClient,
       });
-      ordersStore.setIsOpenPaymentModal(true);
+      returnedOrdersStore.setIsOpenPaymentModal(true);
     }
   };
 
@@ -85,34 +85,31 @@ export const AddEditModal = observer(() => {
     };
 
     if (returnedOrdersStore?.singleReturnedOrder?.id) {
-      // const addOrderProduct: IOrderProductAdd = {
-      //   ...addProducts,
-      //   order_id: ordersStore?.order?.id,
-      // };
+      const addReturnedOrderProduct: IAddProductsToReturnedOrder = {
+        ...addProducts,
+        order_id: returnedOrdersStore?.singleReturnedOrder?.id,
+      };
 
-      // ordersApi.updateOrder({
-      //   id: ordersStore?.order?.id,
-      //   clientId: values?.clientId,
-      //   sellingDate: values?.sellingDate,
-      //   sendUser: ordersStore?.isSendUser,
+      // returnedOrderApi.updateReturnedOrder({
+      //   id: returnedOrdersStore?.singleReturnedOrder?.id,
       // })
       //   .catch(addNotification)
       //   .finally(() => {
       //     setLoading(false);
       //   });
 
-      // ordersApi.orderProductAdd(addOrderProduct)
-      //   .then(() => {
-      //     form.resetFields(['product_id', 'price', 'count']);
-      //     ordersStore.getSingleOrder(ordersStore.order?.id!);
-      //     queryClient.invalidateQueries({ queryKey: ['getOrders'] });
-      //   })
-      //   .catch(addNotification)
-      //   .finally(() => {
-      //     setLoading(false);
-      //   });
+      returnedOrderApi.addProductToReturnedOrder(addReturnedOrderProduct)
+        .then(() => {
+          form.resetFields(['product_id', 'price', 'count']);
+          returnedOrdersStore.getSingleOrder(returnedOrdersStore?.singleReturnedOrder?.id!);
+          queryClient.invalidateQueries({ queryKey: ['getReturnedOrders'] });
+        })
+        .catch(addNotification)
+        .finally(() => {
+          setLoading(false);
+        });
 
-      // return;
+      return;
     }
 
     const createReturnedOrderData: IAddReturnedOrders = {
@@ -135,9 +132,8 @@ export const AddEditModal = observer(() => {
   };
 
   const handleModalClose = () => {
-    ordersStore.setSingleOrder(null);
-    ordersStore.setOrder(null);
-    ordersStore.setIsOpenAddEditNewOrderModal(false);
+    returnedOrdersStore.setSingleReturnedOrder(null);
+    returnedOrdersStore.setIsOpenAddEditReturnedOrderModal(false);
   };
 
   // SEARCH OPTIONS
@@ -170,43 +166,15 @@ export const AddEditModal = observer(() => {
     setSearchClients(null);
   };
 
-  const clientsOptions = useMemo(() => (
-    clientsData?.data.map((supplier) => ({
-      value: supplier?.id,
-      label: `${supplier?.name}: +${supplier?.phone}`,
-    }))
-  ), [clientsData]);
-
-  useEffect(() => {
-    if (ordersStore.singleOrder && ordersStore?.order) {
-      setSearchClients(ordersStore?.order?.client?.phone);
-
-      form.setFieldsValue({
-        cash: ordersStore.order?.payment?.cash,
-        card: ordersStore.order?.payment?.card,
-        transfer: ordersStore.order?.payment?.transfer,
-        other: ordersStore.order?.payment?.other,
-        sellingDate: dayjs(ordersStore.order?.sellingDate),
-        clientId: ordersStore?.order?.client?.id,
-      });
-    } else if (singleClientStore.activeClient?.id) {
-      setSearchClients(singleClientStore.activeClient?.phone);
-      form.setFieldValue('clientId', singleClientStore.activeClient?.id);
-    }
-  }, [ordersStore.order, singleClientStore.activeClient]);
-
-  const countColor = (count: number, min_amount: number): string =>
-    count < 0 ? 'red' : count < min_amount ? 'orange' : 'green';
-
   // TABLE ACTIONS
   const handleEditProduct = (orderProduct: IOrderProducts) => {
     setIsUpdatingProduct(orderProduct);
   };
 
   const handleDeleteProduct = (orderId: string) => {
-    ordersApi.deleteOrderProduct(orderId)
+    returnedOrderApi.deleteProductFromReturnedOrder(orderId)
       .then(() => {
-        ordersStore.getSingleOrder(ordersStore.order?.id!)
+        returnedOrdersStore.getSingleOrder(returnedOrdersStore?.singleReturnedOrder?.id!)
           .finally(() => {
             setLoading(false);
           });
@@ -224,14 +192,14 @@ export const AddEditModal = observer(() => {
 
   const handleSaveAndUpdateOrderProduct = () => {
     if (isUpdatingProduct) {
-      ordersApi.updateOrderProduct({
+      returnedOrderApi.updateProductFromReturnedOrder({
         id: isUpdatingProduct?.id,
         price: isUpdatingProduct?.price,
         count: isUpdatingProduct?.count,
       })
         .then(res => {
           if (res) {
-            ordersStore.getSingleOrder(ordersStore.order?.id!)
+            returnedOrdersStore.getSingleOrder(returnedOrdersStore.singleReturnedOrder?.id!)
               .then(() => {
                 setIsUpdatingProduct(null);
               })
@@ -335,6 +303,25 @@ export const AddEditModal = observer(() => {
       ),
     },
   ];
+
+
+  const clientsOptions = useMemo(() => (
+    clientsData?.data.map((supplier) => ({
+      value: supplier?.id,
+      label: `${supplier?.name}: +${supplier?.phone}`,
+    }))
+  ), [clientsData]);
+
+  useEffect(() => {
+    if (returnedOrdersStore?.singleReturnedOrder) {
+      setSearchClients(returnedOrdersStore?.singleReturnedOrder?.client?.phone);
+
+      form.setFieldsValue({
+        // sellingDate: dayjs(returnedOrdersStore?.singleReturnedOrder?.sellingDate),
+        clientId: returnedOrdersStore?.singleReturnedOrder?.client?.id,
+      });
+    }
+  }, [returnedOrdersStore?.singleReturnedOrder]);
 
   return (
     <Modal
@@ -487,7 +474,7 @@ export const AddEditModal = observer(() => {
       {/* PRODUCTS SHOW LIST */}
       <DataTable
         columns={addOrderProductsColumns}
-        data={ordersStore?.order?.products || []}
+        data={returnedOrdersStore?.singleReturnedOrder?.products || []}
         isMobile={isMobile}
         pagination={false}
         scroll={{ y: 300 }}

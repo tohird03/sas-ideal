@@ -5,9 +5,14 @@ export const priceFormat = (price: string | number | null | undefined) => {
 
   const numberPrice = Number(price);
 
-  if (Number.isInteger(numberPrice)) {
-    return numberPrice.toLocaleString('en-US');
+  if (isNaN(numberPrice)) {
+    return '0';
   }
 
-  return numberPrice.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 5});
+  const formattedPrice = numberPrice.toLocaleString('en-US', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 5,
+  }).replace(/,/g, ' ');
+
+  return formattedPrice;
 };

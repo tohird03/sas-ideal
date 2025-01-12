@@ -2,7 +2,14 @@ import { AxiosResponse } from 'axios';
 import { Endpoints, umsStages } from '../endpoints';
 import { INetworkConfig, Instance } from '../instance';
 import { IResponse } from '../types';
-import { IAddReturnedOrders, IGetReturnedOrdersParams, IReturnedOrder } from './types';
+import {
+  IAddProductsToReturnedOrder,
+  IAddReturnedOrders,
+  IGetReturnedOrdersParams,
+  IReturnedOrder,
+  IUpdateProductFromReturnedOrders,
+  IUpdateReturnedOrder,
+} from './types';
 
 const config: INetworkConfig = {
   baseURL: Endpoints.Base,
@@ -23,11 +30,20 @@ class ReturnedOrderApi extends Instance {
   getSingleReturnedOrder = (orderId: string): Promise<IReturnedOrder> =>
     this.get(`${Endpoints.returnedOrder}/${orderId}`);
 
-  // updatePayment = (params: IAddEditPaymentParams): Promise<AxiosResponse> =>
-  //   this.patch(`${Endpoints.payment}/${params?.id}`, params);
+  updateReturnedOrder = (params: IUpdateReturnedOrder): Promise<AxiosResponse> =>
+    this.patch(`${Endpoints.returnedOrder}/${params?.id}`, params);
 
-  // deletePayment = (id: string): Promise<AxiosResponse> =>
-  //   this.delete(`${Endpoints.payment}/${id}`);
+  deleteReturnedOrder = (id: string): Promise<AxiosResponse> =>
+    this.delete(`${Endpoints.returnedOrder}/${id}`);
+
+  addProductToReturnedOrder = (params: IAddProductsToReturnedOrder): Promise<AxiosResponse> =>
+    this.post(Endpoints.returnedProduct, params);
+
+  deleteProductFromReturnedOrder = (id: string): Promise<AxiosResponse> =>
+    this.delete(`${Endpoints.returnedProduct}/${id}`);
+
+  updateProductFromReturnedOrder = (params: IUpdateProductFromReturnedOrders): Promise<AxiosResponse> =>
+    this.patch(`${Endpoints.returnedProduct}/${params?.id}`, params);
 }
 
 export const returnedOrderApi = new ReturnedOrderApi(config);

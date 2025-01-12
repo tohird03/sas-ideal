@@ -12,6 +12,7 @@ import styles from './returned-orders.scss';
 import { returnedOrdersColumns } from './constants';
 import { returnedOrdersStore } from '@/stores/products';
 import dayjs from 'dayjs';
+import { PaymentModal } from './PaymentModal';
 
 const cn = classNames.bind(styles);
 
@@ -107,6 +108,7 @@ export const ReturnedOrders = observer(() => {
       />
 
       {returnedOrdersStore.isOpenAddEditReturnedOrderModal && <AddEditModal />}
+      {returnedOrdersStore.isOpenPaymentModal && <PaymentModal />}
     </main>
   );
 });

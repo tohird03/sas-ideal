@@ -74,18 +74,19 @@ export const returnedOrdersColumns: ColumnType<IReturnedOrder>[] = [
     ),
   },
   {
-    key: 'description',
-    dataIndex: 'description',
-    title: 'Ma\'lumot',
-    align: 'center',
-    render: (value, record) => priceFormat(record?.cashPayment),
-  },
-  {
     key: 'createdAt',
     dataIndex: 'createdAt',
     title: 'Qaytarilgan sanasi',
     align: 'center',
     width: '150px',
     render: (value, record) => getFullDateFormat(record?.createdAt),
+  },
+  {
+    key: 'action',
+    dataIndex: 'action',
+    title: 'O\'zgartirish',
+    align: 'center',
+    width: '150px',
+    render: (value, record) => <Action returnedOrder={record} />,
   },
 ];
