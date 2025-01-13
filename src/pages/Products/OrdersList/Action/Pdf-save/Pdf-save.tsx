@@ -1,9 +1,15 @@
 import React, { forwardRef } from 'react';
-import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer';
 import { IOrder } from '@/api/order/types';
 import { priceFormat } from '@/utils/priceFormat';
 import { getFullDateFormat } from '@/utils/getDateFormat';
-import QrImg from '@/assets/img/tg-qr.jpg';
+
+// Shriftni ro'yxatdan o'tkazish
+Font.register({
+  family: 'NotoSans',
+  src: '/fonts/noto.ttf',
+  fontWeight: 'bold',
+});
 
 type Props = {
   order: IOrder;
@@ -13,35 +19,33 @@ export const MyDocument = forwardRef<any, Props>(({ order }, ref) => (
   <Document ref={ref}>
     <Page size="A4" style={styles.page}>
       <View style={styles.section}>
+        <Text style={styles.logo}>SAS-IDEAL</Text>
         <View style={styles.topData}>
           <View>
-            <Text style={styles.title}>Xaridor: {order?.client?.name}</Text>
-            <Text style={styles.title}>Xaridor raqami: {order?.client?.phone}</Text>
-            <Text style={styles.title}>Sotuv vaqti: {getFullDateFormat(order?.sellingDate)}</Text>
-          </View>
-          <View>
-            <Image src={QrImg} style={styles.qrImg} />
-            <Text style={styles.qrTitle}>@SOHIBJON_IDEAL</Text>
+            <Text style={styles.title}>Дата продажа: {getFullDateFormat(order?.sellingDate)}</Text>
+            <Text style={styles.title}>Харидор: {order?.client?.name} {order?.client?.phone}</Text>
           </View>
         </View>
 
         {/* Jadval */}
         <View style={styles.table}>
           <View style={styles.tableHeader}>
-            <Text style={styles.tableHeaderCell}>N</Text>
-            <Text style={styles.tableHeaderCell}>Mahsulot nomi</Text>
-            <Text style={styles.tableHeaderCell}>Soni</Text>
-            <Text style={styles.tableHeaderCell}>Narxi</Text>
-            <Text style={styles.tableHeaderCell}>Summasi</Text>
+            <Text style={{ ...styles.tableHeaderCell, maxWidth: '30px' }}>N</Text>
+            <Text style={{ ...styles.tableHeaderCell, maxWidth: '180px', minWidth: '180px' }}>Mahsulot nomi</Text>
+            <Text style={{ ...styles.tableHeaderCell, maxWidth: '40px' }}>✓</Text>
+            <Text style={{ ...styles.tableHeaderCell }}>Soni</Text>
+            <Text style={{ ...styles.tableHeaderCell }}>Narxi</Text>
+            <Text style={{ ...styles.tableHeaderCell }}>Summasi</Text>
           </View>
           {
             order?.products?.map((product, index) => (
               <View key={product?.id} style={styles.tableRow}>
-                <Text style={styles.tableCell}>{index + 1}</Text>
-                <Text style={styles.tableCell}>{product?.product?.name}</Text>
-                <Text style={styles.tableCell}>{product?.count}</Text>
-                <Text style={styles.tableCell}>{product?.price}</Text>
-                <Text style={styles.tableCell}>{priceFormat(product?.count * product?.price)}</Text>
+                <Text style={{ ...styles.tableCell, maxWidth: '30px' }}>{index + 1}</Text>
+                <Text style={{ ...styles.tableCell, maxWidth: '180px', minWidth: '180px' }}>{product?.product?.name}</Text>
+                <Text style={{ ...styles.tableCell, maxWidth: '40px' }} />
+                <Text style={{ ...styles.tableCell }}>{product?.count}</Text>
+                <Text style={{ ...styles.tableCell }}>{product?.price}</Text>
+                <Text style={{ ...styles.tableCell }}>{priceFormat(product?.count * product?.price)}</Text>
               </View>
             ))
           }
@@ -65,6 +69,11 @@ const styles = StyleSheet.create({
     margin: 10,
     padding: 10,
   },
+  logo: {
+    textAlign: 'center',
+    fontSize: '18px',
+    marginBottom: '10px',
+  },
   topData: {
     display: 'flex',
     flexDirection: 'row',
@@ -74,7 +83,8 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 12,
-    fontFamily: 'Helvetica-Bold',
+    fontFamily: 'NotoSans',
+    fontWeight: 'bold',
   },
   qrImg: {
     width: 70,
@@ -82,16 +92,15 @@ const styles = StyleSheet.create({
   qrTitle: {
     fontSize: 8,
     marginTop: 4,
-    fontFamily: 'Helvetica-Bold',
+    fontFamily: 'NotoSans',
     color: '#1b3469',
   },
   content: {
     fontSize: 12,
     marginBottom: 20,
   },
-  // Jadvalga tegishli stil
   table: {
-    marginTop: 20,
+    marginTop: 30,
     width: '100%',
     borderWidth: 1,
     borderColor: 'black',
@@ -105,7 +114,7 @@ const styles = StyleSheet.create({
   tableHeaderCell: {
     flex: 1,
     textAlign: 'center',
-    fontFamily: 'Helvetica-Bold',
+    fontFamily: 'NotoSans',
     fontSize: 10,
     padding: 5,
     borderRightWidth: 1,
@@ -130,6 +139,6 @@ const styles = StyleSheet.create({
   totalCalcText: {
     textAlign: 'right',
     fontSize: 12,
-    fontFamily: 'Helvetica-Bold',
+    fontFamily: 'NotoSans',
   },
 });

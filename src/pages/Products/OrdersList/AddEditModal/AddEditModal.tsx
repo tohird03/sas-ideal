@@ -358,6 +358,10 @@ export const AddEditModal = observer(() => {
     },
   ];
 
+  const handleAddClient = () => {
+    clientsInfoStore.setIsOpenAddEditClientModal(true);
+  };
+
   return (
     <Modal
       open={ordersStore.isOpenAddEditNewOrderModal}
@@ -424,25 +428,31 @@ export const AddEditModal = observer(() => {
         autoComplete="off"
         className="order__add-products-form"
       >
-        <Form.Item
-          label="Mijoz"
-          rules={[{ required: true }]}
-          name="clientId"
-        >
-          <Select
-            showSearch
-            placeholder="Mijoz"
-            loading={loadingClients}
-            optionFilterProp="children"
-            notFoundContent={loadingClients ? <Spin style={{ margin: '10px' }} /> : null}
-            filterOption={filterOption}
-            onSearch={handleSearchSupplier}
-            onClear={handleClearClient}
-            options={supplierOptions}
-            onChange={handleChangeClientSelect}
-            allowClear
-          />
-        </Form.Item>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <Form.Item
+            label="Mijoz"
+            rules={[{ required: true }]}
+            name="clientId"
+            style={{ flex: 1, width: '100%' }}
+          >
+            <Select
+              showSearch
+              placeholder="Mijoz"
+              loading={loadingClients}
+              optionFilterProp="children"
+              notFoundContent={loadingClients ? <Spin style={{ margin: '10px' }} /> : null}
+              filterOption={filterOption}
+              onSearch={handleSearchSupplier}
+              onClear={handleClearClient}
+              options={supplierOptions}
+              onChange={handleChangeClientSelect}
+              allowClear
+              style={{ flex: 1, width: '100%' }}
+
+            />
+          </Form.Item>
+          <Button style={{marginTop: '5px'}} onClick={handleAddClient} icon={<PlusOutlined />} />
+        </div>
         <Form.Item
           label="Sotish sanasi"
           rules={[{ required: true }]}
@@ -548,7 +558,7 @@ export const AddEditModal = observer(() => {
       />
 
       <div>
-        <p style={{textAlign: 'end', fontSize: '24px', fontWeight: 'bold'}}>Umumiy qiymati: {
+        <p style={{ textAlign: 'end', fontSize: '24px', fontWeight: 'bold' }}>Umumiy qiymati: {
           priceFormat(ordersStore?.order?.products?.reduce((prev, current) => prev + (current?.price * current?.count), 0))
         }
         </p>
