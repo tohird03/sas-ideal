@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import {observer} from 'mobx-react';
 import {PlusCircleOutlined} from '@ant-design/icons';
 import {useQuery} from '@tanstack/react-query';
-import {Button, DatePicker, Input, Typography} from 'antd';
+import {Button, DatePicker, Input, Table, Typography} from 'antd';
 import classNames from 'classnames';
 import {DataTable} from '@/components/Datatable/datatable';
 import {getPaginationParams} from '@/utils/getPaginationParams';
@@ -18,7 +18,7 @@ const cn = classNames.bind(styles);
 export const ClientsPayments = observer(() => {
   const isMobile = useMediaQuery('(max-width: 800px)');
 
-  const {data: clientsInfoData, isLoading: loading} = useQuery({
+  const {data: paymentsData, isLoading: loading} = useQuery({
     queryKey: [
       'getPayments',
       paymentsStore.pageNumber,
@@ -91,19 +91,43 @@ export const ClientsPayments = observer(() => {
         </div>
       </div>
 
-      <DataTable
+      <Table
         columns={paymentsColumns}
-        data={clientsInfoData?.data || []}
+        dataSource={paymentsData?.data || []}
         loading={loading}
-        isMobile={isMobile}
         pagination={{
-          total: clientsInfoData?.totalCount,
+          total: paymentsData?.totalCount,
           current: paymentsStore?.pageNumber,
           pageSize: paymentsStore?.pageSize,
           showSizeChanger: true,
           onChange: handlePageChange,
-          ...getPaginationParams(clientsInfoData?.totalCount),
+          ...getPaginationParams(paymentsData?.totalCount),
         }}
+        summary={() => (
+          <Table.Summary.Row>
+            <Table.Summary.Cell colSpan={2} index={1} />
+            <Table.Summary.Cell index={2}>
+              <div style={{ textAlign: 'center', fontWeight: 'bold' }}>
+                Jami: {paymentsData?.totalCalc?.totalCash}
+              </div>
+            </Table.Summary.Cell>
+            <Table.Summary.Cell index={2}>
+              <div style={{ textAlign: 'center', fontWeight: 'bold' }}>
+                Jami: {paymentsData?.totalCalc?.totalCard}
+              </div>
+            </Table.Summary.Cell>
+            <Table.Summary.Cell index={2}>
+              <div style={{ textAlign: 'center', fontWeight: 'bold' }}>
+                Jami: {paymentsData?.totalCalc?.totalTransfer}
+              </div>
+            </Table.Summary.Cell>
+            <Table.Summary.Cell index={2}>
+              <div style={{ textAlign: 'center', fontWeight: 'bold' }}>
+                Jami: {paymentsData?.totalCalc?.totalOther}
+              </div>
+            </Table.Summary.Cell>
+          </Table.Summary.Row>
+        )}
       />
 
       {paymentsStore.isOpenAddEditPaymentModal && <AddEditModal />}

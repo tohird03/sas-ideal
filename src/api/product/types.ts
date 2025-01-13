@@ -19,6 +19,7 @@ export interface IProducts {
   wholesale_price: number;
   // Foyda
   avarage_cost: number;
+  lastSale: string;
 }
 
 export interface IAddEditProduct {

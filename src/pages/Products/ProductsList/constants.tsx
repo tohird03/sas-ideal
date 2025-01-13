@@ -27,11 +27,11 @@ export const productsListColumn: ColumnType<IProducts>[] = [
     render: (value, record) => `${record?.count} dona`,
   },
   {
-    key: 'min_amount',
-    dataIndex: 'min_amount',
-    title: 'Ogohlantirish',
+    key: 'cost',
+    dataIndex: 'cost',
+    title: 'Sotib olingan narxi',
     align: 'center',
-    render: (value, record) => `${record?.min_amount} dona`,
+    render: (value, record) => record?.cost,
   },
   {
     key: 'selling_price',
@@ -39,20 +39,6 @@ export const productsListColumn: ColumnType<IProducts>[] = [
     title: 'Sotilish narxi',
     align: 'center',
     render: (value, record) => record?.selling_price,
-  },
-  {
-    key: 'wholesale_price',
-    dataIndex: 'wholesale_price',
-    title: 'Ulgurji narxi',
-    align: 'center',
-    render: (value, record) => record?.wholesale_price,
-  },
-  {
-    key: 'cost',
-    dataIndex: 'cost',
-    title: 'Sotib olingan narxi',
-    align: 'center',
-    render: (value, record) => record?.cost,
   },
   {
     key: 'totalPrice',
@@ -66,11 +52,25 @@ export const productsListColumn: ColumnType<IProducts>[] = [
     },
   },
   {
+    key: 'min_amount',
+    dataIndex: 'min_amount',
+    title: 'Ogohlantirish',
+    align: 'center',
+    render: (value, record) => `${record?.min_amount} dona`,
+  },
+  {
     key: 'createdAt',
     dataIndex: 'createdAt',
     title: 'Yaratilgan vaqti',
     align: 'center',
     render: (value, record) => getFullDateFormat(record?.createdAt),
+  },
+  {
+    key: 'lastSale',
+    dataIndex: 'lastSale',
+    title: 'Oxirgi sotuv',
+    align: 'center',
+    render: (value, record) => getFullDateFormat(record?.lastSale),
   },
   {
     key: 'action',

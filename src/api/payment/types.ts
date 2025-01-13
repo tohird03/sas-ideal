@@ -26,3 +26,11 @@ export interface IAddEditPaymentParams {
   other: number,
   sendUser?: boolean,
 }
+
+export interface ITotalPayment {
+  totalPay: number,
+  totalCard: number,
+  totalCash: number,
+  totalTransfer: number,
+  totalOther: number,
+}

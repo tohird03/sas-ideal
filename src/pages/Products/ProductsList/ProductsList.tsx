@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { observer } from 'mobx-react';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
-import { Button, Input, Typography } from 'antd';
+import { Button, Input, Table, Typography } from 'antd';
 import classNames from 'classnames';
 import { DataTable } from '@/components/Datatable/datatable';
 import { getPaginationParams } from '@/utils/getPaginationParams';
@@ -76,11 +76,10 @@ export const ProductsList = observer(() => {
         </div>
       </div>
 
-      <DataTable
+      <Table
         columns={productsListColumn}
-        data={productsData?.data || []}
+        dataSource={productsData?.data || []}
         loading={loading}
-        isMobile={isMobile}
         rowClassName={rowClassName}
         pagination={{
           total: productsData?.totalCount,
@@ -90,7 +89,34 @@ export const ProductsList = observer(() => {
           onChange: handlePageChange,
           ...getPaginationParams(productsData?.totalCount),
         }}
+        summary={() => (
+          <Table.Summary.Row>
+            <Table.Summary.Cell colSpan={2} index={1} />
+            <Table.Summary.Cell index={2}>
+              <div style={{ textAlign: 'center', fontWeight: 'bold' }}>
+                Umumiy:
+                {/* @ts-ignore */}
+                <p style={{margin: '0', fontWeight: 'bold'}}>{productsData?.totalProductCount}</p>
+              </div>
+            </Table.Summary.Cell>
+            <Table.Summary.Cell index={2}>
+              <div style={{ textAlign: 'center', fontWeight: 'bold', maxWidth: '150px', margin: '0 auto' }}>
+                Umumiy sotib olingan narxi:
+                {/* @ts-ignore */}
+                <p style={{margin: '0', fontWeight: 'bold'}}>{productsData?.totalProductCost}</p>
+              </div>
+            </Table.Summary.Cell>
+            <Table.Summary.Cell index={3}>
+              <div style={{ textAlign: 'center', fontWeight: 'bold', maxWidth: '150px', margin: '0 auto' }}>
+                Umumiy sotilish narxi:
+                {/* @ts-ignore */}
+                <p style={{margin: '0', fontWeight: 'bold'}}>{productsData?.totalProductPrice}</p>
+              </div>
+            </Table.Summary.Cell>
+          </Table.Summary.Row>
+        )}
       />
+
 
       {productsListStore.isOpenAddEditProductModal && <AddEditModal />}
     </main>

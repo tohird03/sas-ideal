@@ -61,6 +61,7 @@ export const paymentsColumns: ColumnType<IClientsPayments>[] = [
     dataIndex: 'description',
     title: 'Ma\'lumot',
     align: 'center',
+    width: 200,
     render: (value, record) => <span>{record?.description}</span>,
   },
   {

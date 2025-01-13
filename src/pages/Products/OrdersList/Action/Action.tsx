@@ -10,10 +10,14 @@ import { ordersApi } from '@/api/order';
 import { jsPDF as JsPdf } from 'jspdf';
 import { Pdf } from './PDF/pdf';
 import Item from 'antd/es/list/Item';
+import ReactToPrint from 'react-to-print';
 
 type Props = {
   orders: IOrder;
 };
+
+import { MyDocument } from './Pdf-save';
+import { PDFDownloadLink, pdf } from '@react-pdf/renderer';
 
 export const Action: FC<Props> = observer(({ orders }) => {
   const queryClient = useQueryClient();
@@ -66,24 +70,20 @@ export const Action: FC<Props> = observer(({ orders }) => {
     deleteOrder(orders?.id);
   };
 
-  const targetRef = useRef<HTMLDivElement>(null);
+  const handlePrint = () => {
+    const doc = <MyDocument order={orders} />;
 
-  const generatePDF = () => {
-    if (targetRef.current) {
-      const doc = new JsPdf({ unit: 'mm', format: 'a4' }); // You can change 'a4' to 'letter', 'a3', etc.
+    pdf(doc).toBlob().then((blob) => {
+      const url = URL.createObjectURL(blob);
+      const iframe = document.createElement('iframe');
 
-      const fontSize = 40;
-
-      doc.setFontSize(fontSize);
-
-      doc.html(targetRef.current, {
-        callback: (doc) => {
-          doc.save(`${orders?.client?.name}.pdf`);
-        },
-        x: 10,
-        y: 10,
-      });
-    }
+      iframe.style.position = 'absolute';
+      iframe.style.width = '0';
+      iframe.style.height = '0';
+      iframe.src = url;
+      document.body.appendChild(iframe);
+      iframe.contentWindow?.print();
+    });
   };
 
   const menuSaveOptions = (
@@ -99,11 +99,29 @@ export const Action: FC<Props> = observer(({ orders }) => {
       </Item>
       <Item key="check">
         <Button
-          onClick={generatePDF}
+          onClick={handlePrint}
           icon={<PrinterOutlined />}
         >
           Chekka chiqarish
         </Button>
+      </Item>
+      <Item key="check">
+        <PDFDownloadLink
+          style={{
+            border: '1px solid #d9d9d9',
+            borderRadius: '6px',
+            padding: '4px 15px',
+            fontWeight: '500',
+            width: '100%',
+            display: 'flex',
+            textAlign: 'center',
+            justifyContent: 'center',
+          }}
+          document={<MyDocument order={orders} />}
+          fileName={orders?.client?.name}
+        >
+          <DownloadOutlined style={{ marginRight: '10px' }} /> Pdfda yuklash
+        </PDFDownloadLink>
       </Item>
     </Menu>
   );
@@ -143,10 +161,6 @@ export const Action: FC<Props> = observer(({ orders }) => {
       <Dropdown placement="bottomRight" overlay={menuOrderOptions} trigger={['click']}>
         <Button icon={<MoreOutlined />} />
       </Dropdown>
-
-      <div style={{display: 'none'}}>
-        <Pdf order={orders} ref={targetRef} />
-      </div>
     </div>
   );
 });
