@@ -39,6 +39,8 @@ export const AddEditModal = observer(() => {
   const [isUpdatingProduct, setIsUpdatingProduct] = useState<IOrderProducts | null>(null);
   const [isOpenProductSelect, setIsOpenProductSelect] = useState(false);
   const countInputRef = useRef<HTMLInputElement>(null);
+  const productRef = useRef<any>(null);
+  const clientRef = useRef<any>(null);
 
   // GET DATAS
   const { data: clientsData, isLoading: loadingClients } = useQuery({
@@ -119,7 +121,12 @@ export const AddEditModal = observer(() => {
       ordersApi.orderProductAdd(addOrderProduct)
         .then(() => {
           form.resetFields(['product_id', 'price', 'count']);
-          ordersStore.getSingleOrder(ordersStore.order?.id!);
+          ordersStore.getSingleOrder(ordersStore.order?.id!)
+            .finally(() => {
+              const fieldInstance = form.getFieldInstance('product_id');
+
+              fieldInstance?.focus();
+            });
           queryClient.invalidateQueries({ queryKey: ['getOrders'] });
         })
         .catch(addNotification)
@@ -140,7 +147,12 @@ export const AddEditModal = observer(() => {
       .then(res => {
         form.resetFields(['product_id', 'price', 'count']);
         if (res?.id) {
-          ordersStore.getSingleOrder(res?.id!);
+          ordersStore.getSingleOrder(res?.id!)
+            .finally(() => {
+              const fieldInstance = form.getFieldInstance('product_id');
+
+              fieldInstance?.focus();
+            });
         } else {
           ordersStore.setOrder(res);
         }
@@ -169,6 +181,7 @@ export const AddEditModal = observer(() => {
 
   const handleChangeClientSelect = () => {
     setIsOpenProductSelect(true);
+    productRef.current?.focus();
   };
 
   const handleFocusToProduct = () => {
@@ -362,6 +375,61 @@ export const AddEditModal = observer(() => {
     clientsInfoStore.setIsOpenAddEditClientModal(true);
   };
 
+  const handleAddProduct = () => {
+    productsListStore.setIsOpenAddEditProductModal(true);
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLFormElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+
+      const fieldsValue = form.getFieldsValue();
+
+      const requiredFields = form
+        .getFieldsError()
+        .filter((field) => field.errors.length > 0);
+
+      const firstEmptyField = requiredFields.find(
+        (field) => !fieldsValue[field.name[0]]
+      );
+
+      if (firstEmptyField) {
+        const fieldInstance = form.getFieldInstance(firstEmptyField.name[0]);
+
+        fieldInstance?.focus();
+      } else {
+        form.submit();
+      }
+    }
+  };
+
+  const handleSelectChange = (value: any, name: string) => {
+    const nextFieldName = getNextFieldName(name); // A function to get the next field name
+
+    if (nextFieldName) {
+      const nextField = form.getFieldInstance(nextFieldName);
+
+      nextField?.focus();
+    }
+  };
+
+  const getNextFieldName = (currentFieldName: string) => {
+    const fieldNames = [
+      'clientId',
+      'product_id',
+      'price',
+      'count',
+    ];
+
+    const currentIndex = fieldNames.indexOf(currentFieldName);
+
+    return fieldNames[currentIndex + 1];
+  };
+
+  const handleBlurProduct = () => {
+    setIsOpenProductSelect(false);
+  };
+
   return (
     <Modal
       open={ordersStore.isOpenAddEditNewOrderModal}
@@ -427,6 +495,7 @@ export const AddEditModal = observer(() => {
         layout="vertical"
         autoComplete="off"
         className="order__add-products-form"
+        onKeyPress={handleKeyPress}
       >
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <Form.Item
@@ -437,6 +506,7 @@ export const AddEditModal = observer(() => {
           >
             <Select
               showSearch
+              ref={clientRef}
               placeholder="Mijoz"
               loading={loadingClients}
               optionFilterProp="children"
@@ -446,16 +516,15 @@ export const AddEditModal = observer(() => {
               onClear={handleClearClient}
               options={supplierOptions}
               onChange={handleChangeClientSelect}
+              onSelect={(value) => handleSelectChange(value, 'clientId')}
               allowClear
               style={{ flex: 1, width: '100%' }}
-
             />
           </Form.Item>
-          <Button style={{marginTop: '5px'}} onClick={handleAddClient} icon={<PlusOutlined />} />
+          <Button style={{ marginTop: '5px' }} onClick={handleAddClient} icon={<PlusOutlined />} />
         </div>
         <Form.Item
           label="Sotish sanasi"
-          rules={[{ required: true }]}
           name="sellingDate"
           initialValue={dayjs()}
         >
@@ -465,63 +534,57 @@ export const AddEditModal = observer(() => {
             style={{ width: '100%' }}
           />
         </Form.Item>
-        <Form.Item
-          label="Mahsulot"
-          rules={[{ required: true }]}
-          name="product_id"
-        >
-          <Select
-            showSearch
-            placeholder="Mahsulot"
-            loading={loadingProducts}
-            optionFilterProp="children"
-            notFoundContent={loadingProducts ? <Spin style={{ margin: '10px' }} /> : null}
-            filterOption={filterOption}
-            onSearch={handleSearchProducts}
-            onChange={handleChangeProduct}
-            optionLabelProp="label"
-            open={isOpenProductSelect}
-            onFocus={handleFocusToProduct}
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <Form.Item
+            label="Mahsulot"
+            rules={[{ required: true }]}
+            name="product_id"
+            style={{ flex: 1, width: '100%' }}
           >
-            {productsData?.data.map((product) => (
-              <Select.Option
-                key={product?.id}
-                value={product?.id}
-                label={product?.name}
-                className={cn('income-order__add-product')}
-              >
-                <div className={cn('income-order__add-product-option')}>
-                  <p className={cn('income-order__add-product-name')}>
-                    {product?.name}
-                  </p>
-                  <div className={cn('income-order__add-product-info')}>
-                    <p className={cn('income-order__add-product-price')}>
-                      {product?.selling_price}
+            <Select
+              showSearch
+              placeholder="Mahsulot"
+              loading={loadingProducts}
+              optionFilterProp="children"
+              notFoundContent={loadingProducts ? <Spin style={{ margin: '10px' }} /> : null}
+              filterOption={filterOption}
+              onSearch={handleSearchProducts}
+              onChange={handleChangeProduct}
+              optionLabelProp="label"
+              open={isOpenProductSelect}
+              onFocus={handleFocusToProduct}
+              ref={productRef}
+              onBlur={handleBlurProduct}
+            >
+              {productsData?.data.map((product) => (
+                <Select.Option
+                  key={product?.id}
+                  value={product?.id}
+                  label={product?.name}
+                  className={cn('income-order__add-product')}
+                >
+                  <div className={cn('income-order__add-product-option')}>
+                    <p className={cn('income-order__add-product-name')}>
+                      {product?.name}
                     </p>
-                    <p
-                      style={{ backgroundColor: `${countColor(product?.count, product?.min_amount)}` }}
-                      className={cn('income-order__add-product-count')}
-                    >
-                      {product?.count} dona
-                    </p>
+                    <div className={cn('income-order__add-product-info')}>
+                      <p className={cn('income-order__add-product-price')}>
+                        {product?.selling_price}
+                      </p>
+                      <p
+                        style={{ backgroundColor: `${countColor(product?.count, product?.min_amount)}` }}
+                        className={cn('income-order__add-product-count')}
+                      >
+                        {product?.count} dona
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </Select.Option>
-            ))}
-          </Select>
-        </Form.Item>
-        <Form.Item
-          label="Narxi"
-          rules={[{ required: true }]}
-          name="price"
-          initialValue={0}
-        >
-          <InputNumber
-            placeholder="Sotib olingan narxi"
-            style={{ width: '100%' }}
-            formatter={(value) => priceFormat(value!)}
-          />
-        </Form.Item>
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Button style={{ marginTop: '5px' }} onClick={handleAddProduct} icon={<PlusOutlined />} />
+        </div>
         <Form.Item
           label="Mahsulot soni"
           rules={[{ required: true }]}
@@ -531,6 +594,18 @@ export const AddEditModal = observer(() => {
             placeholder="Mahsulot sonini kiriting"
             style={{ width: '100%' }}
             ref={countInputRef}
+            formatter={(value) => priceFormat(value!)}
+          />
+        </Form.Item>
+        <Form.Item
+          label="Narxi"
+          rules={[{ required: true }]}
+          name="price"
+          initialValue={0}
+        >
+          <InputNumber
+            placeholder="Narxi"
+            style={{ width: '100%' }}
             formatter={(value) => priceFormat(value!)}
           />
         </Form.Item>

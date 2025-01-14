@@ -10,15 +10,16 @@ import { useMediaQuery } from '@/utils/mediaQuery';
 import { AddEditModal as AddEditOrder } from './AddEditModal';
 import styles from './orders.scss';
 import { FilterOrderStatusOptions, ordersColumns, ordersTotalCalc } from './constants';
-import { ordersStore } from '@/stores/products';
+import { ordersStore, productsListStore } from '@/stores/products';
 import dayjs from 'dayjs';
 import { OrderShowInfoModal } from './OrderShowInfoModal';
 import { PaymentModal } from './PaymentModal';
-import { clientsInfoStore, singleClientStore } from '@/stores/clients';
+import { clientsInfoStore } from '@/stores/clients';
 import { useParams } from 'react-router-dom';
 import { ordersApi } from '@/api/order';
 import { addNotification } from '@/utils';
-import { AddEditModal } from '@/pages/Clients/ClientsInfo/AddEditModal';
+import { AddEditModal as AddEditClientModal} from '@/pages/Clients/ClientsInfo/AddEditModal';
+import { AddEditModal } from '../ProductsList/AddEditModal';
 
 const cn = classNames.bind(styles);
 
@@ -186,7 +187,8 @@ export const Orders = observer(() => {
       {ordersStore.isOpenAddEditNewOrderModal && <AddEditOrder />}
       {ordersStore.isOpenShowOrderModal && <OrderShowInfoModal />}
       {ordersStore.isOpenPaymentModal && <PaymentModal />}
-      {clientsInfoStore.isOpenAddEditClientModal && <AddEditModal />}
+      {clientsInfoStore.isOpenAddEditClientModal && <AddEditClientModal />}
+      {productsListStore.isOpenAddEditProductModal && <AddEditModal />}
     </main>
   );
 });
