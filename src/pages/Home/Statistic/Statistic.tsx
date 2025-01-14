@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants';
 
 const cn = classNames.bind(styles);
-const formatter = (value: number) => <CountUp duration={2} end={value} separator="." />;
+const formatter = (value: number) => <CountUp duration={2} end={value} separator=" " />;
 
 export const Statistic = observer(() => {
 

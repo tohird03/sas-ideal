@@ -1,6 +1,6 @@
 import { IPagination } from "../types";
 
-export interface IGetProductsParams extends IPagination{
+export interface IGetProductsParams extends IPagination {
   search?: string;
 }
 
@@ -31,4 +31,10 @@ export interface IAddEditProduct {
   cost: number;
   selling_price: number;
   unit: string;
+}
+
+export interface IProductTotalCalc {
+  totalProductCount: number,
+  totalProductCost: number,
+  totalProductPrice: number,
 }

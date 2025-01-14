@@ -2,7 +2,7 @@ import {AxiosResponse} from 'axios';
 import {Endpoints, umsStages} from '../endpoints';
 import {INetworkConfig, Instance} from '../instance';
 import {IResponse} from '../types';
-import { IAddEditProduct, IGetProductsParams, IProducts } from './types';
+import { IAddEditProduct, IGetProductsParams, IProductTotalCalc, IProducts } from './types';
 
 const config: INetworkConfig = {
   baseURL: Endpoints.Base,
@@ -14,7 +14,7 @@ class ProductsApi extends Instance {
     super(config);
   }
 
-  getProducts = (params: IGetProductsParams): Promise<IResponse<IProducts[]>> =>
+  getProducts = (params: IGetProductsParams): Promise<IResponse<IProducts[], IProductTotalCalc>> =>
     this.get(Endpoints.products, {params});
 
   addNewProduct = (params: IAddEditProduct): Promise<AxiosResponse> =>

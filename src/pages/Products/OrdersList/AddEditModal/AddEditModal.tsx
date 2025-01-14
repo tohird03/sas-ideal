@@ -32,8 +32,8 @@ const filterOption = (input: string, option?: { label: string, value: string }) 
 export const AddEditModal = observer(() => {
   const [form] = Form.useForm();
   const queryClient = useQueryClient();
-  const isMobile = useMediaQuery('(max-width: 800px)');
   const [loading, setLoading] = useState(false);
+  const [createLoading, setCreateLoading] = useState(false);
   const [searchClients, setSearchClients] = useState<string | null>(null);
   const [searchProducts, setSearchProducts] = useState<string | null>(null);
   const [isUpdatingProduct, setIsUpdatingProduct] = useState<IOrderProducts | null>(null);
@@ -76,6 +76,8 @@ export const AddEditModal = observer(() => {
 
   // SUBMIT FORMS
   const handleSaveAccepted = () => {
+    setCreateLoading(true);
+
     ordersApi.updateOrder({
       accepted: true,
       id: ordersStore?.order?.id!,
@@ -85,7 +87,10 @@ export const AddEditModal = observer(() => {
         queryClient.invalidateQueries({ queryKey: ['getOrders'] });
         handleModalClose();
       })
-      .catch(addNotification);
+      .catch(addNotification)
+      .finally(() => {
+        setCreateLoading(false);
+      });
   };
 
   const handleCreateOrUpdateOrder = () => {
@@ -430,6 +435,17 @@ export const AddEditModal = observer(() => {
     setIsOpenProductSelect(false);
   };
 
+  const rowClassName = (record: IOrderProducts) => {
+    if (ordersStore?.order?.products) {
+      const isDuplicate = ordersStore?.order?.products?.filter(product => product?.product?.id === record?.product?.id).length > 1;
+
+      return isDuplicate ? 'warning__row' : '';
+    }
+
+    return '';
+  };
+
+
   return (
     <Modal
       open={ordersStore.isOpenAddEditNewOrderModal}
@@ -443,6 +459,7 @@ export const AddEditModal = observer(() => {
                 type="primary"
                 style={{ backgroundColor: 'green' }}
                 onClick={handleSaveAccepted}
+                loading={createLoading}
               >
                 Saqlash
               </Button>
@@ -629,7 +646,8 @@ export const AddEditModal = observer(() => {
         columns={addOrderProductsColumns}
         dataSource={ordersStore?.order?.products || []}
         pagination={false}
-        scroll={{ y: 300 }}
+        scroll={{ y: 350 }}
+        rowClassName={rowClassName}
       />
 
       <div>

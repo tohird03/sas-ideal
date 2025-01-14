@@ -180,7 +180,10 @@ input::-webkit-inner-spin-button {
 }
 
 .warning__row:hover {
-  .ant-table-cell {
+  .ant-table-cell.ant-table-cell-row-hover {
+    background-color: #fbc68a !important;
+  }
+  .ant-table-row  {
     background-color: #fbc68a !important;
   }
 }

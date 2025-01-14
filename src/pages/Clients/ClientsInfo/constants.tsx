@@ -35,6 +35,7 @@ export const clientsColumns: ColumnType<IClientsInfo>[] = [
     title: 'Mijoz qarzi',
     align: 'center',
     render: (value, record) => priceFormat(record?.debt),
+    sorter: (a, b) => a?.debt - b?.debt,
   },
   {
     key: 'lastSale',

@@ -95,22 +95,19 @@ export const ProductsList = observer(() => {
             <Table.Summary.Cell index={2}>
               <div style={{ textAlign: 'center', fontWeight: 'bold' }}>
                 Umumiy:
-                {/* @ts-ignore */}
-                <p style={{margin: '0', fontWeight: 'bold'}}>{productsData?.totalProductCount}</p>
+                <p style={{margin: '0', fontWeight: 'bold'}}>{productsData?.totalCalc?.totalProductCount}</p>
               </div>
             </Table.Summary.Cell>
             <Table.Summary.Cell index={2}>
               <div style={{ textAlign: 'center', fontWeight: 'bold', maxWidth: '150px', margin: '0 auto' }}>
                 Umumiy sotib olingan narxi:
-                {/* @ts-ignore */}
-                <p style={{margin: '0', fontWeight: 'bold'}}>{productsData?.totalProductCost}</p>
+                <p style={{margin: '0', fontWeight: 'bold'}}>{productsData?.totalCalc?.totalProductCost}</p>
               </div>
             </Table.Summary.Cell>
             <Table.Summary.Cell index={3}>
               <div style={{ textAlign: 'center', fontWeight: 'bold', maxWidth: '150px', margin: '0 auto' }}>
                 Umumiy sotilish narxi:
-                {/* @ts-ignore */}
-                <p style={{margin: '0', fontWeight: 'bold'}}>{productsData?.totalProductPrice}</p>
+                <p style={{margin: '0', fontWeight: 'bold'}}>{productsData?.totalCalc?.totalProductPrice}</p>
               </div>
             </Table.Summary.Cell>
           </Table.Summary.Row>

@@ -40,6 +40,7 @@ module.exports = {
     'src/assets/*',
   ],
   rules: {
+    '@typescript-eslint/no-extra-non-null-assertion': 'off',
     '@typescript-eslint/adjacent-overload-signatures': 'error',
     '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/ban-types': 'warn',
