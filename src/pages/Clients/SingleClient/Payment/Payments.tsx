@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import {observer} from 'mobx-react';
 import {PlusCircleOutlined} from '@ant-design/icons';
 import {useQuery} from '@tanstack/react-query';
-import {Button, Input, Typography} from 'antd';
+import {Button, DatePicker, Input, Typography} from 'antd';
 import classNames from 'classnames';
 import {DataTable} from '@/components/Datatable/datatable';
 import {getPaginationParams} from '@/utils/getPaginationParams';
@@ -12,6 +12,7 @@ import styles from './payments.scss';
 import {paymentsColumns} from './constants';
 import { singleClientStore } from '@/stores/clients';
 import { useParams } from 'react-router-dom';
+import dayjs from 'dayjs';
 
 const cn = classNames.bind(styles);
 
@@ -44,6 +45,16 @@ export const Payments = observer(() => {
     singleClientStore.setPaymentSearch(e.currentTarget?.value);
   };
 
+  const handleDateChange = (values: any) => {
+    if (values) {
+      singleClientStore.setStartDate(new Date(values[0]));
+      singleClientStore.setEndDate(new Date(values[1]));
+    } else {
+      singleClientStore.setStartDate(null);
+      singleClientStore.setEndDate(null);
+    }
+  };
+
   const handlePageChange = (page: number, pageSize: number | undefined) => {
     singleClientStore.setPaymentPage(page);
     singleClientStore.setPaymentPageSize(pageSize!);
@@ -59,6 +70,12 @@ export const Payments = observer(() => {
             allowClear
             onChange={handleSearch}
             className={cn('clients-payments__search')}
+          />
+          <DatePicker.RangePicker
+            className={cn('promotion__datePicker')}
+            onChange={handleDateChange}
+            placeholder={['Boshlanish sanasi', 'Tugash sanasi']}
+            defaultValue={[dayjs(singleClientStore.startDate), dayjs(singleClientStore.endDate)]}
           />
           <Button
             onClick={handleAddNewPayment}

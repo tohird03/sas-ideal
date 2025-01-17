@@ -2,10 +2,10 @@ import React from 'react';
 import { ColumnType } from 'antd/es/table';
 import { priceFormat } from '@/utils/priceFormat';
 import { getFullDateFormat } from '@/utils/getDateFormat';
-import { IDeed } from '@/api/clients';
+import { ISupplierDeed } from '@/api/clients';
 import { ArrowRightOutlined } from '@ant-design/icons';
 
-export const deedColumns: ColumnType<IDeed>[] = [
+export const deedColumns: ColumnType<ISupplierDeed>[] = [
   {
     key: 'index',
     dataIndex: 'index',

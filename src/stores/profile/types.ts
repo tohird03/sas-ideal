@@ -2,6 +2,7 @@ import { ISeller } from '@/api/clients';
 
 export interface IStaff extends ISeller {
   permissions: IPemissions[];
+  role: 'admin' | 'super_admin';
 }
 
 export interface IPemissions {

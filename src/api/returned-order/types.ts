@@ -16,6 +16,7 @@ export interface IReturnedOrder extends IReturnedOrderPayments {
   accepted: boolean,
   createdAt: string,
   client: IClientsInfo,
+  returnedDate: string,
   seller: ISeller,
   products: IReturnedOrderProducts[]
 }

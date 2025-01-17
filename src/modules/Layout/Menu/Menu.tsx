@@ -10,12 +10,6 @@ export const Menu = observer(() => {
   const navigate = useNavigate();
   const {pathname} = useLocation();
   const {authStore} = useStores();
-  const isMobile = useMediaQuery('(max-width: 800px)');
-  const selectedMenuOpenKeyList = useMemo(() => pathname.split('/'), [pathname]);
-  const selectedMenuOpenKey = useMemo(
-    () => selectedMenuOpenKeyList.length ? `/${selectedMenuOpenKeyList[1].split('-')[0]}` : '',
-    [selectedMenuOpenKeyList]
-  );
 
   const handleClick: MenuProps['onClick'] = ({key, domEvent}) => {
     domEvent.preventDefault();

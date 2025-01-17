@@ -39,6 +39,7 @@ export const ClientsInfo = observer(() => {
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     clientsInfoStore.setSearch(e.currentTarget?.value);
+    handlePageChange(1, 10);
   };
 
   const handlePageChange = (page: number, pageSize: number | undefined) => {

@@ -1,4 +1,5 @@
 import { IOrder } from '../order/types';
+import { IReturnedOrder } from '../returned-order/types';
 import {IPagination, IPayment} from '../types';
 
 export interface IUpdateUser {
@@ -62,7 +63,13 @@ export interface IDeedOrder extends IOrder {
   description: string;
 }
 
-export type IDeed = IDeedPayment | IDeedOrder;
+export interface IDeedReturnedOrder extends IReturnedOrder {
+  type: 'returned-order';
+  description: string;
+}
+
+export type IDeed = IDeedPayment | IDeedOrder | IDeedReturnedOrder;
+export type ISupplierDeed = IDeedPayment | IDeedOrder;
 
 export interface IGetClientDeedParams {
   id: string;

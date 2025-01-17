@@ -11,6 +11,7 @@ import {
   IGetClientDeedParams,
   IGetClientsInfoParams,
   IGetSupplierInfoParams,
+  ISupplierDeed,
   ISupplierInfo,
   IUpdateUser,
 } from './types';
@@ -43,7 +44,7 @@ class ClientsInfoApi extends Instance {
   addSupplier = (params: IAddSupplierInfo): Promise<AxiosResponse> =>
     this.post(Endpoints.Supplier, params);
 
-  getSupplierDeed = (params: IGetClientDeedParams): Promise<IResponse<IDeed[]>> =>
+  getSupplierDeed = (params: IGetClientDeedParams): Promise<IResponse<ISupplierDeed[]>> =>
     this.get(Endpoints.SupplierDeed, { params });
 
   // UPDATE

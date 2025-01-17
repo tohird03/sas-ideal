@@ -13,21 +13,8 @@ import { returnedOrderApi } from '@/api/returned-order/returned-order';
 
 export const PaymentModal = observer(() => {
   const [form] = Form.useForm();
-  const { supplierId } = useParams();
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
-  const [searchSupplier, setSearchSupplier] = useState<string | null>(null);
-
-  // GET DATAS
-  const { data: singleClientData, isLoading: loadingClients } = useQuery({
-    queryKey: ['getClients', searchSupplier],
-    queryFn: () =>
-      supplierInfoStore.getSuppliers({
-        pageNumber: 1,
-        pageSize: 15,
-        search: searchSupplier!,
-      }),
-  });
 
   const handleSubmit = (values: IIncomeAddEditPaymentParams) => {
     setLoading(true);
@@ -40,8 +27,8 @@ export const PaymentModal = observer(() => {
       })
         .then(() => {
           addNotification('Qaytuv tasdiqlandi');
-          returnedOrdersStore.getSingleOrder(returnedOrdersStore?.singleReturnedOrder?.id!);
           queryClient.invalidateQueries({ queryKey: ['getReturnedOrders'] });
+          returnedOrdersStore.getSingleOrder(returnedOrdersStore?.singleReturnedOrder?.id!);
           handleModalClose();
         })
         .catch(addNotification)

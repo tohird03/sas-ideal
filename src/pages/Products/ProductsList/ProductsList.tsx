@@ -88,6 +88,7 @@ export const ProductsList = observer(() => {
           showSizeChanger: true,
           onChange: handlePageChange,
           ...getPaginationParams(productsData?.totalCount),
+          pageSizeOptions: [50, 100, 500, 1000],
         }}
         summary={() => (
           <Table.Summary.Row>

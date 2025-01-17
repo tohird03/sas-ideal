@@ -1,10 +1,8 @@
 import React from 'react';
 import {
   AppstoreAddOutlined,
-  AppstoreOutlined,
   CodeSandboxOutlined,
   ContactsOutlined,
-  ControlOutlined,
   DownloadOutlined,
   FileSyncOutlined,
   HomeOutlined,
@@ -12,8 +10,6 @@ import {
   ShoppingCartOutlined,
   SolutionOutlined,
   TeamOutlined,
-  UserAddOutlined,
-  UserOutlined,
   UsergroupAddOutlined,
 } from '@ant-design/icons';
 import {ROUTES} from '@/constants';

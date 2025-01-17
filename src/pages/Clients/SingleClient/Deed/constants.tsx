@@ -24,7 +24,11 @@ export const deedColumns: ColumnType<IDeed>[] = [
     render: (value, record) => (
       record?.type === 'order'
         ? getFullDateFormat(record?.sellingDate)
-        : getFullDateFormat(record?.updatedAt)
+        : record?.type === 'payment'
+          ? getFullDateFormat(record?.updatedAt)
+          : record?.type === 'returned-order'
+            ? getFullDateFormat(record?.returnedDate)
+            : ''
     ),
   },
   {
@@ -34,12 +38,28 @@ export const deedColumns: ColumnType<IDeed>[] = [
     width: '250px',
     render: (value, record) => (
       <>
-        {record?.type === 'order' ? 'Sotuv' : 'Qarzga to\'lov'}
+        {
+          record?.type === 'order'
+            ? 'Sotuv'
+            : record?.type === 'payment'
+              ? 'To\'lov'
+              : record?.type === 'returned-order'
+                ? 'Qaytaruv'
+                : ''
+        }
         {<ArrowRightOutlined />}
         <p
           style={{ margin: 0, color: 'blue', display: 'inline' }}
         >
-          №: {record?.type === 'order' ? record?.articl : record?.id}
+          №: {
+            record?.type === 'order'
+              ? record?.articl
+              : record?.type === 'payment'
+                ? record?.id
+                : record?.type === 'returned-order'
+                  ? record?.id
+                  : ''
+          }
         </p>
       </>
     ),
@@ -67,7 +87,9 @@ export const deedColumns: ColumnType<IDeed>[] = [
     render: (value, record) => (
       record?.type === 'payment'
         ? priceFormat(record?.totalPay)
-        : null
+        : record?.type === 'returned-order'
+          ? priceFormat((record?.fromClient || 0))
+          : null
     ),
   },
   {

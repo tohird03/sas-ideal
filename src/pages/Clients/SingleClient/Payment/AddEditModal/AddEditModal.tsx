@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { observer } from 'mobx-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Form, InputNumber, Modal, Select, Spin } from 'antd';
+import { Form, Input, InputNumber, Modal, Select, Spin } from 'antd';
 import { clientsInfoStore, singleClientStore } from '@/stores/clients';
 import { addNotification } from '@/utils';
 import { priceFormat } from '@/utils/priceFormat';
@@ -180,6 +180,19 @@ export const AddEditModal = observer(() => {
             placeholder="Boshqa usullar bilan to'lov"
             style={{ width: '100%' }}
             formatter={(value) => priceFormat(value!)}
+          />
+        </Form.Item>
+        <Form.Item
+          label="To'lov haqida ma'lumot"
+          name="description"
+        >
+          <Input.TextArea
+            placeholder="To'lov haqida ma'lumot"
+            style={{ width: '100%' }}
+            rows={4}
+            maxLength={100}
+            showCount
+            autoSize={{ minRows: 2, maxRows: 6 }}
           />
         </Form.Item>
       </Form>

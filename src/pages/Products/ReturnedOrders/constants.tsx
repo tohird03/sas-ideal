@@ -1,11 +1,7 @@
 import React from 'react';
 import {ColumnType} from 'antd/es/table';
-import {IClientsInfo, ISupplierInfo} from '@/api/clients';
 import {Action} from './Action';
-import { formatPhoneNumber } from '@/utils/phoneFormat';
 import { priceFormat } from '@/utils/priceFormat';
-import { dateFormatterWithStringMonth } from '@/utils/dateFormat';
-import { SupplierNameLink } from '@/pages/ActionComponents/SupplierNameLink';
 import { IReturnedOrder } from '@/api/returned-order/types';
 import { ClientNameLink } from '@/pages/ActionComponents/ClientNameLink';
 import { Tag } from 'antd';
@@ -79,7 +75,7 @@ export const returnedOrdersColumns: ColumnType<IReturnedOrder>[] = [
     title: 'Qaytarilgan sanasi',
     align: 'center',
     width: '150px',
-    render: (value, record) => getFullDateFormat(record?.createdAt),
+    render: (value, record) => getFullDateFormat(record?.returnedDate),
   },
   {
     key: 'action',
