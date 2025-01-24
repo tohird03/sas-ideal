@@ -7,10 +7,7 @@ import { addNotification } from '@/utils';
 import { IOrder } from '@/api/order/types';
 import { ordersStore } from '@/stores/products';
 import { ordersApi } from '@/api/order';
-import { jsPDF as JsPdf } from 'jspdf';
-import { Pdf } from './PDF/pdf';
 import Item from 'antd/es/list/Item';
-import ReactToPrint from 'react-to-print';
 
 type Props = {
   orders: IOrder;
@@ -18,6 +15,7 @@ type Props = {
 
 import { MyDocument } from './Pdf-save';
 import { PDFDownloadLink, pdf } from '@react-pdf/renderer';
+import { getFullDateFormat } from '@/utils/getDateFormat';
 
 export const Action: FC<Props> = observer(({ orders }) => {
   const queryClient = useQueryClient();
@@ -56,7 +54,7 @@ export const Action: FC<Props> = observer(({ orders }) => {
         const a = document.createElement('a');
 
         a.href = url;
-        a.download = 'order.xlsx';
+        a.download = `${orders?.client?.name}, ${getFullDateFormat(orders?.sellingDate)}`;
         a.click();
         URL.revokeObjectURL(url);
       })

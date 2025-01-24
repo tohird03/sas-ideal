@@ -31,7 +31,7 @@ export const MyDocument = forwardRef<any, Props>(({ order }, ref) => (
         <View style={styles.table}>
           <View style={styles.tableHeader}>
             <Text style={{ ...styles.tableHeaderCell, maxWidth: '30px' }}>N</Text>
-            <Text style={{ ...styles.tableHeaderCell, maxWidth: '180px', minWidth: '180px' }}>Mahsulot nomi</Text>
+            <Text style={{ ...styles.tableHeaderCell, maxWidth: '250px', minWidth: '250px' }}>Mahsulot nomi</Text>
             <Text style={{ ...styles.tableHeaderCell, maxWidth: '40px' }}>✓</Text>
             <Text style={{ ...styles.tableHeaderCell }}>Soni</Text>
             <Text style={{ ...styles.tableHeaderCell }}>Narxi</Text>
@@ -41,7 +41,7 @@ export const MyDocument = forwardRef<any, Props>(({ order }, ref) => (
             order?.products?.map((product, index) => (
               <View key={product?.id} style={styles.tableRow}>
                 <Text style={{ ...styles.tableCell, maxWidth: '30px' }}>{index + 1}</Text>
-                <Text style={{ ...styles.tableCell, maxWidth: '180px', minWidth: '180px' }}>{product?.product?.name}</Text>
+                <Text style={{ ...styles.tableCell, maxWidth: '250px', minWidth: '250px' }}>{product?.product?.name}</Text>
                 <Text style={{ ...styles.tableCell, maxWidth: '40px' }} />
                 <Text style={{ ...styles.tableCell }}>{product?.count}</Text>
                 <Text style={{ ...styles.tableCell }}>{product?.price}</Text>

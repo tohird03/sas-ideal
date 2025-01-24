@@ -20,6 +20,7 @@ import { ordersApi } from '@/api/order';
 import { addNotification } from '@/utils';
 import { AddEditModal as AddEditClientModal} from '@/pages/Clients/ClientsInfo/AddEditModal';
 import { AddEditModal } from '../ProductsList/AddEditModal';
+import { dateFormat } from '@/utils/getDateFormat';
 
 const cn = classNames.bind(styles);
 
@@ -70,7 +71,7 @@ export const Orders = observer(() => {
         const a = document.createElement('a');
 
         a.href = url;
-        a.download = 'order.xlsx';
+        a.download = `${dateFormat(String(ordersStore.startDate!))}--${dateFormat(String(ordersStore.endDate!))}`;
         a.click();
         URL.revokeObjectURL(url);
       })
