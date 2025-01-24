@@ -603,18 +603,6 @@ export const AddEditModal = observer(() => {
           <Button style={{ marginTop: '5px' }} onClick={handleAddProduct} icon={<PlusOutlined />} />
         </div>
         <Form.Item
-          label="Mahsulot soni"
-          rules={[{ required: true }]}
-          name="count"
-        >
-          <InputNumber
-            placeholder="Mahsulot sonini kiriting"
-            style={{ width: '100%' }}
-            ref={countInputRef}
-            formatter={(value) => priceFormat(value!)}
-          />
-        </Form.Item>
-        <Form.Item
           label="Narxi"
           rules={[{ required: true }]}
           name="price"
@@ -623,6 +611,18 @@ export const AddEditModal = observer(() => {
           <InputNumber
             placeholder="Narxi"
             style={{ width: '100%' }}
+            formatter={(value) => priceFormat(value!)}
+          />
+        </Form.Item>
+        <Form.Item
+          label="Mahsulot soni"
+          rules={[{ required: true }]}
+          name="count"
+        >
+          <InputNumber
+            placeholder="Mahsulot sonini kiriting"
+            style={{ width: '100%' }}
+            ref={countInputRef}
             formatter={(value) => priceFormat(value!)}
           />
         </Form.Item>
