@@ -3,6 +3,7 @@ import {ColumnType} from 'antd/es/table';
 import {Action} from './Action';
 import { IProducts } from '@/api/product/types';
 import { getFullDateFormat } from '@/utils/getDateFormat';
+import { priceFormat } from '@/utils/priceFormat';
 
 export const productsListColumn: ColumnType<IProducts>[] = [
   {
@@ -48,7 +49,7 @@ export const productsListColumn: ColumnType<IProducts>[] = [
     render: (value, record) => {
       const totalSellingPrice = record?.selling_price * record?.count;
 
-      return totalSellingPrice;
+      return priceFormat(totalSellingPrice);
     },
   },
   {

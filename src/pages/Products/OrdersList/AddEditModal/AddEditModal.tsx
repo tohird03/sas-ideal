@@ -1,14 +1,12 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { observer } from 'mobx-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Alert, Button, Checkbox, DatePicker, Form, InputNumber, InputNumberProps, Modal, Popconfirm, Select, Spin, Tag } from 'antd';
+import { Button, Checkbox, DatePicker, Form, InputNumber, Modal, Popconfirm, Select, Spin, Tag } from 'antd';
 import classNames from 'classnames';
 import { addNotification } from '@/utils';
 import { ordersStore, productsListStore } from '@/stores/products';
 import { priceFormat } from '@/utils/priceFormat';
 import { CheckOutlined, DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
-import { DataTable } from '@/components/Datatable/datatable';
-import { useMediaQuery } from '@/utils/mediaQuery';
 import dayjs from 'dayjs';
 import { clientsInfoStore, singleClientStore } from '@/stores/clients';
 import { ordersApi } from '@/api/order';
@@ -26,8 +24,13 @@ import { CheckboxChangeEvent } from 'antd/es/checkbox';
 
 const cn = classNames.bind(styles);
 
-const filterOption = (input: string, option?: { label: string, value: string }) =>
-  (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
+const filterOption = (input: string, option?: { label: string, value: string }) => {
+  if (!input) return true;
+  const formattedInput = input.trim().toLowerCase();
+  const formattedLabel = option?.label?.toLowerCase() || '';
+
+  return formattedLabel.includes(formattedInput);
+};
 
 export const AddEditModal = observer(() => {
   const [form] = Form.useForm();
@@ -566,7 +569,7 @@ export const AddEditModal = observer(() => {
               loading={loadingProducts}
               optionFilterProp="children"
               notFoundContent={loadingProducts ? <Spin style={{ margin: '10px' }} /> : null}
-              filterOption={filterOption}
+              filterOption={false}
               onSearch={handleSearchProducts}
               onChange={handleChangeProduct}
               optionLabelProp="label"

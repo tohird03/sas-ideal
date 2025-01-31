@@ -12,6 +12,7 @@ import styles from './product-list.scss';
 import { productsListColumn } from './constants';
 import { productsListStore } from '@/stores/products';
 import { IProducts } from '@/api/product/types';
+import { priceFormat } from '@/utils/priceFormat';
 
 const cn = classNames.bind(styles);
 
@@ -102,13 +103,13 @@ export const ProductsList = observer(() => {
             <Table.Summary.Cell index={2}>
               <div style={{ textAlign: 'center', fontWeight: 'bold', maxWidth: '150px', margin: '0 auto' }}>
                 Umumiy sotib olingan narxi:
-                <p style={{margin: '0', fontWeight: 'bold'}}>{productsData?.totalCalc?.totalProductCost}</p>
+                <p style={{margin: '0', fontWeight: 'bold'}}>{priceFormat(productsData?.totalCalc?.totalProductCost)}</p>
               </div>
             </Table.Summary.Cell>
             <Table.Summary.Cell index={3}>
               <div style={{ textAlign: 'center', fontWeight: 'bold', maxWidth: '150px', margin: '0 auto' }}>
                 Umumiy sotilish narxi:
-                <p style={{margin: '0', fontWeight: 'bold'}}>{productsData?.totalCalc?.totalProductPrice}</p>
+                <p style={{margin: '0', fontWeight: 'bold'}}>{priceFormat(productsData?.totalCalc?.totalProductPrice)}</p>
               </div>
             </Table.Summary.Cell>
           </Table.Summary.Row>
