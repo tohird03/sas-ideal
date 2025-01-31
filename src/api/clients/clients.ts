@@ -73,6 +73,16 @@ class ClientsInfoApi extends Instance {
         'Accept': 'application/xlsx',
       },
     });
+
+  getUploadClients = (params: IGetClientsInfoParams): Promise<any> =>
+    this.get(`${Endpoints.UploadClient}`, {
+      params,
+      responseType: 'arraybuffer',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/xlsx',
+      },
+    });
 }
 
 export const clientsInfoApi = new ClientsInfoApi(config);

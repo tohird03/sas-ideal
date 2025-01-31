@@ -16,6 +16,9 @@ export const PaymentModal = observer(() => {
 
   const handleModalClose = () => {
     incomeProductsStore.setIncomeOrderPayment(null);
+    incomeProductsStore.setsingleIncomeOrder(null);
+    incomeProductsStore.setIncomeOrder(null);
+    incomeProductsStore.setIsOpenAddEditIncomeProductsModal(false);
     incomeProductsStore.setIsOpenIncomePaymentModal(false);
   };
 

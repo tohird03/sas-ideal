@@ -16,6 +16,9 @@ export const PaymentModal = observer(() => {
 
   const handleModalClose = () => {
     ordersStore.setOrderPayment(null);
+    ordersStore.setSingleOrder(null);
+    ordersStore.setOrder(null);
+    ordersStore.setIsOpenAddEditNewOrderModal(false);
     ordersStore.setIsOpenPaymentModal(false);
   };
 
@@ -188,7 +191,7 @@ export const PaymentModal = observer(() => {
       </Form>
       <div>
         <p style={{ textAlign: 'end', fontSize: '24px', fontWeight: 'bold' }}>Umumiy qiymati: {priceFormat(totalPrice)}</p>
-        <p style={{ textAlign: 'end', fontSize: '24px', fontWeight: 'bold' }}>Qarzga: {Number(totalPrice) - Number(totalPayment) || 0}</p>
+        <p style={{ textAlign: 'end', fontSize: '24px', fontWeight: 'bold' }}>Qarzga: {priceFormat(Number(totalPrice) - Number(totalPayment) || 0)}</p>
       </div>
     </Modal>
   );

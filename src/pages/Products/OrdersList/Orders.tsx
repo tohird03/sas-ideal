@@ -71,7 +71,7 @@ export const Orders = observer(() => {
         const a = document.createElement('a');
 
         a.href = url;
-        a.download = `${dateFormat(String(ordersStore.startDate!))}--${dateFormat(String(ordersStore.endDate!))}`;
+        a.download = `${dateFormat(String(ordersStore.startDate!))}--${dateFormat(String(ordersStore.endDate!))}.xlsx`;
         a.click();
         URL.revokeObjectURL(url);
       })

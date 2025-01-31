@@ -11,17 +11,17 @@ import { ISingleSupplierTabs, singleSupplierStore } from '@/stores/supplier';
 const cn = classNames.bind(styles);
 
 export const SingleSupplier = observer(() => {
-  const { supplierSingleSupplier } = useParams();
+  const { supplierId } = useParams();
 
   const handleChangeProductTab = (value: SegmentedValue) => {
     singleSupplierStore.setActiveTabs(value as ISingleSupplierTabs);
   };
 
   useEffect(() => {
-    if (supplierSingleSupplier) {
-      singleSupplierStore.getSingleClient(supplierSingleSupplier);
+    if (supplierId) {
+      singleSupplierStore.getSingleClient(supplierId);
     }
-  }, [supplierSingleSupplier]);
+  }, [supplierId]);
 
   useEffect(() => () => {
     singleSupplierStore.reset();

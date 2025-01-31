@@ -55,7 +55,7 @@ export const Deed = observer(() => {
         const a = document.createElement('a');
 
         a.href = url;
-        a.download = 'deed.xlsx';
+        a.download = `${singleClientStore?.activeClient?.name}.xlsx`;
         a.click();
         URL.revokeObjectURL(url);
       })
@@ -78,7 +78,7 @@ export const Deed = observer(() => {
         const a = document.createElement('a');
 
         a.href = url;
-        a.download = 'deed.xlsx';
+        a.download = `${singleClientStore?.activeClient?.name}.xlsx`;
         a.click();
         URL.revokeObjectURL(url);
       })

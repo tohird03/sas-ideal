@@ -20,6 +20,7 @@ export enum Endpoints {
   Supplier = '/user/supplier',
   ClientDeedExcelUpload = '/user/client/deed/upload',
   SupplierDeedExcelUpload = '/user/supplier/deed/upload',
+  UploadClient = '/user/client/debtors',
 
   // PRODUCTS
   products = '/product',

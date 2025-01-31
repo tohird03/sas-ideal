@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { observer } from 'mobx-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button, DatePicker, Form, InputNumber, Modal, Popconfirm, Select, Spin, Tag } from 'antd';
@@ -24,13 +24,17 @@ const filterOption = (input: string, option?: { label: string, value: string }) 
 
 export const AddEditModal = observer(() => {
   const [form] = Form.useForm();
-  const {supplierId} = useParams();
+  const { supplierId } = useParams();
   const queryClient = useQueryClient();
   const isMobile = useMediaQuery('(max-width: 800px)');
   const [loading, setLoading] = useState(false);
   const [searchClients, setSearchClients] = useState<string | null>(null);
   const [searchProducts, setSearchProducts] = useState<string | null>(null);
   const [isUpdatingProduct, setIsUpdatingProduct] = useState<IIncomeProduct | null>(null);
+  const [isOpenProductSelect, setIsOpenProductSelect] = useState(false);
+  const countInputRef = useRef<HTMLInputElement>(null);
+  const productRef = useRef<any>(null);
+  const clientRef = useRef<any>(null);
 
   // GET DATAS
   const { data: supplierData, isLoading: loadingClients } = useQuery({
@@ -98,8 +102,13 @@ export const AddEditModal = observer(() => {
 
       incomeProductsApi.orderProductAdd(addOrderProduct)
         .then(() => {
-          form.resetFields(['product_id', 'cost', 'count']);
-          incomeProductsStore.getSingleIncomeOrder(incomeProductsStore.incomeOrder?.id!);
+          form.resetFields(['product_id', 'cost', 'count', 'selling_price']);
+          incomeProductsStore.getSingleIncomeOrder(incomeProductsStore?.incomeOrder?.id!)
+            .finally(() => {
+              const fieldInstance = form.getFieldInstance('product_id');
+
+              fieldInstance?.focus();
+            });
           queryClient.invalidateQueries({ queryKey: ['getIncomeOrders'] });
         })
         .catch(addNotification)
@@ -120,7 +129,12 @@ export const AddEditModal = observer(() => {
       .then(res => {
         form.resetFields(['product_id', 'cost', 'count', 'selling_price']);
         if (res?.id) {
-          incomeProductsStore.getSingleIncomeOrder(res?.id!);
+          incomeProductsStore.getSingleIncomeOrder(res?.id!)
+            .finally(() => {
+              const fieldInstance = form.getFieldInstance('product_id');
+
+              fieldInstance?.focus();
+            });
         } else {
           incomeProductsStore.setIncomeOrder(res);
         }
@@ -152,6 +166,9 @@ export const AddEditModal = observer(() => {
 
     form.setFieldValue('cost', findProduct?.cost);
     form.setFieldValue('selling_price', findProduct?.selling_price);
+
+    setIsOpenProductSelect(false);
+    countInputRef.current?.focus();
   };
 
   const handleClearClient = () => {
@@ -349,12 +366,72 @@ export const AddEditModal = observer(() => {
     },
   ];
 
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLFormElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+
+      const fieldsValue = form.getFieldsValue();
+
+      const requiredFields = form
+        .getFieldsError()
+        .filter((field) => field.errors.length > 0);
+
+      const firstEmptyField = requiredFields.find(
+        (field) => !fieldsValue[field.name[0]]
+      );
+
+      if (firstEmptyField) {
+        const fieldInstance = form.getFieldInstance(firstEmptyField.name[0]);
+
+        fieldInstance?.focus();
+      } else {
+        form.submit();
+      }
+    }
+  };
+
+  const handleSelectChange = (value: any, name: string) => {
+    const nextFieldName = getNextFieldName(name); // A function to get the next field name
+
+    if (nextFieldName) {
+      const nextField = form.getFieldInstance(nextFieldName);
+
+      nextField?.focus();
+    }
+  };
+
+  const getNextFieldName = (currentFieldName: string) => {
+    const fieldNames = [
+      'supplierId',
+      'product_id',
+      'price',
+      'count',
+    ];
+
+    const currentIndex = fieldNames.indexOf(currentFieldName);
+
+    return fieldNames[currentIndex + 1];
+  };
+
+  const handleBlurProduct = () => {
+    setIsOpenProductSelect(false);
+  };
+
+  const handleChangeClientSelect = () => {
+    setIsOpenProductSelect(true);
+    productRef.current?.focus();
+  };
+
+  const handleFocusToProduct = () => {
+    setIsOpenProductSelect(true);
+  };
+
   return (
     <Modal
       open={incomeProductsStore.isOpenAddEditIncomeProductsModal}
       title={(
         <div className={cn('order__add-products-header')}>
-          <div style={{display: 'flex', alignItems: 'center', gap: '20px'}}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
             {incomeProductsStore?.incomeOrder?.id ? 'Tushurilgan mahsulotlarni tahrirlash' : 'Yangi mahsulot tushurish sotuv'}
             {incomeProductsStore?.incomeOrder?.id && (
               <Button
@@ -394,6 +471,7 @@ export const AddEditModal = observer(() => {
         layout="vertical"
         autoComplete="off"
         className="order__add-products-form"
+        onKeyPress={handleKeyPress}
       >
         <Form.Item
           label="Yetkazib beruvchi"
@@ -402,6 +480,7 @@ export const AddEditModal = observer(() => {
         >
           <Select
             showSearch
+            ref={clientRef}
             placeholder="Yetkazib beruvchi"
             loading={loadingClients}
             optionFilterProp="children"
@@ -411,6 +490,8 @@ export const AddEditModal = observer(() => {
             onClear={handleClearClient}
             options={supplierOptions}
             allowClear
+            onChange={handleChangeClientSelect}
+            onSelect={(value) => handleSelectChange(value, 'supplierId')}
           />
         </Form.Item>
         <Form.Item
@@ -438,8 +519,12 @@ export const AddEditModal = observer(() => {
             notFoundContent={loadingProducts ? <Spin style={{ margin: '10px' }} /> : null}
             filterOption={filterOption}
             onSearch={handleSearchProducts}
+            open={isOpenProductSelect}
             onChange={handleChangeProduct}
             optionLabelProp="label"
+            onFocus={handleFocusToProduct}
+            ref={productRef}
+            onBlur={handleBlurProduct}
           >
             {productsData?.data.map((product) => (
               <Select.Option
@@ -500,6 +585,7 @@ export const AddEditModal = observer(() => {
           <InputNumber
             placeholder="Tushuriladigan mahsulot sonini kiriting"
             style={{ width: '100%' }}
+            ref={countInputRef}
             formatter={(value) => priceFormat(value!)}
           />
         </Form.Item>

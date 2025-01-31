@@ -6,11 +6,11 @@
 }
 .client-info__filter {
   display: flex;
-  flex-direction: row;
+  align-items: flex-start;
+  gap: 30px;
 }
 .client-info__search {
   width: 250px;
-  margin-right: 10px;
 }
 
 @media only screen and (max-width: 800px) {
