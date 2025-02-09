@@ -92,7 +92,9 @@ export const AddEditModal = observer(() => {
     })
       .then(() => {
         queryClient.invalidateQueries({ queryKey: ['getOrders'] });
-        singleClientStore.getSingleClient(clientId!);
+        if (clientId) {
+          singleClientStore.getSingleClient(clientId!);
+        }
         handleModalClose();
       })
       .catch(addNotification)
@@ -145,7 +147,9 @@ export const AddEditModal = observer(() => {
         .catch(addNotification)
         .finally(() => {
           setLoading(false);
-          singleClientStore.getSingleClient(clientId!);
+          if (clientId) {
+            singleClientStore.getSingleClient(clientId!);
+          }
         });
 
       return;
@@ -175,7 +179,9 @@ export const AddEditModal = observer(() => {
       .catch(addNotification)
       .finally(() => {
         setLoading(false);
-        singleClientStore.getSingleClient(clientId!);
+        if (clientId) {
+          singleClientStore.getSingleClient(clientId!);
+        }
       });
   };
 
@@ -259,7 +265,9 @@ export const AddEditModal = observer(() => {
         ordersStore.getSingleOrder(ordersStore.order?.id!)
           .finally(() => {
             setLoading(false);
-            singleClientStore.getSingleClient(clientId!);
+            if (clientId) {
+              singleClientStore.getSingleClient(clientId!);
+            }
           });
       })
       .catch(addNotification);
@@ -294,7 +302,9 @@ export const AddEditModal = observer(() => {
         })
         .catch(addNotification)
         .finally(() => {
-          singleClientStore.getSingleClient(clientId!);
+          if (clientId) {
+            singleClientStore.getSingleClient(clientId!);
+          }
         });
     }
   };

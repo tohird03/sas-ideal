@@ -9,11 +9,13 @@ import { paymentApi } from '@/api/payment';
 import { addNotification } from '@/utils';
 import { useQueryClient } from '@tanstack/react-query';
 import { singleClientStore } from '@/stores/clients';
+import { useParams } from 'react-router-dom';
 
 export const PaymentModal = observer(() => {
   const [form] = Form.useForm();
   const queryClient = useQueryClient();
   const [totalPayment, setTotalPayment] = useState(0);
+  const { clientId } = useParams();
 
   const handleModalClose = () => {
     ordersStore.setOrderPayment(null);
@@ -42,6 +44,10 @@ export const PaymentModal = observer(() => {
       })
         .then(res => {
           queryClient.invalidateQueries({ queryKey: ['getOrders'] });
+          addNotification('To\'lov muvaffaqiyatli o\'zgartirildi');
+          if (clientId) {
+            singleClientStore.getSingleClient(clientId!);
+          }
           handleModalClose();
         })
         .catch(addNotification);
@@ -52,6 +58,10 @@ export const PaymentModal = observer(() => {
     paymentApi.addPayment(orderPaymentData)
       .then(res => {
         queryClient.invalidateQueries({ queryKey: ['getOrders'] });
+        addNotification('To\'lov muvaffaqiyatli amalga oshirildi');
+        if (clientId) {
+          singleClientStore.getSingleClient(clientId!);
+        }
         handleModalClose();
       })
       .catch(addNotification);
