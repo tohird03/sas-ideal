@@ -8,6 +8,7 @@ import { IAddEditPaymentParams } from '@/api/payment/types';
 import { paymentApi } from '@/api/payment';
 import { addNotification } from '@/utils';
 import { useQueryClient } from '@tanstack/react-query';
+import { singleClientStore } from '@/stores/clients';
 
 export const PaymentModal = observer(() => {
   const [form] = Form.useForm();
@@ -40,7 +41,6 @@ export const PaymentModal = observer(() => {
         id: ordersStore.orderPayment?.payment?.id,
       })
         .then(res => {
-          ordersStore.getSingleOrder(ordersStore.orderPayment?.orderId!);
           queryClient.invalidateQueries({ queryKey: ['getOrders'] });
           handleModalClose();
         })
@@ -51,7 +51,6 @@ export const PaymentModal = observer(() => {
 
     paymentApi.addPayment(orderPaymentData)
       .then(res => {
-        ordersStore.getSingleOrder(ordersStore.orderPayment?.orderId!);
         queryClient.invalidateQueries({ queryKey: ['getOrders'] });
         handleModalClose();
       })

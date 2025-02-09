@@ -34,6 +34,7 @@ export enum Endpoints {
 
   // PAYMENT
   payment = '/payment',
+  paymentUpload = '/payment/upload',
   incomePayment = '/incomingOrderPayment',
 
   // ROLES

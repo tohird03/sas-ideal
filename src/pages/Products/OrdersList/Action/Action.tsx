@@ -16,9 +16,12 @@ type Props = {
 import { MyDocument } from './Pdf-save';
 import { PDFDownloadLink, pdf } from '@react-pdf/renderer';
 import { getFullDateFormat } from '@/utils/getDateFormat';
+import { useParams } from 'react-router-dom';
+import { singleClientStore } from '@/stores/clients';
 
 export const Action: FC<Props> = observer(({ orders }) => {
   const queryClient = useQueryClient();
+  const { clientId } = useParams();
   const [downloadLoading, setDownLoadLoading] = useState(false);
 
   const { mutate: deleteOrder } =
@@ -27,6 +30,7 @@ export const Action: FC<Props> = observer(({ orders }) => {
       mutationFn: (id: string) => ordersApi.deleteOrder(id!),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['getOrders'] });
+        singleClientStore.getSingleClient(clientId!);
       },
       onError: addNotification,
     });

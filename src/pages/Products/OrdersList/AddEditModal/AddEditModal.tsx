@@ -21,6 +21,7 @@ import {
 import Table, { ColumnType } from 'antd/es/table';
 import { OrderStatus, OrderStatusColor } from '../constants';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
+import { useParams } from 'react-router-dom';
 
 const cn = classNames.bind(styles);
 
@@ -44,6 +45,7 @@ export const AddEditModal = observer(() => {
   const countInputRef = useRef<HTMLInputElement>(null);
   const productRef = useRef<any>(null);
   const clientRef = useRef<any>(null);
+  const { clientId } = useParams();
 
   // GET DATAS
   const { data: clientsData, isLoading: loadingClients } = useQuery({
@@ -90,6 +92,7 @@ export const AddEditModal = observer(() => {
     })
       .then(() => {
         queryClient.invalidateQueries({ queryKey: ['getOrders'] });
+        singleClientStore.getSingleClient(clientId!);
         handleModalClose();
       })
       .catch(addNotification)
@@ -142,6 +145,7 @@ export const AddEditModal = observer(() => {
         .catch(addNotification)
         .finally(() => {
           setLoading(false);
+          singleClientStore.getSingleClient(clientId!);
         });
 
       return;
@@ -171,6 +175,7 @@ export const AddEditModal = observer(() => {
       .catch(addNotification)
       .finally(() => {
         setLoading(false);
+        singleClientStore.getSingleClient(clientId!);
       });
   };
 
@@ -254,6 +259,7 @@ export const AddEditModal = observer(() => {
         ordersStore.getSingleOrder(ordersStore.order?.id!)
           .finally(() => {
             setLoading(false);
+            singleClientStore.getSingleClient(clientId!);
           });
       })
       .catch(addNotification);
@@ -286,7 +292,10 @@ export const AddEditModal = observer(() => {
             addNotification('Mahsulot muvaffaqiyatli o\'zgartildi!');
           }
         })
-        .catch(addNotification);
+        .catch(addNotification)
+        .finally(() => {
+          singleClientStore.getSingleClient(clientId!);
+        });
     }
   };
 
@@ -449,7 +458,6 @@ export const AddEditModal = observer(() => {
 
     return '';
   };
-
 
   return (
     <Modal

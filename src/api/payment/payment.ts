@@ -25,6 +25,16 @@ class PaymentApi extends Instance {
 
   deletePayment = (id: string): Promise<AxiosResponse> =>
     this.delete(`${Endpoints.payment}/${id}`);
+
+  getUploadPayments = (params: IGetClientsPaymentsParams): Promise<any> =>
+    this.get(`${Endpoints.paymentUpload}`, {
+      params,
+      responseType: 'arraybuffer',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/xlsx',
+      },
+    });
 }
 
 export const paymentApi = new PaymentApi(config);

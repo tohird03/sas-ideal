@@ -1,24 +1,26 @@
-import React, {useEffect} from 'react';
-import {observer} from 'mobx-react';
-import {PlusCircleOutlined} from '@ant-design/icons';
-import {useQuery} from '@tanstack/react-query';
-import {Button, DatePicker, Input, Table, Typography} from 'antd';
+import React, { useEffect, useState } from 'react';
+import { observer } from 'mobx-react';
+import { DownloadOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { useQuery } from '@tanstack/react-query';
+import { Button, DatePicker, Input, Table, Tooltip, Typography } from 'antd';
 import classNames from 'classnames';
-import {DataTable} from '@/components/Datatable/datatable';
-import {getPaginationParams} from '@/utils/getPaginationParams';
-import {useMediaQuery} from '@/utils/mediaQuery';
-import {AddEditModal} from './AddEditModal';
+import { DataTable } from '@/components/Datatable/datatable';
+import { getPaginationParams } from '@/utils/getPaginationParams';
+import { useMediaQuery } from '@/utils/mediaQuery';
+import { AddEditModal } from './AddEditModal';
 import styles from './payments.scss';
-import {paymentsColumns} from './constants';
+import { paymentsColumns } from './constants';
 import { paymentsStore } from '@/stores/clients';
 import dayjs from 'dayjs';
+import { paymentApi } from '@/api/payment';
+import { addNotification } from '@/utils';
 
 const cn = classNames.bind(styles);
 
 export const ClientsPayments = observer(() => {
-  const isMobile = useMediaQuery('(max-width: 800px)');
+  const [downloadLoading, setDownLoadLoading] = useState(false);
 
-  const {data: paymentsData, isLoading: loading} = useQuery({
+  const { data: paymentsData, isLoading: loading } = useQuery({
     queryKey: [
       'getPayments',
       paymentsStore.pageNumber,
@@ -60,6 +62,30 @@ export const ClientsPayments = observer(() => {
     paymentsStore.setPageSize(pageSize!);
   };
 
+  const handleDownloadExcel = () => {
+    setDownLoadLoading(true);
+    paymentApi.getUploadPayments({
+      pageNumber: paymentsStore.pageNumber,
+      pageSize: paymentsStore.pageSize,
+      search: paymentsStore.search!,
+      startDate: paymentsStore.startDate!,
+      endDate: paymentsStore.endDate!,
+    })
+      .then(res => {
+        const url = URL.createObjectURL(new Blob([res]));
+        const a = document.createElement('a');
+
+        a.href = url;
+        a.download = 'to\'lovlar.xlsx';
+        a.click();
+        URL.revokeObjectURL(url);
+      })
+      .catch(addNotification)
+      .finally(() => {
+        setDownLoadLoading(false);
+      });
+  };
+
   useEffect(() => () => {
     paymentsStore.reset();
   }, []);
@@ -88,6 +114,16 @@ export const ClientsPayments = observer(() => {
           >
             Mijoz to&apos;lovi
           </Button>
+          <Tooltip placement="top" title="Excelda yuklash">
+            <Button
+              onClick={handleDownloadExcel}
+              type="primary"
+              icon={<DownloadOutlined />}
+              loading={downloadLoading}
+            >
+              Exelda Yuklash
+            </Button>
+          </Tooltip>
         </div>
       </div>
 
