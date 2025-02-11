@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 
-const DATE_FORMAT = 'DD-MM-YYYY';
+const DATE_FORMAT = 'DD.MM.YYYY';
 const FULL_DATE_FORMAT = `${DATE_FORMAT} HH:mm`;
 
 

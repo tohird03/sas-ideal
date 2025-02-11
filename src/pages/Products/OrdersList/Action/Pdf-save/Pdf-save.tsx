@@ -4,11 +4,16 @@ import { IOrder } from '@/api/order/types';
 import { priceFormat } from '@/utils/priceFormat';
 import { getFullDateFormat } from '@/utils/getDateFormat';
 
-// Shriftni ro'yxatdan o'tkazish
 Font.register({
   family: 'NotoSans',
   src: '/fonts/noto.ttf',
   fontWeight: 'bold',
+});
+
+Font.register({
+  family: 'NotoSansBold',
+  fontWeight: 'bold',
+  src: '/fonts/NotoSans-Bold.ttf',
 });
 
 type Props = {
@@ -22,27 +27,31 @@ export const MyDocument = forwardRef<any, Props>(({ order }, ref) => (
         <Text style={styles.logo}>SAS-IDEAL</Text>
         <View style={styles.topData}>
           <View>
-            <Text style={styles.title}>Дата продажа: {getFullDateFormat(order?.sellingDate)}</Text>
-            <Text style={styles.title}>Харидор: {order?.client?.name} {order?.client?.phone}</Text>
+            <Text style={styles.title}>
+              <Text style={styles.titleSpan}>Дата продажа:</Text> {getFullDateFormat(order?.sellingDate)}
+            </Text>
+            <Text style={styles.title}>
+              <Text style={styles.titleSpan}>Харидор:</Text> {order?.client?.name}  -  {order?.client?.phone}
+            </Text>
           </View>
         </View>
 
         {/* Jadval */}
         <View style={styles.table}>
           <View style={styles.tableHeader}>
-            <Text style={{ ...styles.tableHeaderCell, maxWidth: '30px' }}>N</Text>
-            <Text style={{ ...styles.tableHeaderCell, maxWidth: '250px', minWidth: '250px' }}>Mahsulot nomi</Text>
-            <Text style={{ ...styles.tableHeaderCell, maxWidth: '40px' }}>✓</Text>
-            <Text style={{ ...styles.tableHeaderCell }}>Soni</Text>
-            <Text style={{ ...styles.tableHeaderCell }}>Narxi</Text>
-            <Text style={{ ...styles.tableHeaderCell }}>Summasi</Text>
+            <Text style={{ ...styles.tableHeaderCell, maxWidth: '30px' }}>№</Text>
+            <Text style={{ ...styles.tableHeaderCell, maxWidth: '280px', minWidth: '280px' }}>Махсулот номи</Text>
+            <Text style={{ ...styles.tableHeaderCell, maxWidth: '35px' }}>✓</Text>
+            <Text style={{ ...styles.tableHeaderCell }}>Сони</Text>
+            <Text style={{ ...styles.tableHeaderCell }}>Нархи</Text>
+            <Text style={{ ...styles.tableHeaderCell }}>Суммаси</Text>
           </View>
           {
             order?.products?.map((product, index) => (
               <View key={product?.id} style={styles.tableRow}>
                 <Text style={{ ...styles.tableCell, maxWidth: '30px' }}>{index + 1}</Text>
-                <Text style={{ ...styles.tableCell, maxWidth: '250px', minWidth: '250px' }}>{product?.product?.name}</Text>
-                <Text style={{ ...styles.tableCell, maxWidth: '40px' }} />
+                <Text style={{ ...styles.tableCell, maxWidth: '280px', minWidth: '280px', textAlign: 'left' }}>{product?.product?.name}</Text>
+                <Text style={{ ...styles.tableCell, maxWidth: '35px' }} />
                 <Text style={{ ...styles.tableCell }}>{product?.count}</Text>
                 <Text style={{ ...styles.tableCell }}>{product?.price}</Text>
                 <Text style={{ ...styles.tableCell }}>{priceFormat(product?.count * product?.price)}</Text>
@@ -51,8 +60,8 @@ export const MyDocument = forwardRef<any, Props>(({ order }, ref) => (
           }
         </View>
         <View style={styles.totalCalc}>
-          <Text style={styles.totalCalcText}>Jami narxi: {order?.sum}</Text>
-          <Text style={styles.totalCalcText}>Jami to&lsquo;lov: {order?.payment?.totalPay || 0}</Text>
+          <Text style={styles.totalCalcText}>Жами сумма: {order?.sum}</Text>
+          <Text style={styles.totalCalcText}>Тулов килинди: {order?.payment?.totalPay || 0}</Text>
         </View>
       </View>
     </Page>
@@ -63,7 +72,6 @@ export const MyDocument = forwardRef<any, Props>(({ order }, ref) => (
 const styles = StyleSheet.create({
   page: {
     flexDirection: 'column',
-    padding: 20,
   },
   section: {
     margin: 10,
@@ -71,8 +79,10 @@ const styles = StyleSheet.create({
   },
   logo: {
     textAlign: 'center',
-    fontSize: '18px',
+    fontSize: '24px',
     marginBottom: '10px',
+    fontFamily: 'NotoSansBold',
+
   },
   topData: {
     display: 'flex',
@@ -84,6 +94,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 12,
     fontFamily: 'NotoSans',
+    fontWeight: 'bold',
+  },
+  titleSpan: {
+    fontSize: 12,
+    fontFamily: 'NotoSansBold',
     fontWeight: 'bold',
   },
   qrImg: {
@@ -100,7 +115,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   table: {
-    marginTop: 30,
+    marginTop: 10,
     width: '100%',
     borderWidth: 1,
     borderColor: 'black',
@@ -114,11 +129,12 @@ const styles = StyleSheet.create({
   tableHeaderCell: {
     flex: 1,
     textAlign: 'center',
-    fontFamily: 'NotoSans',
-    fontSize: 10,
-    padding: 5,
+    fontFamily: 'NotoSansBold',
+    fontSize: 8,
+    padding: 2,
     borderRightWidth: 1,
     borderColor: 'black',
+    fontWeight: 800,
   },
   tableRow: {
     flexDirection: 'row',
@@ -128,10 +144,10 @@ const styles = StyleSheet.create({
   tableCell: {
     flex: 1,
     textAlign: 'center',
-    padding: 5,
+    padding: 2,
     borderRightWidth: 1,
     borderColor: 'black',
-    fontSize: 10,
+    fontSize: 8,
   },
   totalCalc: {
     textAlign: 'right',
