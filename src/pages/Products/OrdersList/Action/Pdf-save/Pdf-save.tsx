@@ -1,8 +1,9 @@
 import React, { forwardRef } from 'react';
-import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, Font, Image } from '@react-pdf/renderer';
 import { IOrder } from '@/api/order/types';
 import { priceFormat } from '@/utils/priceFormat';
 import { getFullDateFormat } from '@/utils/getDateFormat';
+import LogoImg from '@/assets/img/logo-pdf.png';
 
 Font.register({
   family: 'NotoSans',
@@ -33,6 +34,9 @@ export const MyDocument = forwardRef<any, Props>(({ order }, ref) => (
             <Text style={styles.title}>
               <Text style={styles.titleSpan}>Харидор:</Text> {order?.client?.name}  -  {order?.client?.phone}
             </Text>
+          </View>
+          <View>
+            <Image style={styles.logoImage} src={LogoImg} />
           </View>
         </View>
 
@@ -79,10 +83,8 @@ const styles = StyleSheet.create({
   },
   logo: {
     textAlign: 'center',
-    fontSize: '24px',
-    marginBottom: '10px',
+    fontSize: '28px',
     fontFamily: 'NotoSansBold',
-
   },
   topData: {
     display: 'flex',
@@ -101,21 +103,16 @@ const styles = StyleSheet.create({
     fontFamily: 'NotoSansBold',
     fontWeight: 'bold',
   },
-  qrImg: {
-    width: 70,
-  },
-  qrTitle: {
-    fontSize: 8,
-    marginTop: 4,
-    fontFamily: 'NotoSans',
-    color: '#1b3469',
+  logoImage: {
+    width: 150,
+    height: 80,
   },
   content: {
     fontSize: 12,
     marginBottom: 20,
   },
   table: {
-    marginTop: 10,
+    marginTop: -10,
     width: '100%',
     borderWidth: 1,
     borderColor: 'black',
