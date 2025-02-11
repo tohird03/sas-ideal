@@ -1,9 +1,10 @@
 import React, { forwardRef } from 'react';
-import { Document, Page, Text, View, StyleSheet, Font, Image } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, Font, Image, Path } from '@react-pdf/renderer';
 import { IOrder } from '@/api/order/types';
 import { priceFormat } from '@/utils/priceFormat';
 import { getFullDateFormat } from '@/utils/getDateFormat';
 import LogoImg from '@/assets/img/logo-pdf.png';
+import CheckmarkIcon from '@/assets/img/check-mark.png';
 
 Font.register({
   family: 'NotoSans',
@@ -45,7 +46,9 @@ export const MyDocument = forwardRef<any, Props>(({ order }, ref) => (
           <View style={styles.tableHeader}>
             <Text style={{ ...styles.tableHeaderCell, maxWidth: '30px' }}>№</Text>
             <Text style={{ ...styles.tableHeaderCell, maxWidth: '280px', minWidth: '280px' }}>Махсулот номи</Text>
-            <Text style={{ ...styles.tableHeaderCell, maxWidth: '35px' }}>✓</Text>
+            <Text style={{ ...styles.tableHeaderCell, maxWidth: '35px' }}>
+              <Image src={CheckmarkIcon} style={{ width: 10, height: 10 }} />
+            </Text>
             <Text style={{ ...styles.tableHeaderCell }}>Сони</Text>
             <Text style={{ ...styles.tableHeaderCell }}>Нархи</Text>
             <Text style={{ ...styles.tableHeaderCell }}>Суммаси</Text>
