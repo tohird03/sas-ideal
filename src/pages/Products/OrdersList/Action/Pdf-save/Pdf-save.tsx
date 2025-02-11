@@ -26,7 +26,7 @@ export const MyDocument = forwardRef<any, Props>(({ order }, ref) => (
   <Document ref={ref}>
     <Page size="A4" style={styles.page}>
       <View style={styles.section}>
-        <Text style={styles.logo}>SAS-IDEAL</Text>
+        {/* <Text style={styles.logo}>SAS-IDEAL</Text> */}
         <View style={styles.topData}>
           <View>
             <Text style={styles.title}>
