@@ -22,6 +22,8 @@ import Table, { ColumnType } from 'antd/es/table';
 import { OrderStatus, OrderStatusColor } from '../constants';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
 import { useParams } from 'react-router-dom';
+import { IClientsInfo } from '@/api/clients';
+import { getFullDateFormat } from '@/utils/getDateFormat';
 
 const cn = classNames.bind(styles);
 
@@ -46,6 +48,7 @@ export const AddEditModal = observer(() => {
   const productRef = useRef<any>(null);
   const clientRef = useRef<any>(null);
   const { clientId } = useParams();
+  const [selectedClientLastSale, setSelectedClientLastSale] = useState<string | null>(null);
 
   // GET DATAS
   const { data: clientsData, isLoading: loadingClients } = useQuery({
@@ -200,7 +203,10 @@ export const AddEditModal = observer(() => {
     setSearchProducts(value);
   };
 
-  const handleChangeClientSelect = () => {
+  const handleChangeClientSelect = (client: IClientsInfo) => {
+    console.log(client);
+
+    setSelectedClientLastSale(client?.lastSale);
     setIsOpenProductSelect(true);
     productRef.current?.focus();
   };
@@ -486,8 +492,7 @@ export const AddEditModal = observer(() => {
               >
                 Saqlash
               </Button>
-            )
-            }
+            )}
           </div>
           <div>
             <Tag
@@ -523,8 +528,7 @@ export const AddEditModal = observer(() => {
             >
               Tasdiqlamasdan saqlash
             </Button>
-          )
-          }
+          )}
         </div>
       }
     >
@@ -543,6 +547,7 @@ export const AddEditModal = observer(() => {
             rules={[{ required: true }]}
             name="clientId"
             style={{ flex: 1, width: '100%' }}
+            help={selectedClientLastSale ? `Oxirgi sotuv: ${getFullDateFormat(selectedClientLastSale)}` : ''}
           >
             <Select
               showSearch
@@ -555,7 +560,13 @@ export const AddEditModal = observer(() => {
               onSearch={handleSearchSupplier}
               onClear={handleClearClient}
               options={supplierOptions}
-              onChange={handleChangeClientSelect}
+              onChange={(value) => {
+                const client = clientsData?.data.find((client) => client.id === value);
+
+                if (client) {
+                  handleChangeClientSelect(client);
+                }
+              }}
               onSelect={(value) => handleSelectChange(value, 'clientId')}
               allowClear
               style={{ flex: 1, width: '100%' }}
