@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Button, Modal, notification } from 'antd';
+import { Button, Modal, Table, notification } from 'antd';
 import { observer } from 'mobx-react';
 import { ordersStore } from '@/stores/products';
 import { DataTable } from '@/components/Datatable/datatable';
@@ -35,7 +35,12 @@ export const OrderShowInfoModal = observer(() => {
       onCancel={handleModalClose}
       cancelText="Bekor qilish"
       centered
-      width={1200}
+      style={{ top: 0, padding: 0 }}
+      bodyStyle={{
+        height: '85vh',
+        overflow: 'auto',
+      }}
+      width="100vw"
       footer={
         <Button onClick={handleModalClose}>
           Yopish
@@ -57,10 +62,9 @@ export const OrderShowInfoModal = observer(() => {
         />
       </div>
       <div>
-        <DataTable
+        <Table
           columns={ordersInfoProductsColumns}
-          data={ordersStore?.singleOrder?.products || []}
-          isMobile={isMobile}
+          dataSource={ordersStore?.singleOrder?.products || []}
           pagination={false}
         />
       </div>

@@ -483,6 +483,7 @@ export const AddEditModal = observer(() => {
         <div className={cn('order__add-products-header')}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
             {ordersStore?.order?.id ? 'Sotuvni tahrirlash' : 'Yangi sotuv'}
+            {ordersStore?.order?.id && `Mijoz qarzi: ${priceFormat(ordersStore?.order?.client?.debt)}`}
             {ordersStore?.order?.id && (
               <Button
                 type="primary"

@@ -39,6 +39,13 @@ a {
   }
 }
 
+.ant-table-row>.ant-table-cell {
+  padding: 4px 10px !important;
+}
+.ant-table-thead>tr>.ant-table-cell {
+  font-size: 13px !important;
+  padding: 6px 8px !important;
+}
 .ant-form-item-control-input-content  {
   width: 100%;
   display: flex;

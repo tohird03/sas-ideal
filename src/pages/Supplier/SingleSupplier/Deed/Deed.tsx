@@ -12,6 +12,7 @@ import { DownloadOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { clientsInfoApi } from '@/api/clients';
 import { addNotification } from '@/utils';
+import { priceFormat } from '@/utils/priceFormat';
 
 const cn = classNames.bind(styles);
 
@@ -130,11 +131,11 @@ export const Deed = observer(() => {
               </Table.Summary.Cell>
               <Table.Summary.Cell index={2}>
                 {/* @ts-ignore */}
-                <div style={{ textAlign: 'center' }}>{supplierDeedData?.totalDebt}</div>
+                <div style={{ textAlign: 'center' }}>{priceFormat(supplierDeedData?.totalDebt)}</div>
               </Table.Summary.Cell>
               <Table.Summary.Cell index={2}>
                 {/* @ts-ignore */}
-                <div style={{ textAlign: 'center' }}>{supplierDeedData?.totalCredit}</div>
+                <div style={{ textAlign: 'center' }}>{priceFormat(supplierDeedData?.totalCredit)}</div>
               </Table.Summary.Cell>
             </Table.Summary.Row>
             <Table.Summary.Row>
@@ -142,8 +143,10 @@ export const Deed = observer(() => {
                 Umumiy farq
               </Table.Summary.Cell>
               <Table.Summary.Cell colSpan={2} index={2}>
-                {/* @ts-ignore */}
-                <div style={{ textAlign: 'center' }}>{supplierDeedData?.totalDebt - supplierDeedData?.totalCredit}</div>
+                <div style={{ textAlign: 'center' }}>
+                  {/* @ts-ignore */}
+                  {priceFormat((supplierDeedData?.totalDebt || 0) - (supplierDeedData?.totalCredit || 0))}
+                </div>
               </Table.Summary.Cell>
             </Table.Summary.Row>
           </>

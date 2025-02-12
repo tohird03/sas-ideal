@@ -23,6 +23,7 @@ export const ordersColumns: ColumnType<IOrder>[] = [
     dataIndex: 'client',
     title: 'Mijoz',
     align: 'center',
+    width: '250px',
     render: (value, record) => <ClientNameLink client={record?.client} />,
   },
   {
@@ -50,12 +51,7 @@ export const ordersColumns: ColumnType<IOrder>[] = [
     dataIndex: 'seller',
     title: 'Sotuvchi',
     align: 'center',
-    render: (value, record) => (
-      <div>
-        <p style={{ margin: 0, fontWeight: 'bold' }}>{record?.seller?.name}</p>
-        <i>+{record?.seller?.phone}</i>
-      </div>
-    ),
+    render: (value, record) => <p style={{ margin: 0, fontWeight: 'bold' }}>{record?.seller?.name}</p>,
   },
   {
     key: 'totalPrice',
@@ -94,7 +90,7 @@ export const ordersColumns: ColumnType<IOrder>[] = [
     dataIndex: 'transfer',
     title: 'Bank o\'tkazmasi orqali to\'lov',
     align: 'center',
-    width: '150px',
+    width: '200px',
     render: (value, record) => priceFormat(record?.payment?.transfer),
   },
   {
@@ -102,7 +98,7 @@ export const ordersColumns: ColumnType<IOrder>[] = [
     dataIndex: 'other',
     title: 'Boshqa usullar bilan to\'lov',
     align: 'center',
-    width: '150px',
+    width: '200px',
     render: (value, record) => priceFormat(record?.payment?.other),
   },
   {
@@ -118,7 +114,7 @@ export const ordersColumns: ColumnType<IOrder>[] = [
     dataIndex: 'createdAt',
     title: 'Sotilgan vaqti',
     align: 'center',
-    width: '150px',
+    width: '200px',
     render: (value, record) => getFullDateFormat(record?.sellingDate),
   },
   {
