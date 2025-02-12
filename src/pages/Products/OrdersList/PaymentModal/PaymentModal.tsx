@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Input, InputNumber, Modal, Select, Spin, notification } from 'antd';
+import { Button, Form, Input, InputNumber, Modal, Select, Space, Spin, notification } from 'antd';
 import { observer } from 'mobx-react';
 import { ordersStore } from '@/stores/products';
 import { priceFormat } from '@/utils/priceFormat';
@@ -15,6 +15,7 @@ export const PaymentModal = observer(() => {
   const [form] = Form.useForm();
   const queryClient = useQueryClient();
   const [totalPayment, setTotalPayment] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
   const { clientId } = useParams();
 
   const handleModalClose = () => {
@@ -68,15 +69,31 @@ export const PaymentModal = observer(() => {
   };
 
   useEffect(() => {
-    form.setFieldsValue({
-      cash: ordersStore.orderPayment?.payment?.cash,
-      card: ordersStore.orderPayment?.payment?.card,
-      transfer: ordersStore.orderPayment?.payment?.transfer,
-      other: ordersStore.orderPayment?.payment?.other,
-      description: ordersStore.orderPayment?.payment?.description,
-      clientId: ordersStore.orderPayment?.client?.id,
-    });
-  }, [ordersStore.orderPayment]);
+    if (ordersStore.orderPayment?.payment) {
+      const payment = ordersStore?.orderPayment?.payment;
+
+      if (payment) {
+        const { cash, card, transfer, other, description }: IPaymentType = payment;
+
+        form.setFieldsValue({
+          cash,
+          card,
+          transfer,
+          other,
+          description,
+          clientId: ordersStore.orderPayment?.client?.id,
+        });
+
+        const totalPayCalc = cash + card + transfer + other;
+
+        setTotalPayment(totalPayCalc);
+      }
+    }
+
+    const totalPriceCalc = ordersStore?.order?.products?.reduce((prev, current) => prev + (current?.price * current?.count), 0);
+
+    setTotalPrice(totalPriceCalc || 0);
+  }, [ordersStore.orderPayment, ordersStore?.order?.products]);
 
   const handleValuesChange = (changedValues: any, allValues: any) => {
     const { cash = 0, card = 0, transfer = 0, other = 0 } = allValues;
@@ -88,12 +105,37 @@ export const PaymentModal = observer(() => {
     setTotalPayment(total);
   };
 
-  const totalPrice = ordersStore?.order?.products?.reduce((prev, current) => prev + (current?.price * current?.count), 0);
+  const handleAddonClick = (fieldName: string) => {
+    const allValues = form.getFieldsValue();
+    const { cash = 0, card = 0, transfer = 0, other = 0 } = allValues;
+
+    const totalEntered = cash + card + transfer + other;
+
+    const remainingAmount = totalPrice - totalEntered;
+
+    if (remainingAmount > 0) {
+      form.setFieldsValue({
+        [fieldName]: (allValues[fieldName] || 0) + remainingAmount,
+      });
+    }
+
+    setTotalPayment(totalPrice);
+  };
 
   return (
     <Modal
       open={ordersStore.isOpenPaymentModal}
-      title={`To'lov, ${ordersStore.orderPayment?.client?.name}`}
+      title={
+        <>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+            <p style={{ margin: 0 }}>
+              To&apos;lov {ordersStore.orderPayment?.client?.name}
+            </p>
+            <p style={{ margin: 0 }}>
+              {ordersStore?.order?.client?.debt && `Mijoz qarzi: ${priceFormat(ordersStore?.order?.client?.debt)}`}
+            </p>
+          </div>
+        </>}
       onCancel={handleModalClose}
       cancelText="Bekor qilish"
       centered
@@ -148,6 +190,15 @@ export const PaymentModal = observer(() => {
             defaultValue={0}
             style={{ width: '100%' }}
             formatter={(value) => priceFormat(value!)}
+            addonAfter={
+              <Button
+                disabled={totalPayment >= totalPrice}
+                type="primary"
+                onClick={handleAddonClick?.bind(null, 'card')}
+              >
+                Umumiy miqdor
+              </Button>
+            }
           />
         </Form.Item>
         <Form.Item
@@ -160,6 +211,15 @@ export const PaymentModal = observer(() => {
             defaultValue={0}
             style={{ width: '100%' }}
             formatter={(value) => priceFormat(value!)}
+            addonAfter={
+              <Button
+                disabled={totalPayment >= totalPrice}
+                type="primary"
+                onClick={handleAddonClick?.bind(null, 'cash')}
+              >
+                Umumiy miqdor
+              </Button>
+            }
           />
         </Form.Item>
         <Form.Item
@@ -171,6 +231,15 @@ export const PaymentModal = observer(() => {
             placeholder="Bank o'tkazmasi orqali to'lov"
             style={{ width: '100%' }}
             formatter={(value) => priceFormat(value!)}
+            addonAfter={
+              <Button
+                disabled={totalPayment >= totalPrice}
+                type="primary"
+                onClick={handleAddonClick?.bind(null, 'transfer')}
+              >
+                Umumiy miqdor
+              </Button>
+            }
           />
         </Form.Item>
         <Form.Item
@@ -182,6 +251,15 @@ export const PaymentModal = observer(() => {
             placeholder="Boshqa usullar bilan to'lov"
             style={{ width: '100%' }}
             formatter={(value) => priceFormat(value!)}
+            addonAfter={
+              <Button
+                disabled={totalPayment >= totalPrice}
+                type="primary"
+                onClick={handleAddonClick?.bind(null, 'other')}
+              >
+                Umumiy miqdor
+              </Button>
+            }
           />
         </Form.Item>
         <Form.Item
@@ -199,8 +277,36 @@ export const PaymentModal = observer(() => {
         </Form.Item>
       </Form>
       <div>
-        <p style={{ textAlign: 'end', fontSize: '24px', fontWeight: 'bold' }}>Umumiy qiymati: {priceFormat(totalPrice)}</p>
-        <p style={{ textAlign: 'end', fontSize: '24px', fontWeight: 'bold' }}>Qarzga: {priceFormat(Number(totalPrice) - Number(totalPayment) || 0)}</p>
+        <p
+          style={{
+            textAlign: 'end',
+            fontSize: '24px',
+            fontWeight: 'bold',
+            margin: 0,
+          }}
+        >
+          Umumiy qiymati: {priceFormat(totalPrice)}
+        </p>
+        <p
+          style={{
+            textAlign: 'end',
+            fontSize: '24px',
+            fontWeight: 'bold',
+            margin: 0,
+          }}
+        >
+          Jami to&apos;lov: {priceFormat(totalPayment)}
+        </p>
+        <p
+          style={{
+            textAlign: 'end',
+            fontSize: '24px',
+            fontWeight: 'bold',
+            margin: 0,
+          }}
+        >
+          Qarzga: {priceFormat(Number(totalPrice) - Number(totalPayment) || 0)}
+        </p>
       </div>
     </Modal>
   );

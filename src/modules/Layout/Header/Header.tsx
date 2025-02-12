@@ -20,10 +20,6 @@ const items: MenuProps['items'] = [
     key: '1',
     label: <LogOut />,
   },
-  {
-    key: '2',
-    label: <Link to={ROUTES.workers}>Мой профайл</Link>,
-  },
 ];
 
 export const Header = observer(({collapsed, onCollapsedClick, isMobile}: Props) => {

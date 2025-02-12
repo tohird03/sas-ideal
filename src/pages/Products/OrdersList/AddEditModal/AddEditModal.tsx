@@ -48,7 +48,7 @@ export const AddEditModal = observer(() => {
   const productRef = useRef<any>(null);
   const clientRef = useRef<any>(null);
   const { clientId } = useParams();
-  const [selectedClientLastSale, setSelectedClientLastSale] = useState<string | null>(null);
+  const [selectedClient, setSelectedClient] = useState<IClientsInfo | null>(null);
 
   // GET DATAS
   const { data: clientsData, isLoading: loadingClients } = useQuery({
@@ -204,9 +204,7 @@ export const AddEditModal = observer(() => {
   };
 
   const handleChangeClientSelect = (client: IClientsInfo) => {
-    console.log(client);
-
-    setSelectedClientLastSale(client?.lastSale);
+    setSelectedClient(client);
     setIsOpenProductSelect(true);
     productRef.current?.focus();
   };
@@ -242,6 +240,7 @@ export const AddEditModal = observer(() => {
   useEffect(() => {
     if (ordersStore.singleOrder && ordersStore?.order) {
       setSearchClients(ordersStore?.order?.client?.phone);
+      setSelectedClient(ordersStore?.order?.client);
 
       form.setFieldsValue({
         cash: ordersStore.order?.payment?.cash,
@@ -251,6 +250,7 @@ export const AddEditModal = observer(() => {
         sellingDate: dayjs(ordersStore.order?.sellingDate),
         clientId: ordersStore?.order?.client?.id,
       });
+
     } else if (singleClientStore.activeClient?.id) {
       setSearchClients(singleClientStore.activeClient?.phone);
       form.setFieldValue('clientId', singleClientStore.activeClient?.id);
@@ -483,7 +483,7 @@ export const AddEditModal = observer(() => {
         <div className={cn('order__add-products-header')}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
             {ordersStore?.order?.id ? 'Sotuvni tahrirlash' : 'Yangi sotuv'}
-            {ordersStore?.order?.id && `Mijoz qarzi: ${priceFormat(ordersStore?.order?.client?.debt)}`}
+            <p style={{margin: 0}}>{selectedClient && `Mijoz qarzi: ${priceFormat(selectedClient?.debt)}`}</p>
             {ordersStore?.order?.id && (
               <Button
                 type="primary"
@@ -548,7 +548,7 @@ export const AddEditModal = observer(() => {
             rules={[{ required: true }]}
             name="clientId"
             style={{ flex: 1, width: '100%' }}
-            help={selectedClientLastSale ? `Oxirgi sotuv: ${getFullDateFormat(selectedClientLastSale)}` : ''}
+            help={selectedClient?.lastSale ? `Oxirgi sotuv: ${getFullDateFormat(selectedClient?.lastSale)}` : ''}
           >
             <Select
               showSearch

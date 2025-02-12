@@ -40,12 +40,6 @@ export const Action: FC<Props> = observer(({ orders }) => {
     ordersStore.setIsOpenShowOrderModal(true);
   };
 
-  const handleEditOrder = () => {
-    ordersStore.setSingleOrder(orders);
-    ordersStore.setOrder(orders);
-    ordersStore.setIsOpenAddEditNewOrderModal(true);
-  };
-
   const handleDownloadExcel = () => {
     setDownLoadLoading(true);
     ordersApi.getUploadOrderToExel({
@@ -68,10 +62,6 @@ export const Action: FC<Props> = observer(({ orders }) => {
       });
   };
 
-  const handleDelete = () => {
-    deleteOrder(orders?.id);
-  };
-
   const handlePrint = () => {
     const doc = <MyDocument order={orders} />;
 
@@ -86,6 +76,16 @@ export const Action: FC<Props> = observer(({ orders }) => {
       document.body.appendChild(iframe);
       iframe.contentWindow?.print();
     });
+  };
+
+  const handleEditOrder = () => {
+    ordersStore.setSingleOrder(orders);
+    ordersStore.setOrder(orders);
+    ordersStore.setIsOpenAddEditNewOrderModal(true);
+  };
+
+  const handleDelete = () => {
+    deleteOrder(orders?.id);
   };
 
   const menuSaveOptions = (

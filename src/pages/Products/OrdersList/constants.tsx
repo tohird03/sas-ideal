@@ -23,7 +23,7 @@ export const ordersColumns: ColumnType<IOrder>[] = [
     dataIndex: 'client',
     title: 'Mijoz',
     align: 'center',
-    width: '250px',
+    width: '300px',
     render: (value, record) => <ClientNameLink client={record?.client} />,
   },
   {
@@ -59,6 +59,7 @@ export const ordersColumns: ColumnType<IOrder>[] = [
     title: 'Jami narxi',
     align: 'center',
     width: '150px',
+    sorter: (a, b) => a?.sum - b?.sum,
     render: (value, record) => priceFormat(record?.sum),
   },
   {
@@ -66,7 +67,7 @@ export const ordersColumns: ColumnType<IOrder>[] = [
     dataIndex: 'totalPay',
     title: 'Jami to\'lov',
     align: 'center',
-    width: '150px',
+    width: '120px',
     render: (value, record) => priceFormat(record?.payment?.totalPay),
   },
   {
@@ -74,7 +75,7 @@ export const ordersColumns: ColumnType<IOrder>[] = [
     dataIndex: 'cash',
     title: 'Naqd to\'lov',
     align: 'center',
-    width: '150px',
+    width: '120px',
     render: (value, record) => priceFormat(record?.payment?.cash),
   },
   {
@@ -90,7 +91,7 @@ export const ordersColumns: ColumnType<IOrder>[] = [
     dataIndex: 'transfer',
     title: 'Bank o\'tkazmasi orqali to\'lov',
     align: 'center',
-    width: '200px',
+    width: '150px',
     render: (value, record) => priceFormat(record?.payment?.transfer),
   },
   {
@@ -98,7 +99,7 @@ export const ordersColumns: ColumnType<IOrder>[] = [
     dataIndex: 'other',
     title: 'Boshqa usullar bilan to\'lov',
     align: 'center',
-    width: '200px',
+    width: '150px',
     render: (value, record) => priceFormat(record?.payment?.other),
   },
   {
@@ -106,7 +107,8 @@ export const ordersColumns: ColumnType<IOrder>[] = [
     dataIndex: 'debt',
     title: 'Qarzga',
     align: 'center',
-    width: '150px',
+    width: '130px',
+    sorter: (a, b) => a?.debt - b?.debt,
     render: (value, record) => priceFormat(record?.debt),
   },
   {
@@ -114,7 +116,7 @@ export const ordersColumns: ColumnType<IOrder>[] = [
     dataIndex: 'createdAt',
     title: 'Sotilgan vaqti',
     align: 'center',
-    width: '200px',
+    width: '120px',
     render: (value, record) => getFullDateFormat(record?.sellingDate),
   },
   {
@@ -122,7 +124,6 @@ export const ordersColumns: ColumnType<IOrder>[] = [
     dataIndex: 'action',
     title: 'Action',
     align: 'center',
-    width: '150px',
     render: (value, record) => <Action orders={record} />,
   },
 ];

@@ -18,6 +18,7 @@ export const PaymentStatus = observer(({ order }: Props) => {
         orderId: order?.id,
       });
       ordersStore.setIsOpenPaymentModal(true);
+      ordersStore.setOrder(order);
     }
   };
 

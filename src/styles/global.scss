@@ -55,6 +55,10 @@ a {
   width: 100%;
 }
 
+.ant-input-number-group-addon {
+  padding: 0 !important;
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   appearance: none;

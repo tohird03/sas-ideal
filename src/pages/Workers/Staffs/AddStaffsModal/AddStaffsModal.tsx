@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Checkbox, Collapse, Form, Input, InputNumber, Modal } from 'antd';
-import { IAddOrEditStaff, staffsApi } from '@/api/staffs';
+import { IAddStaff, IUpdateStaff, staffsApi } from '@/api/staffs';
 import { staffsStore } from '@/stores/workers';
 import { addNotification } from '@/utils';
 import { regexPhoneNumber } from '@/utils/phoneFormat';
@@ -14,6 +14,7 @@ export const AddStaffsModal = observer(() => {
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
   const [userPer, setUserPer] = useState<string[]>([]);
+  const [oldPer, setOldPer] = useState<string[]>([]);
 
   const { data: roleData, isLoading: loadingRole } = useQuery({
     queryKey: ['getRoles'],
@@ -23,7 +24,7 @@ export const AddStaffsModal = observer(() => {
   const { mutate: addNewStaffs } =
     useMutation({
       mutationKey: ['addNewStaffs'],
-      mutationFn: (params: IAddOrEditStaff) => staffsApi.addNewStaff(params),
+      mutationFn: (params: IAddStaff) => staffsApi.addNewStaff(params),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['getStaffs'] });
         handleModalClose();
@@ -35,10 +36,10 @@ export const AddStaffsModal = observer(() => {
       },
     });
 
-  const { mutate: updateProcess } =
+  const { mutate: updateStaffs } =
     useMutation({
-      mutationKey: ['updateProcess'],
-      mutationFn: (params: IAddOrEditStaff) => staffsApi.updateStaff(params),
+      mutationKey: ['updateStaffs'],
+      mutationFn: (params: IUpdateStaff) => staffsApi.updateStaff(params),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['getStaffs'] });
         addNotification('Xodim muvaffaqiyatli o\'zgartirildi');
@@ -56,19 +57,23 @@ export const AddStaffsModal = observer(() => {
   };
 
   const handleModalOk = () => {
-    console.log('Salom');
-
     form.submit();
   };
 
-  const handleSubmit = (values: IAddOrEditStaff) => {
+  const handleSubmit = (values: IAddStaff) => {
     setLoading(true);
 
     if (staffsStore?.singleStaff) {
-      updateProcess({
-        ...values,
+      const connectPer = userPer?.filter(newPer => !oldPer?.includes(newPer));
+      const disconnectPer = oldPer?.filter(newPer => !userPer?.includes(newPer));
+
+      updateStaffs({
+        name: values?.name,
+        password: values?.password,
         phone: `998${values?.phone}`,
         id: staffsStore?.singleStaff?.id!,
+        connectPermissions: connectPer,
+        disconnectPermissions: disconnectPer,
       });
 
       return;
@@ -94,10 +99,17 @@ export const AddStaffsModal = observer(() => {
 
   useEffect(() => {
     if (staffsStore.singleStaff) {
-      form.setFieldsValue({
-        ...staffsStore.singleStaff,
-        phone: staffsStore.singleStaff?.phone?.slice(3),
-      });
+      staffsApi?.getSingleStaffs(staffsStore?.singleStaff?.id)
+        .then(res => {
+          form.setFieldsValue({
+            ...res,
+            phone: res?.phone?.slice(3),
+          });
+          const checkPer = res?.permissions?.map(per => per?.id);
+
+          setUserPer(checkPer);
+          setOldPer(checkPer);
+        });
     }
   }, [staffsStore.singleStaff]);
 
@@ -147,7 +159,6 @@ export const AddStaffsModal = observer(() => {
         <Form.Item
           name="password"
           label="Parolni kiriting"
-          rules={[{ required: true }]}
         >
           <Input.Password placeholder="Parolni kiriting" />
         </Form.Item>
@@ -155,7 +166,6 @@ export const AddStaffsModal = observer(() => {
           name="reset-password"
           label="Parolni qayta kiriting"
           rules={[
-            { required: true },
             {
               validator(rule, value) {
                 if (value !== form.getFieldValue('password')) {
@@ -186,6 +196,7 @@ export const AddStaffsModal = observer(() => {
                     onChange={(e) => handleChangePer(e, per?.id)}
                     key={per?.id}
                     style={{ display: 'flex', paddingLeft: '20px' }}
+                    checked={userPer?.includes(per?.id)}
                   >
                     {per?.name}
                   </Checkbox>

@@ -3,7 +3,7 @@ import { Document, Page, Text, View, StyleSheet, Font, Image, Path } from '@reac
 import { IOrder } from '@/api/order/types';
 import { priceFormat } from '@/utils/priceFormat';
 import { getFullDateFormat } from '@/utils/getDateFormat';
-import LogoImg from '@/assets/img/logo-pdf.png';
+import LogoImg from '@/assets/img/logo-all.png';
 import CheckmarkIcon from '@/assets/img/check-mark.png';
 
 Font.register({
@@ -26,15 +26,16 @@ export const MyDocument = forwardRef<any, Props>(({ order }, ref) => (
   <Document ref={ref}>
     <Page size="A4" style={styles.page}>
       <View style={styles.section}>
-        {/* <Text style={styles.logo}>SAS-IDEAL</Text> */}
         <View style={styles.topData}>
-          <View>
-            <Text style={styles.title}>
-              <Text style={styles.titleSpan}>Дата продажа:</Text> {getFullDateFormat(order?.sellingDate)}
-            </Text>
-            <Text style={styles.title}>
-              <Text style={styles.titleSpan}>Харидор:</Text> {order?.client?.name}  -  {order?.client?.phone}
-            </Text>
+          <View style={styles.titleInfo}>
+            <View style={styles.title}>
+              <Text style={styles.titleSpan}>Дата продажа:</Text>
+              <Text style={styles.titleSpanData}>{getFullDateFormat(order?.sellingDate)}</Text>
+            </View>
+            <View style={styles.title}>
+              <Text style={styles.titleSpan}>Харидор:</Text>
+              <Text style={styles.titleSpanData}>{order?.client?.name}    {order?.client?.phone}</Text>
+            </View>
           </View>
           <View>
             <Image style={styles.logoImage} src={LogoImg} />
@@ -66,9 +67,15 @@ export const MyDocument = forwardRef<any, Props>(({ order }, ref) => (
             ))
           }
         </View>
-        <View style={styles.totalCalc}>
-          <Text style={styles.totalCalcText}>Жами сумма: {order?.sum}</Text>
-          <Text style={styles.totalCalcText}>Тулов килинди: {order?.payment?.totalPay || 0}</Text>
+        <View>
+          <View style={styles.totalCalcTextWrapper}>
+            <Text style={styles.totalCalcText}>Жами сумма:</Text>
+            <Text style={styles.totalCalcPriceText}>{order?.sum}</Text>
+          </View>
+          <View style={styles.totalCalcTextWrapper}>
+            <Text style={styles.totalCalcText}>Тулов килинди:</Text>
+            <Text style={styles.totalCalcPriceText}>{order?.payment?.totalPay || 0}</Text>
+          </View>
         </View>
       </View>
     </Page>
@@ -95,31 +102,45 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
+    marginTop: -40,
+  },
+  titleInfo: {
+    marginBottom: -30,
   },
   title: {
     fontSize: 12,
     fontFamily: 'NotoSans',
     fontWeight: 'bold',
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 15,
+    width: '70%',
   },
   titleSpan: {
     fontSize: 12,
     fontFamily: 'NotoSansBold',
     fontWeight: 'bold',
   },
+  titleSpanData: {
+    fontSize: 12,
+    fontFamily: 'NotoSans',
+    maxWidth: '70%',
+  },
   logoImage: {
-    width: 150,
-    height: 80,
+    width: 120,
+    height: 160,
+    marginRight: 40,
   },
   content: {
     fontSize: 12,
     marginBottom: 20,
   },
   table: {
-    marginTop: -10,
+    marginTop: -40,
     width: '100%',
     borderWidth: 1,
     borderColor: 'black',
-    marginBottom: 20,
+    marginBottom: 10,
   },
   tableHeader: {
     flexDirection: 'row',
@@ -130,8 +151,8 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'center',
     fontFamily: 'NotoSansBold',
-    fontSize: 8,
-    padding: 2,
+    fontSize: 10,
+    padding: 3,
     borderRightWidth: 1,
     borderColor: 'black',
     fontWeight: 800,
@@ -144,17 +165,26 @@ const styles = StyleSheet.create({
   tableCell: {
     flex: 1,
     textAlign: 'center',
-    padding: 2,
+    padding: 3,
     borderRightWidth: 1,
     borderColor: 'black',
-    fontSize: 8,
+    fontSize: 9,
   },
-  totalCalc: {
-    textAlign: 'right',
+  totalCalcTextWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    gap: 15,
   },
   totalCalcText: {
     textAlign: 'right',
-    fontSize: 12,
+    fontSize: 9,
+    fontFamily: 'NotoSansBold',
+    fontWeight: 'bold',
+  },
+  totalCalcPriceText: {
+    textAlign: 'left',
+    fontSize: 9,
     fontFamily: 'NotoSans',
+    width: 100,
   },
 });
