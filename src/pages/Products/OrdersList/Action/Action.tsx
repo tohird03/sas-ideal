@@ -30,7 +30,10 @@ export const Action: FC<Props> = observer(({ orders }) => {
       mutationFn: (id: string) => ordersApi.deleteOrder(id!),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['getOrders'] });
-        singleClientStore.getSingleClient(clientId!);
+
+        if (clientId) {
+          singleClientStore.getSingleClient(clientId!);
+        }
       },
       onError: addNotification,
     });

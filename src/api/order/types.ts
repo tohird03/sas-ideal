@@ -78,9 +78,14 @@ export interface IOrderStatistic {
   todaySales: number,
   weeklySales: number,
   monthlySales: number,
-  ourDebt: number,
-  fromDebt: number,
+  ourDebt: DebtResponse,
+  fromDebt: DebtResponse,
   weeklyChart: IOrderStatisticChart[],
+}
+
+export declare interface DebtResponse {
+  client: number,
+  supplier: number
 }
 
 export interface IOrderStatisticChart {

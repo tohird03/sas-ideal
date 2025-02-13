@@ -25,6 +25,9 @@ class IncomeProductsApi extends Instance {
   updateIncomeOrder = (params: IUpdateIncomeOrder): Promise<AxiosResponse> =>
     this.patch(`${Endpoints.productsIncomeOrder}/${params?.id}`, params);
 
+  deleteIncomeOrder = (id: string): Promise<AxiosResponse> =>
+    this.delete(`${Endpoints.productsIncomeOrder}/${id}`);
+
   getSingleIncomeOrder = (orderId: string): Promise<IIncomeOrder> =>
     this.get(`${Endpoints.productsIncomeOrder}/${orderId}`);
 

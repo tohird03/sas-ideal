@@ -3,10 +3,10 @@ import {observer} from 'mobx-react';
 import {DeleteOutlined, EditOutlined, EyeOutlined} from '@ant-design/icons';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {Button, Popconfirm, Tooltip} from 'antd';
-import {clientsInfoApi} from '@/api/clients';
 import {addNotification} from '@/utils';
 import { IIncomeOrder } from '@/api/income-products/types';
 import { incomeProductsStore } from '@/stores/products';
+import { incomeProductsApi } from '@/api/income-products';
 
 type Props = {
   order: IIncomeOrder;
@@ -15,10 +15,10 @@ type Props = {
 export const Action: FC<Props> = observer(({order}) => {
   const queryClient = useQueryClient();
 
-  const {mutate: deleteSupplier} =
+  const {mutate: deleteIncomeProducts} =
   useMutation({
-    mutationKey: ['deleteSupplier'],
-    mutationFn: (id: string) => clientsInfoApi.deleteUser(id!),
+    mutationKey: ['deleteIncomeProducts'],
+    mutationFn: (id: string) => incomeProductsApi.deleteIncomeOrder(id!),
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['getIncomeOrders']});
     },
@@ -37,7 +37,7 @@ export const Action: FC<Props> = observer(({order}) => {
   };
 
   const handleDelete = () => {
-    deleteSupplier(order?.id);
+    deleteIncomeProducts(order?.id);
   };
 
   return (
@@ -47,8 +47,8 @@ export const Action: FC<Props> = observer(({order}) => {
       </Tooltip>
       <Button onClick={handleEditProcess} type="primary" icon={<EditOutlined />} />
       <Popconfirm
-        title="Yetkazib beruvchini o'chirish"
-        description="Rostdan ham bu yetkazib beruvchini o'chirishni xohlaysizmi?"
+        title="Mahsulotni o'chirish"
+        description="Rostdan ham bu mahsulotni o'chirishni xohlaysizmi?"
         onConfirm={handleDelete}
         okText="Ha"
         okButtonProps={{style: {background: 'red'}}}

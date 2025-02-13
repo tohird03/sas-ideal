@@ -11,7 +11,7 @@ class OrdersStore {
   order: IOrder | null = null;
   orderPayment: IOrderPayment | null = null;
   pageNumber = 1;
-  pageSize = 10;
+  pageSize = 100;
   accepted: string | null = null;
   search: string | null = null;
   isOpenAddEditNewOrderModal = false;
@@ -99,7 +99,7 @@ class OrdersStore {
 
   reset() {
     this.pageNumber = 1;
-    this.pageSize = 10;
+    this.pageSize = 100;
     this.search = null;
   }
 }

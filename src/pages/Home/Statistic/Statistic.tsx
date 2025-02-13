@@ -8,7 +8,6 @@ import { CalendarOutlined, DollarOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
 import { ordersStore } from '@/stores/products';
 import { dateFormat, getStartAndEndDate, getStartMonthEndDate } from '@/utils/getDateFormat';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import CountUp from 'react-countup';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants';
@@ -135,23 +134,42 @@ export const Statistic = observer(() => {
           </div>
         </div>
         <div className={cn('statistic__top-order')}>
-          <h3 className={cn('statistic__top-heading')}>O&apos;zaro hisob kitoblar</h3>
-          <div className={cn('statistic__top-order-card-calc')}>
-            <Card onClick={handleClickClient} className={cn('statistic__top-card')}>
-              <DollarOutlined style={{ fontSize: '40px', color: '#f18024', marginBottom: 5 }} />
-              <p className={cn('statistic__top-card-info')}>Bizga qarz</p>
-              <p className={cn('statistic__top-card-value')}>
-                {formatter(ordersStatisticData?.fromDebt || 0)}
-              </p>
-            </Card>
-            <Card onClick={handleClickSupplier} className={cn('statistic__top-card')}>
-              <DollarOutlined style={{ fontSize: '40px', color: '#f18024', marginBottom: 5 }} />
-              <p className={cn('statistic__top-card-info')}>Bizning qarzimiz</p>
-              <p className={cn('statistic__top-card-value')}>
-                {formatter(ordersStatisticData?.ourDebt || 0)}
-              </p>
-            </Card>
-          </div>
+          <h3 className={cn('statistic__top-heading')}>Mijozlar</h3>
+          <Card onClick={handleClickClient} className={cn('statistic__top-card')}>
+            <div className={cn('statistic__debts')}>
+              <div>
+                <p className={cn('statistic__top-card-info')}>Bizga qarz</p>
+                <p className={cn('statistic__top-card-value')}>
+                  {formatter(ordersStatisticData?.fromDebt?.client || 0)}
+                </p>
+              </div>
+              <div>
+                <p className={cn('statistic__top-card-info')}>Bizning qarz</p>
+                <p className={cn('statistic__top-card-value')}>
+                  {formatter(ordersStatisticData?.ourDebt?.client || 0)}
+                </p>
+              </div>
+            </div>
+          </Card>
+        </div>
+        <div className={cn('statistic__top-order')}>
+          <h3 className={cn('statistic__top-heading')}>Yetkazib beruvchilar</h3>
+          <Card onClick={handleClickSupplier} className={cn('statistic__top-card')}>
+            <div className={cn('statistic__debts')}>
+              <div>
+                <p className={cn('statistic__top-card-info')}>Bizning qarz</p>
+                <p className={cn('statistic__top-card-value')}>
+                  {formatter(ordersStatisticData?.ourDebt?.supplier || 0)}
+                </p>
+              </div>
+              <div>
+                <p className={cn('statistic__top-card-info')}>Bizga qarz</p>
+                <p className={cn('statistic__top-card-value')}>
+                  {formatter(ordersStatisticData?.fromDebt?.supplier || 0)}
+                </p>
+              </div>
+            </div>
+          </Card>
         </div>
       </div>
       <Card>

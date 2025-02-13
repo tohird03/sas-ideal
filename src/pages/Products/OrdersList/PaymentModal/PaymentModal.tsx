@@ -47,7 +47,7 @@ export const PaymentModal = observer(() => {
           queryClient.invalidateQueries({ queryKey: ['getOrders'] });
           addNotification('To\'lov muvaffaqiyatli o\'zgartirildi');
           if (clientId) {
-            singleClientStore.getSingleClient(clientId!);
+            singleClientStore.getSingleClient(clientId);
           }
           handleModalClose();
         })
@@ -126,16 +126,15 @@ export const PaymentModal = observer(() => {
     <Modal
       open={ordersStore.isOpenPaymentModal}
       title={
-        <>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-            <p style={{ margin: 0 }}>
-              To&apos;lov {ordersStore.orderPayment?.client?.name}
-            </p>
-            <p style={{ margin: 0 }}>
-              {ordersStore?.order?.client?.debt && `Mijoz qarzi: ${priceFormat(ordersStore?.order?.client?.debt)}`}
-            </p>
-          </div>
-        </>}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <p style={{ margin: 0 }}>
+            To&apos;lov {ordersStore.orderPayment?.client?.name}
+          </p>
+          <p style={{ margin: 0 }}>
+            {ordersStore?.order?.client?.debt && `Mijoz qarzi: ${priceFormat(ordersStore?.order?.client?.debt)}`}
+          </p>
+        </div>
+      }
       onCancel={handleModalClose}
       cancelText="Bekor qilish"
       centered

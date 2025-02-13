@@ -13,6 +13,8 @@ import styles from './client-info.scss';
 import { clientsColumns } from './constants';
 import { IClientsInfo, clientsInfoApi } from '@/api/clients';
 import { addNotification } from '@/utils';
+import { priceFormat } from '@/utils/priceFormat';
+import { ordersStore } from '@/stores/products';
 
 const cn = classNames.bind(styles);
 
@@ -33,6 +35,11 @@ export const ClientsInfo = observer(() => {
         pageSize: clientsInfoStore.pageSize,
         search: clientsInfoStore.search!,
       }),
+  });
+
+  const { data: ordersStatisticData } = useQuery({
+    queryKey: ['getOrdersStatistic'],
+    queryFn: () => ordersStore.getOrdersStatistic(),
   });
 
   const handleAddNewClient = () => {
@@ -86,7 +93,7 @@ export const ClientsInfo = observer(() => {
         <Typography.Title level={3}>Mijozlar</Typography.Title>
         <div className={cn('client-info__filter')}>
           <Typography.Title level={3}>
-            Jami qarz: {clientsInfoData?.data?.reduce((prev, client) => prev + client?.debt, 0)}
+            Jami qarz: {priceFormat(ordersStatisticData?.fromDebt?.client)}
           </Typography.Title>
           <Input
             placeholder="Mijozlarni qidirish"

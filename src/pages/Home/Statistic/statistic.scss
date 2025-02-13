@@ -3,7 +3,7 @@ $small: 500px;
 .statistic {
   &__top-wrapper {
     display: grid;
-    grid-template-columns: 55% 42%;
+    grid-template-columns: 50% 22% 22%;
     align-items: center;
     margin-bottom: 40px;
     gap: 3%;
@@ -13,6 +13,13 @@ $small: 500px;
   }
   &__top-heading {
     margin-bottom: 15px;
+  }
+  &__debts {
+    display: grid;
+    align-items: center;
+    grid-template-columns: 50% 50%;
+    height: 100%;
+    justify-content: center;
   }
   &__top-order-card {
     display: grid;
@@ -34,6 +41,8 @@ $small: 500px;
     width: 100%;
     display: flex;
     cursor: pointer;
+    align-self: stretch;
+    min-height: 170px;
     .ant-card-body {
       width: 100% !important;
       text-align: center;

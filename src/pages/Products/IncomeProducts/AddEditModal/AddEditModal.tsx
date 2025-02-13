@@ -432,7 +432,11 @@ export const AddEditModal = observer(() => {
       title={(
         <div className={cn('order__add-products-header')}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-            {incomeProductsStore?.incomeOrder?.id ? 'Tushurilgan mahsulotlarni tahrirlash' : 'Yangi mahsulot tushurish sotuv'}
+            {
+              incomeProductsStore?.incomeOrder?.id
+                ? 'Tushurilgan mahsulotlarni tahrirlash'
+                : 'Yangi mahsulot tushurish sotuv'
+            }
             {incomeProductsStore?.incomeOrder?.id && (
               <Button
                 type="primary"
@@ -441,8 +445,7 @@ export const AddEditModal = observer(() => {
               >
                 To&lsquo;lovsiz saqlash
               </Button>
-            )
-            }
+            )}
           </div>
           <div>
             <Button
@@ -464,7 +467,6 @@ export const AddEditModal = observer(() => {
       }}
       width="100vw"
     >
-      {/* PRODUCTS FORM */}
       <Form
         form={form}
         onFinish={handleSubmitProduct}
@@ -599,7 +601,6 @@ export const AddEditModal = observer(() => {
         </Button>
       </Form>
 
-      {/* PRODUCTS SHOW LIST */}
       <DataTable
         columns={addOrderProductsColumns}
         data={incomeProductsStore?.incomeOrder?.incomingProducts || []}

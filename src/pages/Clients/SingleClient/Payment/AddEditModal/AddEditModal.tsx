@@ -7,6 +7,7 @@ import { addNotification } from '@/utils';
 import { priceFormat } from '@/utils/priceFormat';
 import { paymentApi } from '@/api/payment';
 import { IAddEditPaymentParams } from '@/api/payment/types';
+import { useParams } from 'react-router-dom';
 
 const filterOption = (input: string, option?: { label: string, value: string }) =>
   (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
@@ -16,6 +17,7 @@ export const AddEditModal = observer(() => {
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
   const [searchClients, setSearchClients] = useState<string | null>(null);
+  const {clientId} = useParams();
 
   // GET DATAS
   const { data: clientsData, isLoading: loadingClients } = useQuery({
@@ -39,6 +41,9 @@ export const AddEditModal = observer(() => {
         .then(() => {
           addNotification('To\'lov muvaffaqiyatli tahrirlandi!');
           queryClient.invalidateQueries({ queryKey: ['getPayments'] });
+          if (clientId) {
+            singleClientStore.getSingleClient(clientId!);
+          }
           handleModalClose();
         })
         .catch(addNotification)
@@ -53,6 +58,9 @@ export const AddEditModal = observer(() => {
       .then(() => {
         addNotification('To\'lov muvaffaqiyatli qo\'shildi!');
         queryClient.invalidateQueries({ queryKey: ['getPayments'] });
+        if (clientId) {
+          singleClientStore.getSingleClient(clientId!);
+        }
         handleModalClose();
       })
       .catch(addNotification)

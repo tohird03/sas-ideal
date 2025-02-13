@@ -5,6 +5,7 @@ import { priceFormat } from '@/utils/priceFormat';
 import { getFullDateFormat } from '@/utils/getDateFormat';
 import LogoImg from '@/assets/img/logo-all.png';
 import CheckmarkIcon from '@/assets/img/check-mark.png';
+import { phoneFormat } from '@/utils/phoneFormat';
 
 Font.register({
   family: 'NotoSans',
@@ -34,7 +35,7 @@ export const MyDocument = forwardRef<any, Props>(({ order }, ref) => (
             </View>
             <View style={styles.title}>
               <Text style={styles.titleSpan}>Харидор:</Text>
-              <Text style={styles.titleSpanData}>{order?.client?.name}    {order?.client?.phone}</Text>
+              <Text style={styles.titleSpanData}>{order?.client?.name}    {phoneFormat(order?.client?.phone?.slice(3))}</Text>
             </View>
           </View>
           <View>

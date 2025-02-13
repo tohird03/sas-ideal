@@ -5,7 +5,7 @@ import { productsApi } from '@/api/product/product';
 
 class ProductsListStore {
   pageNumber = 1;
-  pageSize = 10;
+  pageSize = 100;
   search: string | null = null;
   isOpenAddEditProductModal = false;
   singleProduct: IProducts | null = null;
@@ -41,7 +41,7 @@ class ProductsListStore {
 
   reset() {
     this.pageNumber = 1;
-    this.pageSize = 10;
+    this.pageSize = 100;
     this.search = null;
   }
 }
