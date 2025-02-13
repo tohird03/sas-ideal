@@ -91,7 +91,7 @@ export const AddEditModal = observer(() => {
       id: ordersStore?.order?.id!,
       sendUser: ordersStore?.isSendUser,
       clientId: form.getFieldValue('clientId'),
-      sellingDate: form.getFieldValue('sellingDate'),
+      sellingDate: dayjs().add(5, 'hour').toDate(),
     })
       .then(() => {
         queryClient.invalidateQueries({ queryKey: ['getOrders'] });

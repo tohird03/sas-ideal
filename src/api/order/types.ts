@@ -55,7 +55,7 @@ export interface IAddOrder {
 export interface IUpdateOrder {
   id: string;
   clientId?: string;
-  sellingDate?: string;
+  sellingDate?: Date | string;
   accepted?: boolean;
   sendUser: boolean;
 }
