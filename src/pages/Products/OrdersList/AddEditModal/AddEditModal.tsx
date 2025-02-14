@@ -86,12 +86,20 @@ export const AddEditModal = observer(() => {
   const handleSaveAccepted = () => {
     setCreateLoading(true);
 
+    const sellingDateValue = form.getFieldValue('sellingDate');
+    const oldSellingDateValue = dayjs(ordersStore?.order?.sellingDate)?.add(5, 'hour');
+
+    const sellingDateData = sellingDateValue ? new Date(sellingDateValue).toISOString().split('T')[0] : undefined;
+    const oldSellingDateData = oldSellingDateValue?.toISOString()?.split('T')[0];
+
+    const isChangeSellingDate = sellingDateData && oldSellingDateData ? sellingDateData !== oldSellingDateData : false;
+
     ordersApi.updateOrder({
       accepted: true,
       id: ordersStore?.order?.id!,
       sendUser: ordersStore?.isSendUser,
       clientId: form.getFieldValue('clientId'),
-      sellingDate: dayjs().add(5, 'hour').toDate(),
+      sellingDate: (isChangeSellingDate ? form.getFieldValue('sellingDate') : ordersStore?.order?.sellingDate),
     })
       .then(() => {
         queryClient.invalidateQueries({ queryKey: ['getOrders'] });
@@ -112,6 +120,7 @@ export const AddEditModal = observer(() => {
 
   const handleSubmitProduct = (values: IAddOrderModalForm) => {
     setLoading(true);
+    const fixDate = dayjs(values?.sellingDate).add(5, 'hour').toISOString();
 
     const addProducts: IAddOrderProducts = {
       product_id: values?.product_id,
@@ -125,10 +134,11 @@ export const AddEditModal = observer(() => {
         order_id: ordersStore?.order?.id,
       };
 
+
       ordersApi.updateOrder({
         id: ordersStore?.order?.id,
         clientId: values?.clientId,
-        sellingDate: values?.sellingDate,
+        sellingDate: fixDate,
         sendUser: ordersStore?.isSendUser,
       })
         .catch(addNotification)
@@ -160,7 +170,7 @@ export const AddEditModal = observer(() => {
 
     const createOrderData: IAddOrder = {
       clientId: values?.clientId,
-      sellingDate: values?.sellingDate,
+      sellingDate: fixDate,
       products: [addProducts],
     };
 

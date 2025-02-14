@@ -5,11 +5,15 @@ import { IIncomeGetClientsPaymentsParams, ISupplierPayments } from '@/api/paymen
 import { incomePaymentApi } from '@/api/payment-income';
 
 class SupplierPaymentsStore {
+  #today = new Date();
+
   pageNumber = 1;
   pageSize = 20;
   search: string | null = null;
   isOpenAddEditPaymentModal = false;
   singlePayment: ISupplierPayments | null = null;
+  startDate: Date | null = this.#today;
+  endDate: Date | null = this.#today;
 
   constructor() {
     makeAutoObservable(this);
@@ -38,6 +42,14 @@ class SupplierPaymentsStore {
 
   setSinglePayment = (singlePayment: ISupplierPayments | null) => {
     this.singlePayment = singlePayment;
+  };
+
+  setStartDate = (startDate: Date | null) => {
+    this.startDate = startDate;
+  };
+
+  setEndDate = (endDate: Date | null) => {
+    this.endDate = endDate;
   };
 
   reset() {

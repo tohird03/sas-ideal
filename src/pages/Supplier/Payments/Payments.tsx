@@ -1,30 +1,33 @@
-import React, {useEffect} from 'react';
-import {observer} from 'mobx-react';
-import {PlusCircleOutlined} from '@ant-design/icons';
-import {useQuery} from '@tanstack/react-query';
-import {Button, Input, Typography} from 'antd';
+import React, { useEffect } from 'react';
+import { observer } from 'mobx-react';
+import { PlusCircleOutlined } from '@ant-design/icons';
+import { useQuery } from '@tanstack/react-query';
+import { Button, DatePicker, Input, Typography } from 'antd';
 import classNames from 'classnames';
-import {DataTable} from '@/components/Datatable/datatable';
-import {getPaginationParams} from '@/utils/getPaginationParams';
-import {useMediaQuery} from '@/utils/mediaQuery';
-import {AddEditModal} from './AddEditModal';
+import { DataTable } from '@/components/Datatable/datatable';
+import { getPaginationParams } from '@/utils/getPaginationParams';
+import { useMediaQuery } from '@/utils/mediaQuery';
+import { AddEditModal } from './AddEditModal';
 import styles from './payments.scss';
-import {paymentsColumns} from './constants';
+import { paymentsColumns } from './constants';
 import { supplierPaymentsStore } from '@/stores/supplier';
 import { useParams } from 'react-router-dom';
+import dayjs from 'dayjs';
 
 const cn = classNames.bind(styles);
 
 export const SupplierPayments = observer(() => {
   const isMobile = useMediaQuery('(max-width: 800px)');
-  const {supplierId} = useParams();
+  const { supplierId } = useParams();
 
-  const {data: clientsInfoData, isLoading: loading} = useQuery({
+  const { data: clientsInfoData, isLoading: loading } = useQuery({
     queryKey: [
       'getPayments',
       supplierPaymentsStore.pageNumber,
       supplierPaymentsStore.pageSize,
       supplierPaymentsStore.search,
+      supplierPaymentsStore.startDate,
+      supplierPaymentsStore.endDate,
       supplierId,
     ],
     queryFn: () =>
@@ -32,6 +35,8 @@ export const SupplierPayments = observer(() => {
         pageNumber: supplierPaymentsStore.pageNumber,
         pageSize: supplierPaymentsStore.pageSize,
         search: supplierPaymentsStore.search!,
+        startDate: supplierPaymentsStore?.startDate!,
+        endDate: supplierPaymentsStore?.endDate!,
         supplierId,
       }),
   });
@@ -42,6 +47,16 @@ export const SupplierPayments = observer(() => {
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     supplierPaymentsStore.setSearch(e.currentTarget?.value);
+  };
+
+  const handleDateChange = (values: any) => {
+    if (values) {
+      supplierPaymentsStore.setStartDate(new Date(values[0]));
+      supplierPaymentsStore.setEndDate(new Date(values[1]));
+    } else {
+      supplierPaymentsStore.setStartDate(null);
+      supplierPaymentsStore.setEndDate(null);
+    }
   };
 
   const handlePageChange = (page: number, pageSize: number | undefined) => {
@@ -63,6 +78,12 @@ export const SupplierPayments = observer(() => {
             allowClear
             onChange={handleSearch}
             className={cn('clients-payments__search')}
+          />
+          <DatePicker.RangePicker
+            className={cn('promotion__datePicker')}
+            onChange={handleDateChange}
+            placeholder={['Boshlanish sanasi', 'Tugash sanasi']}
+            defaultValue={[dayjs(supplierPaymentsStore.startDate), dayjs(supplierPaymentsStore.endDate)]}
           />
           <Button
             onClick={handleAddNewPayment}

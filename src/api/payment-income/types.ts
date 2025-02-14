@@ -11,8 +11,8 @@ export interface ISupplierPayments extends IPaymentType {
 
 export interface IIncomeGetClientsPaymentsParams extends IPagination {
   search?: string;
-  startDate?: string;
-  endDate?: string;
+  startDate?: Date;
+  endDate?: Date;
   supplierId?: string;
 }
 

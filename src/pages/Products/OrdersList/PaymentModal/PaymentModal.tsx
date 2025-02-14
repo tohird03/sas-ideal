@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Input, InputNumber, Modal, Select, Space, Spin, notification } from 'antd';
+import { Button, Form, Input, InputNumber, Modal, Select, Space, Spin, message, notification } from 'antd';
 import { observer } from 'mobx-react';
 import { ordersStore } from '@/stores/products';
 import { priceFormat } from '@/utils/priceFormat';
@@ -17,6 +17,10 @@ export const PaymentModal = observer(() => {
   const [totalPayment, setTotalPayment] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
   const { clientId } = useParams();
+
+  const today = new Date().toISOString().split('T')[0];
+  const checkDate = ordersStore.order?.sellingDate?.split('T')[0];
+  const isToday = checkDate === today;
 
   const handleModalClose = () => {
     ordersStore.setOrderPayment(null);
@@ -39,6 +43,12 @@ export const PaymentModal = observer(() => {
     };
 
     if (ordersStore.orderPayment?.payment) {
+      if (!isToday) {
+        message.info('Oldingi to\'lovni o\'zgartirolmaysiz!');
+
+        return;
+      }
+
       paymentApi.updatePayment({
         ...orderPaymentData,
         id: ordersStore.orderPayment?.payment?.id,
@@ -149,6 +159,7 @@ export const PaymentModal = observer(() => {
         <Button
           onClick={handleSavePayment}
           type="primary"
+          disabled={!isToday}
         >
           Maqullash
         </Button>
