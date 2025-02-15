@@ -48,6 +48,8 @@ export const AddEditModal = observer(() => {
   const productRef = useRef<any>(null);
   const clientRef = useRef<any>(null);
   const { clientId } = useParams();
+  const changeCostRef = useRef<any>(null);
+  const changeCountRef = useRef<any>(null);
   const [selectedClient, setSelectedClient] = useState<IClientsInfo | null>(null);
 
   // GET DATAS
@@ -325,6 +327,13 @@ export const AddEditModal = observer(() => {
     }
   };
 
+  const handleDoubleClickChangeProduct = (order: IOrderProducts, fieldRef: any) => {
+    setIsUpdatingProduct(order);
+    setTimeout(() => {
+      fieldRef?.current?.focus();
+    }, 0);
+  };
+
   const addOrderProductsColumns: ColumnType<IOrderProducts>[] = [
     {
       key: 'index',
@@ -352,8 +361,14 @@ export const AddEditModal = observer(() => {
             placeholder="Narxi"
             disabled={isUpdatingProduct?.id !== record?.id}
             onChange={handleChangeCount}
+            ref={changeCountRef}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') {
+                handleSaveAndUpdateOrderProduct();
+              }
+            }}
           />
-        ) : <span>{record?.count}</span>
+        ) : <span onDoubleClick={handleDoubleClickChangeProduct?.bind(null, record, changeCountRef)}>{record?.count}</span>
       ),
     },
     {
@@ -368,8 +383,14 @@ export const AddEditModal = observer(() => {
             placeholder="Narxi"
             disabled={isUpdatingProduct?.id !== record?.id}
             onChange={handleChangePrice}
+            ref={changeCostRef}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') {
+                handleSaveAndUpdateOrderProduct();
+              }
+            }}
           />
-        ) : <span>{record?.price}</span>
+        ) : <span onDoubleClick={handleDoubleClickChangeProduct?.bind(null, record, changeCostRef)}>{record?.price}</span>
       ),
     },
     {
