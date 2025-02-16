@@ -7,7 +7,7 @@ import { addNotification } from '@/utils';
 import { ordersStore, productsListStore } from '@/stores/products';
 import { priceFormat } from '@/utils/priceFormat';
 import { CheckOutlined, DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { clientsInfoStore, singleClientStore } from '@/stores/clients';
 import { ordersApi } from '@/api/order';
 import styles from '../orders.scss';
@@ -23,7 +23,7 @@ import { OrderStatus, OrderStatusColor } from '../constants';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
 import { useParams } from 'react-router-dom';
 import { IClientsInfo } from '@/api/clients';
-import { getFullDateFormat } from '@/utils/getDateFormat';
+import { dateFormat, getDateFormat, getFullDateFormat } from '@/utils/getDateFormat';
 
 const cn = classNames.bind(styles);
 
@@ -88,20 +88,11 @@ export const AddEditModal = observer(() => {
   const handleSaveAccepted = () => {
     setCreateLoading(true);
 
-    const sellingDateValue = form.getFieldValue('sellingDate');
-    const oldSellingDateValue = dayjs(ordersStore?.order?.sellingDate)?.add(5, 'hour');
-
-    const sellingDateData = sellingDateValue ? new Date(sellingDateValue).toISOString().split('T')[0] : undefined;
-    const oldSellingDateData = oldSellingDateValue?.toISOString()?.split('T')[0];
-
-    const isChangeSellingDate = sellingDateData && oldSellingDateData ? sellingDateData !== oldSellingDateData : false;
-
     ordersApi.updateOrder({
       accepted: true,
       id: ordersStore?.order?.id!,
       sendUser: ordersStore?.isSendUser,
       clientId: form.getFieldValue('clientId'),
-      sellingDate: (isChangeSellingDate ? form.getFieldValue('sellingDate') : ordersStore?.order?.sellingDate),
     })
       .then(() => {
         queryClient.invalidateQueries({ queryKey: ['getOrders'] });
@@ -122,7 +113,6 @@ export const AddEditModal = observer(() => {
 
   const handleSubmitProduct = (values: IAddOrderModalForm) => {
     setLoading(true);
-    const fixDate = dayjs(values?.sellingDate).add(5, 'hour').toISOString();
 
     const addProducts: IAddOrderProducts = {
       product_id: values?.product_id,
@@ -136,11 +126,9 @@ export const AddEditModal = observer(() => {
         order_id: ordersStore?.order?.id,
       };
 
-
       ordersApi.updateOrder({
         id: ordersStore?.order?.id,
         clientId: values?.clientId,
-        sellingDate: fixDate,
         sendUser: ordersStore?.isSendUser,
       })
         .catch(addNotification)
@@ -172,7 +160,6 @@ export const AddEditModal = observer(() => {
 
     const createOrderData: IAddOrder = {
       clientId: values?.clientId,
-      sellingDate: fixDate,
       products: [addProducts],
     };
 
@@ -288,7 +275,12 @@ export const AddEditModal = observer(() => {
             }
           });
       })
-      .catch(addNotification);
+      .catch(addNotification)
+      .finally(() => {
+        if (clientId) {
+          singleClientStore.getSingleClient(clientId!);
+        }
+      });
   };
 
   const handleChangePrice = (value: number | null) => {
@@ -441,6 +433,27 @@ export const AddEditModal = observer(() => {
     clientsInfoStore.setIsOpenAddEditClientModal(true);
   };
 
+  const handleChaneOrderDate = (value: Dayjs | null, dateString: string) => {
+    if (ordersStore?.order?.id) {
+      ordersApi.updateOrder({
+        id: ordersStore?.order?.id!,
+        sellingDate: value?.toISOString(),
+        sendUser: ordersStore?.isSendUser,
+      })
+        .then(() => {
+          queryClient.invalidateQueries({ queryKey: ['getOrders'] });
+          if (clientId) {
+            singleClientStore.getSingleClient(clientId!);
+          }
+          handleModalClose();
+        })
+        .catch(addNotification)
+        .finally(() => {
+          setCreateLoading(false);
+        });
+    }
+  };
+
   const handleAddProduct = () => {
     productsListStore.setIsOpenAddEditProductModal(true);
   };
@@ -514,7 +527,7 @@ export const AddEditModal = observer(() => {
         <div className={cn('order__add-products-header')}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
             {ordersStore?.order?.id ? 'Sotuvni tahrirlash' : 'Yangi sotuv'}
-            <p style={{margin: 0}}>{selectedClient && `Mijoz qarzi: ${priceFormat(selectedClient?.debt)}`}</p>
+            <p style={{ margin: 0 }}>{selectedClient && `Mijoz qarzi: ${priceFormat(selectedClient?.debt)}`}</p>
             {ordersStore?.order?.id && (
               <Button
                 type="primary"
@@ -615,6 +628,7 @@ export const AddEditModal = observer(() => {
             defaultValue={dayjs()}
             format="DD.MM.YYYY"
             style={{ width: '100%' }}
+            onChange={handleChaneOrderDate}
           />
         </Form.Item>
         <div style={{ display: 'flex', alignItems: 'center' }}>

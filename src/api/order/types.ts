@@ -47,7 +47,7 @@ export interface IAddOrderModalForm extends IAddOrderProducts {
 
 export interface IAddOrder {
   clientId: string;
-  sellingDate: string;
+  sellingDate?: string;
   accepted?: boolean;
   products: IAddOrderProducts[];
 }
