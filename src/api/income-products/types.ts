@@ -58,7 +58,7 @@ export interface IUpdateIncomeOrder {
 }
 
 export interface IIncomeOrderPayment {
-  supplierId?: string;
+  supplier?: ISupplierInfo;
   orderId: string;
   payment: IPayment | undefined;
 }

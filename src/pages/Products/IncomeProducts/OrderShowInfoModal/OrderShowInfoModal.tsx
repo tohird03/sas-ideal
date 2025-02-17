@@ -35,7 +35,12 @@ export const OrderShowInfoModal = observer(() => {
       onCancel={handleModalClose}
       cancelText="Bekor qilish"
       centered
-      width={1200}
+      style={{ top: 0, padding: '20px' }}
+      bodyStyle={{
+        height: '85vh',
+        overflow: 'auto',
+      }}
+      width="100vw"
       footer={
         <Button onClick={handleModalClose}>
           Yopish

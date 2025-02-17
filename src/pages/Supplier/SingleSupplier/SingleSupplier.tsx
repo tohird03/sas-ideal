@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { observer } from 'mobx-react';
-import { Segmented } from 'antd';
+import { Segmented, Typography } from 'antd';
 import { SegmentedValue } from 'antd/es/segmented';
 import { SegmentComponents, singleSupplierTabOptions } from './constants';
 import { useParams } from 'react-router-dom';
@@ -29,12 +29,21 @@ export const SingleSupplier = observer(() => {
 
   return (
     <main>
-      <Segmented
-        defaultValue={ISingleSupplierTabs.ORDER}
-        onChange={handleChangeProductTab}
-        options={singleSupplierTabOptions}
-        className={cn('single-supplier__segment')}
-      />
+      <div className={cn('single-supplier__head')}>
+        <Segmented
+          defaultValue={ISingleSupplierTabs.ORDER}
+          onChange={handleChangeProductTab}
+          options={singleSupplierTabOptions}
+          className={cn('single-supplier__segment')}
+        />
+
+        <Typography.Title
+          className={cn('single-client__title')}
+          level={3}
+        >
+          Yetkazib beruvchiga qarz: {singleSupplierStore?.activeClient?.debt}
+        </Typography.Title>
+      </div>
 
       {SegmentComponents[singleSupplierStore?.activeTabs]}
     </main>

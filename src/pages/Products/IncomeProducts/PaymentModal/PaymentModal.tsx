@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Button, Form, InputNumber, Modal, Select } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Button, Form, Input, InputNumber, Modal, Select } from 'antd';
 import { observer } from 'mobx-react';
 import { priceFormat } from '@/utils/priceFormat';
 import { IPaymentType } from '@/api/types';
@@ -13,6 +13,8 @@ import { incomePaymentApi } from '@/api/payment-income';
 export const PaymentModal = observer(() => {
   const [form] = Form.useForm();
   const queryClient = useQueryClient();
+  const [totalPayment, setTotalPayment] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
 
   const handleModalClose = () => {
     incomeProductsStore.setIncomeOrderPayment(null);
@@ -30,7 +32,7 @@ export const PaymentModal = observer(() => {
     const orderPaymentData: IIncomeAddEditPaymentParams = {
       ...values,
       orderId: incomeProductsStore.incomeOrderPayment?.orderId,
-      supplierId: incomeProductsStore.incomeOrderPayment?.supplierId!,
+      supplierId: incomeProductsStore.incomeOrderPayment?.supplier?.id!,
     };
 
     if (incomeProductsStore.incomeOrderPayment?.payment) {
@@ -39,7 +41,6 @@ export const PaymentModal = observer(() => {
         id: incomeProductsStore.incomeOrderPayment?.payment?.id,
       })
         .then(res => {
-          incomeProductsStore.getSingleIncomeOrder(incomeProductsStore.incomeOrderPayment?.orderId!);
           queryClient.invalidateQueries({ queryKey: ['getIncomeOrders'] });
           handleModalClose();
         })
@@ -50,33 +51,78 @@ export const PaymentModal = observer(() => {
 
     incomePaymentApi.addIncomePayment(orderPaymentData)
       .then(res => {
-        incomeProductsStore.getSingleIncomeOrder(incomeProductsStore.incomeOrderPayment?.orderId!);
         queryClient.invalidateQueries({ queryKey: ['getOrders'] });
         handleModalClose();
       })
       .catch(addNotification);
   };
 
+  const handleValuesChange = (changedValues: any, allValues: any) => {
+    const { cash = 0, card = 0, transfer = 0, other = 0 } = allValues;
+    const total = [cash, card, transfer, other].reduce(
+      (sum, value) => sum + Number(value || 0),
+      0
+    );
+
+    setTotalPayment(total);
+  };
+
+  const handleAddonClick = (fieldName: string) => {
+    const allValues = form.getFieldsValue();
+    const { cash = 0, card = 0, transfer = 0, other = 0 } = allValues;
+
+    const totalEntered = cash + card + transfer + other;
+
+    const remainingAmount = totalPrice - totalEntered;
+
+    if (remainingAmount > 0) {
+      form.setFieldsValue({
+        [fieldName]: (allValues[fieldName] || 0) + remainingAmount,
+      });
+    }
+
+    setTotalPayment(totalPrice);
+  };
+
   useEffect(() => {
-    form.setFieldsValue({
-      cash: incomeProductsStore.incomeOrderPayment?.payment?.cash,
-      card: incomeProductsStore.incomeOrderPayment?.payment?.card,
-      transfer: incomeProductsStore.incomeOrderPayment?.payment?.transfer,
-      other: incomeProductsStore.incomeOrderPayment?.payment?.other,
-      supplierId: incomeProductsStore.incomeOrderPayment?.supplierId,
-    });
+    if (incomeProductsStore.incomeOrderPayment?.payment) {
+      const payment = incomeProductsStore?.incomeOrderPayment?.payment;
+
+      if (payment) {
+        const { cash, card, transfer, other, description }: IPaymentType = payment;
+
+        form.setFieldsValue({
+          cash,
+          card,
+          transfer,
+          other,
+          description,
+          clientId: incomeProductsStore.incomeOrderPayment?.supplier?.id,
+        });
+
+        const totalPayCalc = cash + card + transfer + other;
+
+        setTotalPayment(totalPayCalc);
+      }
+    }
+
+    const totalPriceCalc = incomeProductsStore?.incomeOrder?.incomingProducts?.reduce((prev, current) => prev + (current?.cost * current?.count), 0);
+
+    setTotalPrice(totalPriceCalc || 0);
   }, [incomeProductsStore.incomeOrderPayment]);
 
   return (
     <Modal
       open={incomeProductsStore.isOpenIncomeOrderPaymentModal}
-      // title={`To'lov, ${incomeProductsStore.incomeOrderPayment?.supplierId?.name}`}
+      title={`
+        ${incomeProductsStore.incomeOrderPayment?.supplier?.name}: Yetkazib beruvchiga qarz
+        ${incomeProductsStore.incomeOrderPayment?.supplier?.debt || 0}`}
       onCancel={handleModalClose}
       cancelText="Bekor qilish"
       centered
       style={{ top: 0, padding: 0 }}
       bodyStyle={{
-        height: '90vh',
+        height: '85vh',
         overflow: 'auto',
       }}
       width="100vw"
@@ -92,6 +138,7 @@ export const PaymentModal = observer(() => {
       <Form
         form={form}
         onFinish={handleSubmitPayment}
+        onValuesChange={handleValuesChange}
         layout="vertical"
         autoComplete="off"
         className="income-order__add-products-form-info"
@@ -100,15 +147,15 @@ export const PaymentModal = observer(() => {
           label="Yetkazib beruvchi"
           rules={[{ required: true }]}
           name="supplierId"
-          initialValue={incomeProductsStore.incomeOrderPayment?.supplierId}
+          initialValue={incomeProductsStore.incomeOrderPayment?.supplier?.id}
         >
           <Select
             showSearch
             placeholder="Yetkazib beruvchi"
             optionFilterProp="children"
             options={[{
-              value: incomeProductsStore.incomeOrderPayment?.supplierId,
-              label: `${incomeProductsStore.incomeOrderPayment?.supplierId} ${incomeProductsStore.incomeOrderPayment?.supplierId}`,
+              value: incomeProductsStore.incomeOrderPayment?.supplier?.id,
+              label: `${incomeProductsStore.incomeOrderPayment?.supplier?.name} ${incomeProductsStore.incomeOrderPayment?.supplier?.phone}`,
             }]}
             allowClear
           />
@@ -123,6 +170,15 @@ export const PaymentModal = observer(() => {
             defaultValue={0}
             style={{ width: '100%' }}
             formatter={(value) => priceFormat(value!)}
+            addonAfter={
+              <Button
+                disabled={totalPayment >= totalPrice}
+                type="primary"
+                onClick={handleAddonClick?.bind(null, 'card')}
+              >
+                Umumiy miqdor
+              </Button>
+            }
           />
         </Form.Item>
         <Form.Item
@@ -135,6 +191,15 @@ export const PaymentModal = observer(() => {
             defaultValue={0}
             style={{ width: '100%' }}
             formatter={(value) => priceFormat(value!)}
+            addonAfter={
+              <Button
+                disabled={totalPayment >= totalPrice}
+                type="primary"
+                onClick={handleAddonClick?.bind(null, 'cash')}
+              >
+                Umumiy miqdor
+              </Button>
+            }
           />
         </Form.Item>
         <Form.Item
@@ -146,6 +211,15 @@ export const PaymentModal = observer(() => {
             placeholder="Bank o'tkazmasi orqali to'lov"
             style={{ width: '100%' }}
             formatter={(value) => priceFormat(value!)}
+            addonAfter={
+              <Button
+                disabled={totalPayment >= totalPrice}
+                type="primary"
+                onClick={handleAddonClick?.bind(null, 'transfer')}
+              >
+                Umumiy miqdor
+              </Button>
+            }
           />
         </Form.Item>
         <Form.Item
@@ -157,9 +231,63 @@ export const PaymentModal = observer(() => {
             placeholder="Boshqa usullar bilan to'lov"
             style={{ width: '100%' }}
             formatter={(value) => priceFormat(value!)}
+            addonAfter={
+              <Button
+                disabled={totalPayment >= totalPrice}
+                type="primary"
+                onClick={handleAddonClick?.bind(null, 'other')}
+              >
+                Umumiy miqdor
+              </Button>
+            }
+          />
+        </Form.Item>
+        <Form.Item
+          label="To'lov haqida ma'lumot"
+          name="description"
+        >
+          <Input.TextArea
+            placeholder="To'lov haqida ma'lumot"
+            style={{ width: '100%' }}
+            rows={4}
+            maxLength={100}
+            showCount
+            autoSize={{ minRows: 2, maxRows: 6 }}
           />
         </Form.Item>
       </Form>
+      <div>
+        <p
+          style={{
+            textAlign: 'end',
+            fontSize: '24px',
+            fontWeight: 'bold',
+            margin: 0,
+          }}
+        >
+          Umumiy qiymati: {priceFormat(totalPrice)}
+        </p>
+        <p
+          style={{
+            textAlign: 'end',
+            fontSize: '24px',
+            fontWeight: 'bold',
+            margin: 0,
+          }}
+        >
+          Jami to&apos;lov: {priceFormat(totalPayment)}
+        </p>
+        <p
+          style={{
+            textAlign: 'end',
+            fontSize: '24px',
+            fontWeight: 'bold',
+            margin: 0,
+          }}
+        >
+          Qarzga: {priceFormat(Number(totalPrice) - Number(totalPayment) || 0)}
+        </p>
+      </div>
     </Modal>
   );
 });

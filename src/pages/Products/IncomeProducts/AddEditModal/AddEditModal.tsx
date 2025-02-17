@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { observer } from 'mobx-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Button, DatePicker, Form, InputNumber, Modal, Popconfirm, Select, Spin, Tag } from 'antd';
+import { Button, DatePicker, Form, InputNumber, Modal, Popconfirm, Select, Spin } from 'antd';
 import classNames from 'classnames';
 import { addNotification } from '@/utils';
 import { incomeProductsStore, productsListStore } from '@/stores/products';
@@ -15,16 +15,18 @@ import { ColumnType } from 'antd/es/table';
 import { incomeProductsApi } from '@/api/income-products';
 import { IAddEditIncomeOrder, IAddIncomeOrderForm, IAddIncomeOrderProducts, IIncomeOrderProductAdd, IIncomeProduct } from '@/api/income-products/types';
 import { singleSupplierStore, supplierInfoStore } from '@/stores/supplier';
-import { useParams } from 'react-router-dom';
+import { ISupplierInfo } from '@/api/clients';
 
 const cn = classNames.bind(styles);
 
 const filterOption = (input: string, option?: { label: string, value: string }) =>
   (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
 
+const countColor = (count: number, min_amount: number): string =>
+  count < 0 ? 'red' : count < min_amount ? 'orange' : 'green';
+
 export const AddEditModal = observer(() => {
   const [form] = Form.useForm();
-  const { supplierId } = useParams();
   const queryClient = useQueryClient();
   const isMobile = useMediaQuery('(max-width: 800px)');
   const [loading, setLoading] = useState(false);
@@ -35,6 +37,7 @@ export const AddEditModal = observer(() => {
   const countInputRef = useRef<HTMLInputElement>(null);
   const productRef = useRef<any>(null);
   const clientRef = useRef<any>(null);
+  const [selectedSupplier, setSelectedSupplier] = useState<ISupplierInfo | null>(null);
 
   // GET DATAS
   const { data: supplierData, isLoading: loadingClients } = useQuery({
@@ -61,7 +64,7 @@ export const AddEditModal = observer(() => {
     if (incomeProductsStore?.incomeOrder?.id) {
       incomeProductsStore.setIncomeOrderPayment({
         payment: incomeProductsStore?.incomeOrder?.payment,
-        supplierId: incomeProductsStore?.incomeOrder?.supplier?.id,
+        supplier: incomeProductsStore?.incomeOrder?.supplier,
         orderId: incomeProductsStore?.incomeOrder?.id,
       });
       incomeProductsStore.setIsOpenIncomePaymentModal(true);
@@ -81,6 +84,17 @@ export const AddEditModal = observer(() => {
   };
 
   const handleCreateOrUpdateOrder = () => {
+    if (!form.getFieldValue('count')) {
+      form.setFields([
+        {
+          name: 'count',
+          errors: ['Mahsulot sonini kiriting!'],
+        },
+      ]);
+
+      return;
+    }
+
     form.submit();
   };
 
@@ -183,12 +197,9 @@ export const AddEditModal = observer(() => {
   ), [supplierData]);
 
   useEffect(() => {
-    if (supplierId) {
-      form.setFieldValue('supplierId', singleSupplierStore.activeClient?.id);
-    }
-
     if (incomeProductsStore.singleIncomeOrder && incomeProductsStore?.incomeOrder) {
       setSearchClients(incomeProductsStore?.incomeOrder?.supplier?.phone!);
+      setSelectedSupplier(incomeProductsStore?.incomeOrder?.supplier);
 
       form.setFieldsValue({
         cash: incomeProductsStore.incomeOrder?.payment?.cash,
@@ -202,10 +213,7 @@ export const AddEditModal = observer(() => {
       setSearchClients(singleSupplierStore.activeClient?.phone);
       form.setFieldValue('supplierId', singleSupplierStore.activeClient?.id);
     }
-  }, [incomeProductsStore.incomeOrder, singleSupplierStore.activeClient, supplierId]);
-
-  const countColor = (count: number, min_amount: number): string =>
-    count < 0 ? 'red' : count < min_amount ? 'orange' : 'green';
+  }, [incomeProductsStore.incomeOrder, singleSupplierStore.activeClient]);
 
   // TABLE ACTIONS
   const handleEditProduct = (orderProduct: IIncomeProduct) => {
@@ -367,6 +375,17 @@ export const AddEditModal = observer(() => {
   ];
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLFormElement>) => {
+    if (!form.getFieldValue('count')) {
+      form.setFields([
+        {
+          name: 'count',
+          errors: ['Mahsulot sonini kiriting!'],
+        },
+      ]);
+
+      return;
+    }
+
     if (e.key === 'Enter') {
       e.preventDefault();
 
@@ -417,7 +436,8 @@ export const AddEditModal = observer(() => {
     setIsOpenProductSelect(false);
   };
 
-  const handleChangeClientSelect = () => {
+  const handleChangeClientSelect = (supplier: ISupplierInfo) => {
+    setSelectedSupplier(supplier);
     setIsOpenProductSelect(true);
     productRef.current?.focus();
   };
@@ -437,6 +457,7 @@ export const AddEditModal = observer(() => {
                 ? 'Tushurilgan mahsulotlarni tahrirlash'
                 : 'Yangi mahsulot tushurish sotuv'
             }
+            <p style={{ margin: 0 }}>{selectedSupplier && `Yetkazib beruvchiga qarz: ${priceFormat(selectedSupplier?.debt)}`}</p>
             {incomeProductsStore?.incomeOrder?.id && (
               <Button
                 type="primary"
@@ -492,7 +513,13 @@ export const AddEditModal = observer(() => {
             onClear={handleClearClient}
             options={supplierOptions}
             allowClear
-            onChange={handleChangeClientSelect}
+            onChange={(value) => {
+              const client = supplierData?.data?.find((client) => client.id === value);
+
+              if (client) {
+                handleChangeClientSelect(client);
+              }
+            }}
             onSelect={(value) => handleSelectChange(value, 'supplierId')}
           />
         </Form.Item>
@@ -540,9 +567,6 @@ export const AddEditModal = observer(() => {
                     {product?.name}
                   </p>
                   <div className={cn('income-order__add-product-info')}>
-                    <p className={cn('income-order__add-product-price')}>
-                      {product?.selling_price}
-                    </p>
                     <p
                       style={{ backgroundColor: `${countColor(product?.count, product?.min_amount)}` }}
                       className={cn('income-order__add-product-count')}
@@ -568,18 +592,6 @@ export const AddEditModal = observer(() => {
           />
         </Form.Item>
         <Form.Item
-          label="Sotish narxi"
-          rules={[{ required: true }]}
-          name="selling_price"
-          initialValue={0}
-        >
-          <InputNumber
-            placeholder="Sotib olingan narxi"
-            style={{ width: '100%' }}
-            formatter={(value) => priceFormat(value!)}
-          />
-        </Form.Item>
-        <Form.Item
           label="Mahsulot soni"
           rules={[{ required: true }]}
           name="count"
@@ -588,6 +600,18 @@ export const AddEditModal = observer(() => {
             placeholder="Tushuriladigan mahsulot sonini kiriting"
             style={{ width: '100%' }}
             ref={countInputRef}
+            formatter={(value) => priceFormat(value!)}
+          />
+        </Form.Item>
+        <Form.Item
+          label="Sotish narxi"
+          rules={[{ required: true }]}
+          name="selling_price"
+          initialValue={0}
+        >
+          <InputNumber
+            placeholder="Sotib olingan narxi"
+            style={{ width: '100%' }}
             formatter={(value) => priceFormat(value!)}
           />
         </Form.Item>
@@ -608,6 +632,13 @@ export const AddEditModal = observer(() => {
         pagination={false}
         scroll={{ y: 300 }}
       />
+
+      <div>
+        <p style={{ textAlign: 'end', fontSize: '24px', fontWeight: 'bold' }}>Umumiy qiymati: {
+          priceFormat(incomeProductsStore?.incomeOrder?.incomingProducts?.reduce((prev, current) => prev + (current?.cost * current?.count), 0))
+        }
+        </p>
+      </div>
     </Modal>
   );
 });

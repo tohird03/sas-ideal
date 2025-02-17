@@ -17,6 +17,7 @@ export const PaymentModal = observer(() => {
   const [totalPayment, setTotalPayment] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
   const { clientId } = useParams();
+  const [loadingPayment, setLoadingPayment] = useState(false);
 
   const today = new Date().toISOString().split('T')[0];
   const checkDate = ordersStore.order?.sellingDate?.split('T')[0];
@@ -35,6 +36,7 @@ export const PaymentModal = observer(() => {
   };
 
   const handleSubmitPayment = (values: IPaymentType) => {
+    setLoadingPayment(true);
     const orderPaymentData: IAddEditPaymentParams = {
       ...values,
       orderId: ordersStore.orderPayment?.orderId,
@@ -61,7 +63,10 @@ export const PaymentModal = observer(() => {
           }
           handleModalClose();
         })
-        .catch(addNotification);
+        .catch(addNotification)
+        .finally(() => {
+          setLoadingPayment(false);
+        });
 
       return;
     }
@@ -75,7 +80,10 @@ export const PaymentModal = observer(() => {
         }
         handleModalClose();
       })
-      .catch(addNotification);
+      .catch(addNotification)
+      .finally(() => {
+        setLoadingPayment(false);
+      });
   };
 
   useEffect(() => {
@@ -160,6 +168,7 @@ export const PaymentModal = observer(() => {
           onClick={handleSavePayment}
           type="primary"
           disabled={!isToday}
+          loading={loadingPayment}
         >
           Maqullash
         </Button>

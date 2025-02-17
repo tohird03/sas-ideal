@@ -108,6 +108,17 @@ export const AddEditModal = observer(() => {
   };
 
   const handleCreateOrUpdateOrder = () => {
+    if (!form.getFieldValue('count')) {
+      form.setFields([
+        {
+          name: 'count',
+          errors: ['Mahsulot sonini kiriting!'],
+        },
+      ]);
+
+      return;
+    }
+
     form.submit();
   };
 
@@ -459,6 +470,17 @@ export const AddEditModal = observer(() => {
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLFormElement>) => {
+    if (!form.getFieldValue('count')) {
+      form.setFields([
+        {
+          name: 'count',
+          errors: ['Mahsulot sonini kiriting!'],
+        },
+      ]);
+
+      return;
+    }
+
     if (e.key === 'Enter') {
       e.preventDefault();
 
@@ -483,7 +505,7 @@ export const AddEditModal = observer(() => {
   };
 
   const handleSelectChange = (value: any, name: string) => {
-    const nextFieldName = getNextFieldName(name); // A function to get the next field name
+    const nextFieldName = getNextFieldName(name);
 
     if (nextFieldName) {
       const nextField = form.getFieldInstance(nextFieldName);

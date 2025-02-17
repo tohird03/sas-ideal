@@ -7,6 +7,7 @@ import { dateFormatterWithStringMonth } from '@/utils/dateFormat';
 import { Tag } from 'antd';
 import { getFullDateFormat } from '@/utils/getDateFormat';
 import { SupplierNameLink } from '@/pages/ActionComponents/SupplierNameLink';
+import { PaymentStatus } from './PaymentStatus';
 
 export const incomeOrdersColumns: ColumnType<IIncomeOrder>[] = [
   {
@@ -21,6 +22,7 @@ export const incomeOrdersColumns: ColumnType<IIncomeOrder>[] = [
     dataIndex: 'supplier',
     title: 'Yetkazib beruvchi',
     align: 'center',
+    width: '300px',
     render: (value, record) => <SupplierNameLink supplier={record?.supplier} />,
   },
   {
@@ -31,9 +33,16 @@ export const incomeOrdersColumns: ColumnType<IIncomeOrder>[] = [
     render: (value, record) => (
       <div>
         <p style={{margin: 0, fontWeight: 'bold'}}>{record?.admin?.name}</p>
-        <i>+{record?.admin?.phone}</i>
       </div>
     ),
+  },
+  {
+    key: 'paymentShow',
+    dataIndex: 'paymentShow',
+    title: 'To\'lov holat',
+    align: 'center',
+    width: '150px',
+    render: (value, record) => <PaymentStatus incomeOrder={record} />,
   },
   {
     key: 'totalPrice',
@@ -82,6 +91,14 @@ export const incomeOrdersColumns: ColumnType<IIncomeOrder>[] = [
     align: 'center',
     width: '150px',
     render: (value, record) => priceFormat(record?.payment?.other),
+  },
+  {
+    key: 'debt',
+    dataIndex: 'debt',
+    title: 'Qarzga',
+    align: 'center',
+    width: '150px',
+    render: (value, record) => priceFormat(record?.debt),
   },
   {
     key: 'createdAt',
