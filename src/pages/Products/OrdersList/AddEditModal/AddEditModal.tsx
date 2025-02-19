@@ -320,6 +320,7 @@ export const AddEditModal = observer(() => {
               });
             addNotification('Mahsulot muvaffaqiyatli o\'zgartildi!');
           }
+          queryClient.invalidateQueries({ queryKey: ['getOrders'] });
         })
         .catch(addNotification)
         .finally(() => {

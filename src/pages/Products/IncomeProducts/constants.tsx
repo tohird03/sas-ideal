@@ -3,11 +3,9 @@ import { ColumnType } from 'antd/es/table';
 import { Action } from './Action';
 import { IIncomeOrder, IIncomeProduct } from '@/api/income-products/types';
 import { priceFormat } from '@/utils/priceFormat';
-import { dateFormatterWithStringMonth } from '@/utils/dateFormat';
-import { Tag } from 'antd';
-import { getFullDateFormat } from '@/utils/getDateFormat';
 import { SupplierNameLink } from '@/pages/ActionComponents/SupplierNameLink';
 import { PaymentStatus } from './PaymentStatus';
+import { getFullDateFormat } from '@/utils/getDateFormat';
 
 export const incomeOrdersColumns: ColumnType<IIncomeOrder>[] = [
   {

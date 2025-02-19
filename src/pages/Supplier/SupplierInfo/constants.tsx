@@ -6,6 +6,7 @@ import { formatPhoneNumber } from '@/utils/phoneFormat';
 import { priceFormat } from '@/utils/priceFormat';
 import { dateFormatterWithStringMonth } from '@/utils/dateFormat';
 import { SupplierNameLink } from '@/pages/ActionComponents/SupplierNameLink';
+import { getFullDateFormat } from '@/utils/getDateFormat';
 
 export const supplierColumns: ColumnType<ISupplierInfo>[] = [
   {
@@ -41,7 +42,7 @@ export const supplierColumns: ColumnType<ISupplierInfo>[] = [
     dataIndex: 'lastSale',
     title: 'Oxirgi xarid',
     align: 'center',
-    render: (value, record) => dateFormatterWithStringMonth(record?.lastSale),
+    render: (value, record) => getFullDateFormat(record?.lastSale),
   },
   {
     key: 'action',

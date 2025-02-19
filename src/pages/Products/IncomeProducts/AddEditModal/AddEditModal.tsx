@@ -25,6 +25,19 @@ const filterOption = (input: string, option?: { label: string, value: string }) 
 const countColor = (count: number, min_amount: number): string =>
   count < 0 ? 'red' : count < min_amount ? 'orange' : 'green';
 
+const getNextFieldName = (currentFieldName: string) => {
+  const fieldNames = [
+    'supplierId',
+    'product_id',
+    'price',
+    'count',
+  ];
+
+  const currentIndex = fieldNames.indexOf(currentFieldName);
+
+  return fieldNames[currentIndex + 1];
+};
+
 export const AddEditModal = observer(() => {
   const [form] = Form.useForm();
   const queryClient = useQueryClient();
@@ -410,26 +423,13 @@ export const AddEditModal = observer(() => {
   };
 
   const handleSelectChange = (value: any, name: string) => {
-    const nextFieldName = getNextFieldName(name); // A function to get the next field name
+    const nextFieldName = getNextFieldName(name);
 
     if (nextFieldName) {
       const nextField = form.getFieldInstance(nextFieldName);
 
       nextField?.focus();
     }
-  };
-
-  const getNextFieldName = (currentFieldName: string) => {
-    const fieldNames = [
-      'supplierId',
-      'product_id',
-      'price',
-      'count',
-    ];
-
-    const currentIndex = fieldNames.indexOf(currentFieldName);
-
-    return fieldNames[currentIndex + 1];
   };
 
   const handleBlurProduct = () => {

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Button, Modal, notification } from 'antd';
 import { observer } from 'mobx-react';
-import { incomeProductsStore, ordersStore } from '@/stores/products';
+import { incomeProductsStore } from '@/stores/products';
 import { DataTable } from '@/components/Datatable/datatable';
 import { ordersInfoColumns, ordersInfoPaymentColumns, ordersInfoProductsColumns } from '../constants';
 import styles from '../income-products.scss';

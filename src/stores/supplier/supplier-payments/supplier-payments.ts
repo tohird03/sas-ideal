@@ -1,6 +1,5 @@
 import {makeAutoObservable} from 'mobx';
 import {addNotification} from '@/utils';
-import { paymentApi } from '@/api/payment';
 import { IIncomeGetClientsPaymentsParams, ISupplierPayments } from '@/api/payment-income/types';
 import { incomePaymentApi } from '@/api/payment-income';
 

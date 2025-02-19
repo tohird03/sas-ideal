@@ -3,7 +3,6 @@ import { Button, Form, Input, InputNumber, Modal, Select } from 'antd';
 import { observer } from 'mobx-react';
 import { priceFormat } from '@/utils/priceFormat';
 import { IPaymentType } from '@/api/types';
-import { paymentApi } from '@/api/payment';
 import { addNotification } from '@/utils';
 import { useQueryClient } from '@tanstack/react-query';
 import { incomeProductsStore } from '@/stores/products';
@@ -40,7 +39,7 @@ export const PaymentModal = observer(() => {
         ...orderPaymentData,
         id: incomeProductsStore.incomeOrderPayment?.payment?.id,
       })
-        .then(res => {
+        .then(() => {
           queryClient.invalidateQueries({ queryKey: ['getIncomeOrders'] });
           handleModalClose();
         })
@@ -50,14 +49,14 @@ export const PaymentModal = observer(() => {
     }
 
     incomePaymentApi.addIncomePayment(orderPaymentData)
-      .then(res => {
+      .then(() => {
         queryClient.invalidateQueries({ queryKey: ['getOrders'] });
         handleModalClose();
       })
       .catch(addNotification);
   };
 
-  const handleValuesChange = (changedValues: any, allValues: any) => {
+  const handleValuesChange = (_: any, allValues: any) => {
     const { cash = 0, card = 0, transfer = 0, other = 0 } = allValues;
     const total = [cash, card, transfer, other].reduce(
       (sum, value) => sum + Number(value || 0),
