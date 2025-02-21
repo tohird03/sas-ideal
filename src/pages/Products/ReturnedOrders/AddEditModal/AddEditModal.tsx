@@ -178,6 +178,8 @@ export const AddEditModal = observer(() => {
           .finally(() => {
             setLoading(false);
           });
+
+        queryClient.invalidateQueries({ queryKey: ['getReturnedOrders'] });
       })
       .catch(addNotification);
   };
@@ -206,6 +208,8 @@ export const AddEditModal = observer(() => {
               .finally(() => {
                 setLoading(false);
               });
+
+            queryClient.invalidateQueries({ queryKey: ['getReturnedOrders'] });
             addNotification('Mahsulot muvaffaqiyatli o\'zgartildi!');
           }
         })
