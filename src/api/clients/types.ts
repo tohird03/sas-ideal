@@ -61,6 +61,7 @@ export interface IDeedPayment extends IPayment {
 export interface IDeedOrder extends IOrder {
   type: 'order';
   description: string;
+  createdAt?: string;
 }
 
 export interface IDeedReturnedOrder extends IReturnedOrder {
