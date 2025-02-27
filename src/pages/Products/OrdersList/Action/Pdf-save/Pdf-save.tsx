@@ -114,13 +114,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     display: 'flex',
     flexDirection: 'row',
-    gap: 15,
     width: '70%',
   },
   titleSpan: {
     fontSize: 12,
     fontFamily: 'NotoSansBold',
     fontWeight: 'bold',
+    marginRight: 30,
   },
   titleSpanData: {
     fontSize: 12,
