@@ -7,6 +7,7 @@ import { addNotification } from '@/utils';
 import { priceFormat } from '@/utils/priceFormat';
 import { paymentApi } from '@/api/payment';
 import { IAddEditPaymentParams } from '@/api/payment/types';
+import { IClientsInfo } from '@/api/clients';
 
 const filterOption = (input: string, option?: { label: string, value: string }) =>
   (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
@@ -16,6 +17,7 @@ export const AddEditModal = observer(() => {
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
   const [searchClients, setSearchClients] = useState<string | null>(null);
+  const [selectedClient, setSelectedClient] = useState<IClientsInfo | null>(null);
 
   // GET DATAS
   const { data: clientsData, isLoading: loadingClients } = useQuery({
@@ -78,6 +80,10 @@ export const AddEditModal = observer(() => {
     setSearchClients(null);
   };
 
+  const handleChangeClient = (value: IClientsInfo) => {
+    setSelectedClient(value);
+  };
+
   const clientsOptions = useMemo(() => (
     clientsData?.data.map((supplier) => ({
       value: supplier?.id,
@@ -96,10 +102,17 @@ export const AddEditModal = observer(() => {
     }
   }, [paymentsStore.singlePayment]);
 
+  console.log(selectedClient);
+
   return (
     <Modal
       open={paymentsStore.isOpenAddEditPaymentModal}
-      title={paymentsStore.singlePayment ? 'To\'lovni tahrirlash' : 'To\'lov qo\'shish'}
+      title={(
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          {paymentsStore.singlePayment ? 'To\'lovni tahrirlash' : 'To\'lov qo\'shish'}
+          <p style={{ margin: 0 }}>{selectedClient && `Mijoz qarzi: ${priceFormat(selectedClient?.debt)}`}</p>
+        </div>
+      )}
       onCancel={handleModalClose}
       onOk={handleModalOk}
       okText={paymentsStore.singlePayment ? 'To\'lovni tahrirlash' : 'To\'lov qo\'shish'}
@@ -127,6 +140,13 @@ export const AddEditModal = observer(() => {
             filterOption={filterOption}
             onSearch={handleSearchClients}
             onClear={handleClearClient}
+            onChange={(value) => {
+              const client = clientsData?.data.find((client) => client.id === value);
+
+              if (client) {
+                handleChangeClient(client);
+              }
+            }}
             options={clientsOptions}
             allowClear
           />

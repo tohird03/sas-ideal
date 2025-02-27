@@ -112,7 +112,12 @@ export const AddEditModal = observer(() => {
   return (
     <Modal
       open={singleClientStore.isOpenAddEditPaymentModal}
-      title={singleClientStore.singlePayment ? 'To\'lovni tahrirlash' : 'To\'lov qo\'shish'}
+      title={(
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          {singleClientStore?.singlePayment ? 'To\'lovni tahrirlash' : 'To\'lov qo\'shish'}
+          <p style={{ margin: 0 }}>{singleClientStore?.activeClient && `Mijoz qarzi: ${priceFormat(singleClientStore?.activeClient?.debt)}`}</p>
+        </div>
+      )}
       onCancel={handleModalClose}
       onOk={handleModalOk}
       okText={singleClientStore.singlePayment ? 'To\'lovni tahrirlash' : 'To\'lov qo\'shish'}
