@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { observer } from 'mobx-react';
 import { DownloadOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
@@ -18,9 +18,10 @@ import { clientsInfoStore } from '@/stores/clients';
 import { useParams } from 'react-router-dom';
 import { ordersApi } from '@/api/order';
 import { addNotification } from '@/utils';
-import { AddEditModal as AddEditClientModal} from '@/pages/Clients/ClientsInfo/AddEditModal';
+import { AddEditModal as AddEditClientModal } from '@/pages/Clients/ClientsInfo/AddEditModal';
 import { AddEditModal } from '../ProductsList/AddEditModal';
 import { dateFormat } from '@/utils/getDateFormat';
+import { staffsApi } from '@/api/staffs';
 
 const cn = classNames.bind(styles);
 
@@ -38,6 +39,7 @@ export const Orders = observer(() => {
       ordersStore.startDate,
       ordersStore.endDate,
       ordersStore.accepted,
+      ordersStore.sellerId,
       clientId,
     ],
     queryFn: () =>
@@ -47,8 +49,18 @@ export const Orders = observer(() => {
         search: ordersStore.search!,
         startDate: ordersStore.startDate!,
         endDate: ordersStore.endDate!,
-        ...(ordersStore.accepted ? {accepted: ordersStore.accepted} : {}),
+        sellerId: ordersStore.sellerId!,
+        ...(ordersStore.accepted ? { accepted: ordersStore.accepted } : {}),
         clientId,
+      }),
+  });
+
+  const { data: sellerData, isLoading: loadingSeller } = useQuery({
+    queryKey: ['getSellers'],
+    queryFn: () =>
+      staffsApi.getStaffs({
+        pageNumber: 1,
+        pageSize: 100,
       }),
   });
 
@@ -64,6 +76,7 @@ export const Orders = observer(() => {
       search: ordersStore.search!,
       startDate: ordersStore.startDate!,
       endDate: ordersStore.endDate!,
+      sellerId: ordersStore.sellerId!,
       clientId,
     })
       .then(res => {
@@ -105,10 +118,27 @@ export const Orders = observer(() => {
     ordersStore.setAccepted(null);
   };
 
+  const handleChangeSeller = (value: string) => {
+    if (value) {
+      ordersStore.setSellerId(value);
+
+      return;
+    }
+
+    ordersStore.setSellerId(null);
+  };
+
   const handlePageChange = (page: number, pageSize: number | undefined) => {
     ordersStore.setPageNumber(page);
     ordersStore.setPageSize(pageSize!);
   };
+
+  const sellerOptions = useMemo(() => (
+    sellerData?.data.map((sellerData) => ({
+      value: sellerData?.id,
+      label: `${sellerData?.name}`,
+    }))
+  ), [sellerData]);
 
   useEffect(() => () => {
     ordersStore.reset();
@@ -132,9 +162,17 @@ export const Orders = observer(() => {
             defaultValue={[dayjs(ordersStore.startDate), dayjs(ordersStore.endDate)]}
           />
           <Select
+            options={sellerOptions}
+            onChange={handleChangeSeller}
+            style={{ width: '200px' }}
+            placeholder="Sotuvchilar"
+            loading={loadingSeller}
+            allowClear
+          />
+          <Select
             options={FilterOrderStatusOptions}
             onChange={handleChangeFilter}
-            style={{width: '200px'}}
+            style={{ width: '200px' }}
             placeholder="Sotuv holati"
             allowClear
           />

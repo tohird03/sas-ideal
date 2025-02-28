@@ -21,6 +21,7 @@ export interface IGetOrdersParams extends IPagination {
   endDate?: Date;
   clientId?: string;
   accepted?: string;
+  sellerId?: string;
   type?: 'excel'
 }
 

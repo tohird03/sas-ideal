@@ -14,6 +14,7 @@ class OrdersStore {
   pageSize = 100;
   accepted: string | null = null;
   search: string | null = null;
+  sellerId: string | null = null;
   isOpenAddEditNewOrderModal = false;
   isOpenShowOrderModal = false;
   isOpenPaymentModal = false;
@@ -71,6 +72,10 @@ class OrdersStore {
 
   setSearch = (search: string | null) => {
     this.search = search;
+  };
+
+  setSellerId = (sellerId: string | null) => {
+    this.sellerId = sellerId;
   };
 
   setStartDate = (startDate: Date | null) => {
