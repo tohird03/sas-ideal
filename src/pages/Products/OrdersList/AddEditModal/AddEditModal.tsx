@@ -470,12 +470,12 @@ export const AddEditModal = observer(() => {
     productsListStore.setIsOpenAddEditProductModal(true);
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLFormElement>) => {
-    if (!form.getFieldValue('count')) {
+  const handleChangePriceForm = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!form.getFieldValue('price')) {
       form.setFields([
         {
-          name: 'count',
-          errors: ['Mahsulot sonini kiriting!'],
+          name: 'price',
+          errors: ['Mahsulot narxini kiriting!'],
         },
       ]);
 
@@ -483,6 +483,23 @@ export const AddEditModal = observer(() => {
     }
 
     if (e.key === 'Enter') {
+      countInputRef?.current?.focus();
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLFormElement>) => {
+    if (e.key === 'Enter') {
+      if (!form.getFieldValue('count')) {
+        form.setFields([
+          {
+            name: 'count',
+            errors: ['Mahsulot sonini kiriting!'],
+          },
+        ]);
+
+        return;
+      }
+
       e.preventDefault();
 
       const fieldsValue = form.getFieldsValue();
@@ -715,6 +732,7 @@ export const AddEditModal = observer(() => {
             placeholder="Narxi"
             style={{ width: '100%' }}
             formatter={(value) => priceFormat(value!)}
+            onKeyUp={handleChangePriceForm}
           />
         </Form.Item>
         <Form.Item

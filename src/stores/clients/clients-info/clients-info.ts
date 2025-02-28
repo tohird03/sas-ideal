@@ -4,7 +4,7 @@ import {addNotification} from '@/utils';
 
 class ClientsInfoStore {
   pageNumber = 1;
-  pageSize = 10;
+  pageSize = 100;
   search: string | null = null;
   isOpenAddEditClientModal = false;
   singleClientInfo: IClientsInfo | null = null;
@@ -40,7 +40,7 @@ class ClientsInfoStore {
 
   reset() {
     this.pageNumber = 1;
-    this.pageSize = 10;
+    this.pageSize = 100;
     this.search = null;
   }
 }
