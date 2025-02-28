@@ -446,6 +446,16 @@ export const AddEditModal = observer(() => {
     setIsOpenProductSelect(true);
   };
 
+  const rowClassName = (record: IIncomeProduct) => {
+    if (incomeProductsStore?.incomeOrder?.incomingProducts) {
+      const isDuplicate = incomeProductsStore?.incomeOrder?.incomingProducts?.filter(product => product?.product?.id === record?.product?.id).length > 1;
+
+      return isDuplicate ? 'warning__row' : '';
+    }
+
+    return '';
+  };
+
   return (
     <Modal
       open={incomeProductsStore.isOpenAddEditIncomeProductsModal}
@@ -631,6 +641,7 @@ export const AddEditModal = observer(() => {
         isMobile={isMobile}
         pagination={false}
         scroll={{ y: 300 }}
+        rowClassName={rowClassName}
       />
 
       <div>
