@@ -436,6 +436,40 @@ export const AddEditModal = observer(() => {
     setIsOpenProductSelect(false);
   };
 
+  const handleChangeCostForm = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!form.getFieldValue('cost')) {
+      form.setFields([
+        {
+          name: 'cost',
+          errors: ['Mahsulot sotib olingan narxini kiriting!'],
+        },
+      ]);
+
+      return;
+    }
+
+    if (e.key === 'Enter') {
+      countInputRef?.current?.focus();
+    }
+  };
+
+  const handleChangePriceForm = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!form.getFieldValue('selling_price')) {
+      form.setFields([
+        {
+          name: 'selling_price',
+          errors: ['Mahsulot sotiladigan narxini kiriting!'],
+        },
+      ]);
+
+      return;
+    }
+
+    if (e.key === 'Enter') {
+      countInputRef?.current?.focus();
+    }
+  };
+
   const handleChangeClientSelect = (supplier: ISupplierInfo) => {
     setSelectedSupplier(supplier);
     setIsOpenProductSelect(true);
@@ -599,6 +633,7 @@ export const AddEditModal = observer(() => {
             placeholder="Sotib olingan narxi"
             style={{ width: '100%' }}
             formatter={(value) => priceFormat(value!)}
+            onKeyUp={handleChangeCostForm}
           />
         </Form.Item>
         <Form.Item
@@ -623,6 +658,7 @@ export const AddEditModal = observer(() => {
             placeholder="Sotib olingan narxi"
             style={{ width: '100%' }}
             formatter={(value) => priceFormat(value!)}
+            onKeyUp={handleChangePriceForm}
           />
         </Form.Item>
         <Button
