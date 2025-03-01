@@ -1,10 +1,9 @@
 import React from 'react';
 import { ColumnType } from 'antd/es/table';
-import { IClientsInfo } from '@/api/clients';
+import { IClientDebtFilter, IClientsInfo } from '@/api/clients';
 import { Action } from './Action';
 import { formatPhoneNumber } from '@/utils/phoneFormat';
 import { priceFormat } from '@/utils/priceFormat';
-import { dateFormatterWithStringMonth } from '@/utils/dateFormat';
 import { ClientNameLink } from '@/pages/ActionComponents/ClientNameLink';
 import { getFullDateFormat } from '@/utils/getDateFormat';
 
@@ -51,5 +50,24 @@ export const clientsColumns: ColumnType<IClientsInfo>[] = [
     title: 'Action',
     align: 'center',
     render: (value, record) => <Action client={record} />,
+  },
+];
+
+export const clientDebtFilter = [
+  {
+    value: null,
+    label: 'Hamma mijozlar',
+  },
+  {
+    value: IClientDebtFilter.EQUAL,
+    label: '* ga teng bo\'lganlari',
+  },
+  {
+    value: IClientDebtFilter.LESS,
+    label: '* dan kam bo\'lganlari',
+  },
+  {
+    value: IClientDebtFilter.GREATER,
+    label: '* dan yuqori bo\'lganlari',
   },
 ];

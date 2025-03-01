@@ -11,6 +11,8 @@ import { dateFormat, getStartAndEndDate, getStartMonthEndDate } from '@/utils/ge
 import CountUp from 'react-countup';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants';
+import { clientsInfoStore } from '@/stores/clients';
+import { IClientDebtFilter } from '@/api/clients';
 
 const cn = classNames.bind(styles);
 const formatter = (value: number) => <CountUp duration={2} end={value} separator=" " />;
@@ -97,6 +99,8 @@ export const Statistic = observer(() => {
   };
 
   const handleClickClient = () => {
+    clientsInfoStore.setDebtType(IClientDebtFilter.GREATER);
+    clientsInfoStore.setPageSize(500);
     navigate(ROUTES.clientsInfo);
   };
 

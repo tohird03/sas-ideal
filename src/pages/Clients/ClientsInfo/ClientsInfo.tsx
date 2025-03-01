@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
 import { DownloadOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
-import { Button, Input, Tooltip, Typography } from 'antd';
+import { Button, Input, InputNumber, Select, Tooltip, Typography } from 'antd';
 import classNames from 'classnames';
 import { DataTable } from '@/components/Datatable/datatable';
 import { clientsInfoStore } from '@/stores/clients';
@@ -10,8 +10,8 @@ import { getPaginationParams } from '@/utils/getPaginationParams';
 import { useMediaQuery } from '@/utils/mediaQuery';
 import { AddEditModal } from './AddEditModal';
 import styles from './client-info.scss';
-import { clientsColumns } from './constants';
-import { IClientsInfo, clientsInfoApi } from '@/api/clients';
+import { clientDebtFilter, clientsColumns } from './constants';
+import { IClientDebtFilter, IClientsInfo, clientsInfoApi } from '@/api/clients';
 import { addNotification } from '@/utils';
 import { priceFormat } from '@/utils/priceFormat';
 import { ordersStore } from '@/stores/products';
@@ -28,12 +28,16 @@ export const ClientsInfo = observer(() => {
       clientsInfoStore.pageNumber,
       clientsInfoStore.pageSize,
       clientsInfoStore.search,
+      clientsInfoStore.debt,
+      clientsInfoStore.debtType,
     ],
     queryFn: () =>
       clientsInfoStore.getClients({
         pageNumber: clientsInfoStore.pageNumber,
         pageSize: clientsInfoStore.pageSize,
         search: clientsInfoStore.search!,
+        debt: clientsInfoStore.debt!,
+        debtType: clientsInfoStore.debtType!,
       }),
   });
 
@@ -46,9 +50,17 @@ export const ClientsInfo = observer(() => {
     clientsInfoStore.setIsOpenAddEditClientModal(true);
   };
 
+  const handleDebtValueChange = (value: number | null) => {
+    clientsInfoStore.setDebt(value);
+  };
+
+  const handleDebtFilterChange = (value: IClientDebtFilter) => {
+    clientsInfoStore.setDebtType(value);
+  };
+
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     clientsInfoStore.setSearch(e.currentTarget?.value);
-    handlePageChange(1, 10);
+    handlePageChange(1, 100);
   };
 
   const handlePageChange = (page: number, pageSize: number | undefined) => {
@@ -100,6 +112,22 @@ export const ClientsInfo = observer(() => {
             allowClear
             onChange={handleSearch}
             className={cn('client-info__search')}
+          />
+          <InputNumber
+            placeholder="Qarz miqdorini kiriting"
+            onChange={handleDebtValueChange}
+            style={{ width: '350px' }}
+            defaultValue={0}
+            disabled
+            addonAfter={
+              <Select
+                options={clientDebtFilter}
+                onChange={handleDebtFilterChange}
+                style={{ width: '200px' }}
+                placeholder="Hammasi"
+                value={clientsInfoStore.debtType}
+              />
+            }
           />
           <Button
             onClick={handleAddNewClient}

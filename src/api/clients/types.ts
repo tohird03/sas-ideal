@@ -26,6 +26,14 @@ export interface IClientsInfo {
 
 export interface IGetClientsInfoParams extends IPagination {
   search?: string;
+  debt?: number;
+  debtType?: IClientDebtFilter;
+}
+
+export enum IClientDebtFilter {
+  EQUAL = 'equal',
+  GREATER = 'greater',
+  LESS = 'less',
 }
 
 export interface IAddClientInfo {

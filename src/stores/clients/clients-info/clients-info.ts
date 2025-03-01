@@ -1,11 +1,13 @@
 import {makeAutoObservable} from 'mobx';
-import {clientsInfoApi, IClientsInfo, IGetClientsInfoParams} from '@/api/clients';
+import {clientsInfoApi, IClientDebtFilter, IClientsInfo, IGetClientsInfoParams} from '@/api/clients';
 import {addNotification} from '@/utils';
 
 class ClientsInfoStore {
   pageNumber = 1;
   pageSize = 100;
   search: string | null = null;
+  debt: number | null = null;
+  debtType: IClientDebtFilter | null = null;
   isOpenAddEditClientModal = false;
   singleClientInfo: IClientsInfo | null = null;
 
@@ -28,6 +30,14 @@ class ClientsInfoStore {
 
   setSearch = (search: string | null) => {
     this.search = search;
+  };
+
+  setDebt = (debt: number | null) => {
+    this.debt = debt;
+  };
+
+  setDebtType = (debtType: IClientDebtFilter | null) => {
+    this.debtType = debtType;
   };
 
   setIsOpenAddEditClientModal = (isOpenAddEditClientModal: boolean) => {
