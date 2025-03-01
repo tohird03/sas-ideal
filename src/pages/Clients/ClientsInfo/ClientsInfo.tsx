@@ -118,7 +118,6 @@ export const ClientsInfo = observer(() => {
             onChange={handleDebtValueChange}
             style={{ width: '350px' }}
             defaultValue={0}
-            disabled
             addonAfter={
               <Select
                 options={clientDebtFilter}
