@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { observer } from 'mobx-react';
 import { DownloadOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
-import { Button, DatePicker, Input, Table, Tooltip, Typography } from 'antd';
+import { Button, DatePicker, Input, Select, Table, Tooltip, Typography } from 'antd';
 import classNames from 'classnames';
 import { DataTable } from '@/components/Datatable/datatable';
 import { getPaginationParams } from '@/utils/getPaginationParams';
@@ -14,6 +14,7 @@ import { paymentsStore } from '@/stores/clients';
 import dayjs from 'dayjs';
 import { paymentApi } from '@/api/payment';
 import { addNotification } from '@/utils';
+import { staffsApi } from '@/api/staffs';
 
 const cn = classNames.bind(styles);
 
@@ -28,6 +29,7 @@ export const ClientsPayments = observer(() => {
       paymentsStore.search,
       paymentsStore.startDate,
       paymentsStore.endDate,
+      paymentsStore.sellerId,
     ],
     queryFn: () =>
       paymentsStore.getClientsPayments({
@@ -36,6 +38,16 @@ export const ClientsPayments = observer(() => {
         search: paymentsStore.search!,
         startDate: paymentsStore?.startDate!,
         endDate: paymentsStore?.endDate!,
+        sellerId: paymentsStore.sellerId!,
+      }),
+  });
+
+  const { data: sellerData, isLoading: loadingSeller } = useQuery({
+    queryKey: ['getSellers'],
+    queryFn: () =>
+      staffsApi.getStaffs({
+        pageNumber: 1,
+        pageSize: 100,
       }),
   });
 
@@ -45,6 +57,16 @@ export const ClientsPayments = observer(() => {
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     paymentsStore.setSearch(e.currentTarget?.value);
+  };
+
+  const handleChangeSeller = (value: string) => {
+    if (value) {
+      paymentsStore.setSellerId(value);
+
+      return;
+    }
+
+    paymentsStore.setSellerId(null);
   };
 
   const handleDateChange = (values: any) => {
@@ -70,6 +92,7 @@ export const ClientsPayments = observer(() => {
       search: paymentsStore.search!,
       startDate: paymentsStore.startDate!,
       endDate: paymentsStore.endDate!,
+      sellerId: paymentsStore.sellerId!,
     })
       .then(res => {
         const url = URL.createObjectURL(new Blob([res]));
@@ -86,6 +109,13 @@ export const ClientsPayments = observer(() => {
       });
   };
 
+  const sellerOptions = useMemo(() => (
+    sellerData?.data.map((sellerData) => ({
+      value: sellerData?.id,
+      label: `${sellerData?.name}`,
+    }))
+  ), [sellerData]);
+
   useEffect(() => () => {
     paymentsStore.reset();
   }, []);
@@ -100,6 +130,14 @@ export const ClientsPayments = observer(() => {
             allowClear
             onChange={handleSearch}
             className={cn('clients-payments__search')}
+          />
+          <Select
+            options={sellerOptions}
+            onChange={handleChangeSeller}
+            style={{ width: '200px' }}
+            placeholder="Sotuvchilar"
+            loading={loadingSeller}
+            allowClear
           />
           <DatePicker.RangePicker
             className={cn('promotion__datePicker')}

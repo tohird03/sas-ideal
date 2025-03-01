@@ -9,6 +9,7 @@ class PaymentsStore {
   pageNumber = 1;
   pageSize = 10;
   search: string | null = null;
+  sellerId: string | null = null;
   isOpenAddEditPaymentModal = false;
   singlePayment: IClientsPayments | null = null;
   startDate: Date | null = this.#today;
@@ -33,6 +34,10 @@ class PaymentsStore {
 
   setSearch = (search: string | null) => {
     this.search = search;
+  };
+
+  setSellerId = (sellerId: string | null) => {
+    this.sellerId = sellerId;
   };
 
   setIsOpenAddEditPaymentModal = (isOpenAddEditPaymentModal: boolean) => {

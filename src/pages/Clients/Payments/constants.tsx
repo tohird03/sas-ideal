@@ -72,6 +72,13 @@ export const paymentsColumns: ColumnType<IClientsPayments>[] = [
     render: (value, record) => getFullDateFormat(record?.createdAt),
   },
   {
+    key: 'seller',
+    dataIndex: 'seller',
+    title: 'Sotuvchi',
+    align: 'center',
+    render: (value, record) => <p style={{ margin: 0, fontWeight: 'bold' }}>{record?.seller?.name}</p>,
+  },
+  {
     key: 'action',
     dataIndex: 'action',
     title: 'Action',

@@ -1,4 +1,4 @@
-import { IClientsInfo } from "../clients"
+import { IClientsInfo, ISeller } from "../clients"
 import { IOrder } from "../order/types"
 import { IPagination, IPaymentType } from "../types"
 
@@ -7,6 +7,7 @@ export interface IClientsPayments extends IPaymentType {
   createdAt: string,
   order: IOrder,
   client: IClientsInfo,
+  seller: ISeller,
 }
 
 export interface IGetClientsPaymentsParams extends IPagination {
@@ -14,6 +15,7 @@ export interface IGetClientsPaymentsParams extends IPagination {
   startDate?: Date;
   endDate?: Date;
   clientId?: string;
+  sellerId?: string;
 }
 
 export interface IAddEditPaymentParams {
