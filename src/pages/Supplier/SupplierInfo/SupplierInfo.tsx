@@ -2,15 +2,16 @@ import React, { useEffect } from 'react';
 import { observer } from 'mobx-react';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
-import { Button, Input, Typography } from 'antd';
+import { Button, Input, InputNumber, Select, Typography } from 'antd';
 import classNames from 'classnames';
 import { DataTable } from '@/components/Datatable/datatable';
 import { getPaginationParams } from '@/utils/getPaginationParams';
 import { useMediaQuery } from '@/utils/mediaQuery';
 import { AddEditModal } from './AddEditModal';
 import styles from './supplier-info.scss';
-import { supplierColumns } from './constants';
+import { supplierColumns, supplierDebtFilter } from './constants';
 import { supplierInfoStore } from '@/stores/supplier';
+import { IClientDebtFilter, ISupplierInfo } from '@/api/clients';
 
 const cn = classNames.bind(styles);
 
@@ -23,12 +24,16 @@ export const SupplierInfo = observer(() => {
       supplierInfoStore.pageNumber,
       supplierInfoStore.pageSize,
       supplierInfoStore.search,
+      supplierInfoStore.debt,
+      supplierInfoStore.debtType,
     ],
     queryFn: () =>
       supplierInfoStore.getSuppliers({
         pageNumber: supplierInfoStore.pageNumber,
         pageSize: supplierInfoStore.pageSize,
         search: supplierInfoStore.search!,
+        debt: supplierInfoStore.debt!,
+        debtType: supplierInfoStore.debtType!,
       }),
   });
 
@@ -40,10 +45,23 @@ export const SupplierInfo = observer(() => {
     supplierInfoStore.setSearch(e.currentTarget?.value);
   };
 
+  const handleDebtValueChange = (value: number | null) => {
+    supplierInfoStore.setDebt(value);
+  };
+
+  const handleDebtFilterChange = (value: IClientDebtFilter) => {
+    supplierInfoStore.setDebtType(value);
+  };
+
   const handlePageChange = (page: number, pageSize: number | undefined) => {
     supplierInfoStore.setPageNumber(page);
     supplierInfoStore.setPageSize(pageSize!);
   };
+
+  const rowClassName = (record: ISupplierInfo) =>
+    record.debt > 0 ? 'info__row'
+      : record.debt < 0
+        ? 'error__row' : '';
 
   useEffect(() => () => {
     supplierInfoStore.reset();
@@ -59,6 +77,21 @@ export const SupplierInfo = observer(() => {
             allowClear
             onChange={handleSearch}
             className={cn('supplier-info__search')}
+          />
+          <InputNumber
+            placeholder="Qarz miqdorini kiriting"
+            onChange={handleDebtValueChange}
+            style={{ width: '350px' }}
+            defaultValue={0}
+            addonAfter={
+              <Select
+                options={supplierDebtFilter}
+                onChange={handleDebtFilterChange}
+                style={{ width: '200px' }}
+                placeholder="Hammasi"
+                value={supplierInfoStore.debtType}
+              />
+            }
           />
           <Button
             onClick={handleAddNewSupplier}
@@ -83,6 +116,7 @@ export const SupplierInfo = observer(() => {
           onChange: handlePageChange,
           ...getPaginationParams(supplierData?.totalCount),
         }}
+        rowClassName={rowClassName}
       />
 
       {supplierInfoStore.isOpenAddEditSupplierModal && <AddEditModal />}

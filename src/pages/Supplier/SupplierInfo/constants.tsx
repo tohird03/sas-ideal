@@ -1,6 +1,6 @@
 import React from 'react';
 import {ColumnType} from 'antd/es/table';
-import {IClientsInfo, ISupplierInfo} from '@/api/clients';
+import {IClientDebtFilter, IClientsInfo, ISupplierInfo} from '@/api/clients';
 import {Action} from './Action';
 import { formatPhoneNumber } from '@/utils/phoneFormat';
 import { priceFormat } from '@/utils/priceFormat';
@@ -50,5 +50,24 @@ export const supplierColumns: ColumnType<ISupplierInfo>[] = [
     title: 'Action',
     align: 'center',
     render: (value, record) => <Action supplier={record} />,
+  },
+];
+
+export const supplierDebtFilter = [
+  {
+    value: null,
+    label: 'Hamma mijozlar',
+  },
+  {
+    value: IClientDebtFilter.EQUAL,
+    label: '* ga teng bo\'lganlari',
+  },
+  {
+    value: IClientDebtFilter.LESS,
+    label: '* dan kam bo\'lganlari',
+  },
+  {
+    value: IClientDebtFilter.GREATER,
+    label: '* dan yuqori bo\'lganlari',
   },
 ];

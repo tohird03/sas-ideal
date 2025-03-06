@@ -1,5 +1,5 @@
 import {makeAutoObservable} from 'mobx';
-import {clientsInfoApi, IGetSupplierInfoParams, ISupplierInfo} from '@/api/clients';
+import {clientsInfoApi, IClientDebtFilter, IGetSupplierInfoParams, ISupplierInfo} from '@/api/clients';
 import {addNotification} from '@/utils';
 
 class SupplierInfoStore {
@@ -8,6 +8,8 @@ class SupplierInfoStore {
   search: string | null = null;
   isOpenAddEditSupplierModal = false;
   singleSupplierInfo: ISupplierInfo | null = null;
+  debt: number | null = null;
+  debtType: IClientDebtFilter | null = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -28,6 +30,14 @@ class SupplierInfoStore {
 
   setSearch = (search: string | null) => {
     this.search = search;
+  };
+
+  setDebt = (debt: number | null) => {
+    this.debt = debt;
+  };
+
+  setDebtType = (debtType: IClientDebtFilter | null) => {
+    this.debtType = debtType;
   };
 
   setIsOpenAddEditSupplierModal = (isOpenAddEditSupplierModal: boolean) => {

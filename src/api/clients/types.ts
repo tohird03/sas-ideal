@@ -45,6 +45,8 @@ export interface IAddClientInfo {
 // SUPPLIER
 export interface IGetSupplierInfoParams extends IPagination {
   search?: string;
+  debt?: number;
+  debtType?: IClientDebtFilter;
 }
 
 export interface ISupplierInfo {
