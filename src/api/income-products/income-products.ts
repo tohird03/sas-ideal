@@ -50,6 +50,15 @@ class IncomeProductsApi extends Instance {
       },
     });
 
+  getUploadIncomeOrderToExel = (orderId: string): Promise<any> =>
+    this.get(`${Endpoints.productsIncomeOrderExel}/${orderId}`, {
+      responseType: 'arraybuffer',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/xlsx',
+      },
+    });
+
 }
 
 export const incomeProductsApi = new IncomeProductsApi(config);

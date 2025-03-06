@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
-import { PlusCircleOutlined } from '@ant-design/icons';
+import { DownloadOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
-import { Button, DatePicker, Input, Typography } from 'antd';
+import { Button, DatePicker, Input, Tooltip, Typography } from 'antd';
 import classNames from 'classnames';
 import { DataTable } from '@/components/Datatable/datatable';
 import { getPaginationParams } from '@/utils/getPaginationParams';
@@ -13,11 +13,14 @@ import { returnedOrdersColumns } from './constants';
 import { returnedOrdersStore } from '@/stores/products';
 import dayjs from 'dayjs';
 import { PaymentModal } from './PaymentModal';
+import { returnedOrderApi } from '@/api/returned-order/returned-order';
+import { addNotification } from '@/utils';
 
 const cn = classNames.bind(styles);
 
 export const ReturnedOrders = observer(() => {
   const isMobile = useMediaQuery('(max-width: 800px)');
+  const [downloadLoading, setDownLoadLoading] = useState(false);
 
   const { data: returnedOrdersData, isLoading: loading } = useQuery({
     queryKey: [
@@ -61,6 +64,30 @@ export const ReturnedOrders = observer(() => {
     returnedOrdersStore.setPageSize(pageSize!);
   };
 
+  const handleDownloadExcel = () => {
+    setDownLoadLoading(true);
+    returnedOrderApi.getAllUploadReturnedOrderToExel({
+      pageNumber: returnedOrdersStore.pageNumber,
+      pageSize: returnedOrdersStore.pageSize,
+      search: returnedOrdersStore.search!,
+      startDate: returnedOrdersStore.startDate!,
+      endDate: returnedOrdersStore.endDate!,
+    })
+      .then(res => {
+        const url = URL.createObjectURL(new Blob([res]));
+        const a = document.createElement('a');
+
+        a.href = url;
+        a.download = 'Returned-order.xlsx';
+        a.click();
+        URL.revokeObjectURL(url);
+      })
+      .catch(addNotification)
+      .finally(() => {
+        setDownLoadLoading(false);
+      });
+  };
+
   useEffect(() => () => {
     returnedOrdersStore.reset();
   }, []);
@@ -82,6 +109,16 @@ export const ReturnedOrders = observer(() => {
             placeholder={['Boshlanish sanasi', 'Tugash sanasi']}
             defaultValue={[dayjs(returnedOrdersStore.startDate), dayjs(returnedOrdersStore.endDate)]}
           />
+          <Tooltip placement="top" title="Excelda yuklash">
+            <Button
+              onClick={handleDownloadExcel}
+              type="primary"
+              icon={<DownloadOutlined />}
+              loading={downloadLoading}
+            >
+              Exelda Yuklash
+            </Button>
+          </Tooltip>
           <Button
             onClick={handleAddNewReturnedOrder}
             type="primary"

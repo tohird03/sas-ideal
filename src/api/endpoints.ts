@@ -31,6 +31,7 @@ export enum Endpoints {
   productsOrderProduct = '/orderProduct',
   productsOrderExel = '/Order/upload',
   productsIncomeOrderExel = '/incomingOrder/upload',
+  productsReturnedOrderExel = '/returned-order/upload',
 
   // PAYMENT
   payment = '/payment',
