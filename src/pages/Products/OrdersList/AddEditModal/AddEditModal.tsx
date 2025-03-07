@@ -123,6 +123,10 @@ export const AddEditModal = observer(() => {
   };
 
   const handleSubmitProduct = (values: IAddOrderModalForm) => {
+    if (loading) {
+      return;
+    }
+
     setLoading(true);
 
     const addProducts: IAddOrderProducts = {
@@ -142,10 +146,7 @@ export const AddEditModal = observer(() => {
         clientId: values?.clientId,
         sendUser: ordersStore?.isSendUser,
       })
-        .catch(addNotification)
-        .finally(() => {
-          setLoading(false);
-        });
+        .catch(addNotification);
 
       ordersApi.orderProductAdd(addOrderProduct)
         .then(() => {
