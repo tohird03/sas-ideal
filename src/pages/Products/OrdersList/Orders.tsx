@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { observer } from 'mobx-react';
 import { DownloadOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
-import { Button, DatePicker, Input, Select, Tooltip, Typography } from 'antd';
+import { Button, DatePicker, DatePickerProps, Input, Select, Tooltip, Typography } from 'antd';
 import classNames from 'classnames';
 import { DataTable } from '@/components/Datatable/datatable';
 import { getPaginationParams } from '@/utils/getPaginationParams';
@@ -98,14 +98,18 @@ export const Orders = observer(() => {
     ordersStore.setSearch(e.currentTarget?.value);
   };
 
-  const handleDateChange = (values: any) => {
-    if (values) {
-      ordersStore.setStartDate(new Date(values[0]));
-      ordersStore.setEndDate(new Date(values[1]));
-    } else {
+  const handleStartDateChange: DatePickerProps['onChange'] = (date, dateString) => {
+    if (!dateString) {
       ordersStore.setStartDate(null);
+    }
+    ordersStore.setStartDate(new Date(dateString));
+  };
+
+  const handleEndDateChange: DatePickerProps['onChange'] = (date, dateString) => {
+    if (!dateString) {
       ordersStore.setEndDate(null);
     }
+    ordersStore.setEndDate(new Date(dateString));
   };
 
   const handleChangeFilter = (value: string) => {
@@ -155,11 +159,19 @@ export const Orders = observer(() => {
             onChange={handleSearch}
             className={cn('orders__search')}
           />
-          <DatePicker.RangePicker
+          <DatePicker
             className={cn('promotion__datePicker')}
-            onChange={handleDateChange}
-            placeholder={['Boshlanish sanasi', 'Tugash sanasi']}
-            defaultValue={[dayjs(ordersStore.startDate), dayjs(ordersStore.endDate)]}
+            onChange={handleStartDateChange}
+            placeholder={'Boshlanish sanasi'}
+            defaultValue={dayjs(ordersStore.startDate)}
+            allowClear={false}
+          />
+          <DatePicker
+            className={cn('promotion__datePicker')}
+            onChange={handleEndDateChange}
+            placeholder={'Tugash sanasi'}
+            defaultValue={dayjs(ordersStore.endDate)}
+            allowClear={false}
           />
           <Select
             options={sellerOptions}

@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import {observer} from 'mobx-react';
 import {PlusCircleOutlined} from '@ant-design/icons';
 import {useQuery} from '@tanstack/react-query';
-import {Button, DatePicker, Input, Typography} from 'antd';
+import {Button, DatePicker, DatePickerProps, Input, Typography} from 'antd';
 import classNames from 'classnames';
 import {DataTable} from '@/components/Datatable/datatable';
 import {getPaginationParams} from '@/utils/getPaginationParams';
@@ -26,6 +26,9 @@ export const Payments = observer(() => {
       singleClientStore.paymentPage,
       singleClientStore.paymentPageSize,
       singleClientStore.paymentSearch,
+      singleClientStore.startDate,
+      singleClientStore.endDate,
+      singleClientStore.paymentSearch,
       singleClientStore.activeClient?.id,
     ],
     queryFn: () =>
@@ -33,6 +36,8 @@ export const Payments = observer(() => {
         pageNumber: singleClientStore.paymentPage,
         pageSize: singleClientStore.paymentPageSize,
         search: singleClientStore.paymentSearch!,
+        startDate: singleClientStore.startDate!,
+        endDate: singleClientStore.endDate!,
         clientId,
       }),
   });
@@ -45,14 +50,18 @@ export const Payments = observer(() => {
     singleClientStore.setPaymentSearch(e.currentTarget?.value);
   };
 
-  const handleDateChange = (values: any) => {
-    if (values) {
-      singleClientStore.setStartDate(new Date(values[0]));
-      singleClientStore.setEndDate(new Date(values[1]));
-    } else {
+  const handleStartDateChange: DatePickerProps['onChange'] = (date, dateString) => {
+    if (!dateString) {
       singleClientStore.setStartDate(null);
+    }
+    singleClientStore.setStartDate(new Date(dateString));
+  };
+
+  const handleEndDateChange: DatePickerProps['onChange'] = (date, dateString) => {
+    if (!dateString) {
       singleClientStore.setEndDate(null);
     }
+    singleClientStore.setEndDate(new Date(dateString));
   };
 
   const handlePageChange = (page: number, pageSize: number | undefined) => {
@@ -71,11 +80,19 @@ export const Payments = observer(() => {
             onChange={handleSearch}
             className={cn('clients-payments__search')}
           />
-          <DatePicker.RangePicker
+          <DatePicker
             className={cn('promotion__datePicker')}
-            onChange={handleDateChange}
-            placeholder={['Boshlanish sanasi', 'Tugash sanasi']}
-            defaultValue={[dayjs(singleClientStore.startDate), dayjs(singleClientStore.endDate)]}
+            onChange={handleStartDateChange}
+            placeholder={'Boshlanish sanasi'}
+            defaultValue={dayjs(singleClientStore.startDate)}
+            allowClear={false}
+          />
+          <DatePicker
+            className={cn('promotion__datePicker')}
+            onChange={handleEndDateChange}
+            placeholder={'Tugash sanasi'}
+            defaultValue={dayjs(singleClientStore.endDate)}
+            allowClear={false}
           />
           <Button
             onClick={handleAddNewPayment}

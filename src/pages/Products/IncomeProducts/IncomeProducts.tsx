@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
 import { DownloadOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
-import { Button, DatePicker, Input, Select, Tooltip, Typography } from 'antd';
+import { Button, DatePicker, DatePickerProps, Input, Select, Tooltip, Typography } from 'antd';
 import classNames from 'classnames';
 import { DataTable } from '@/components/Datatable/datatable';
 import { getPaginationParams } from '@/utils/getPaginationParams';
@@ -60,14 +60,18 @@ export const IncomeProducts = observer(() => {
   };
 
 
-  const handleDateChange = (values: any) => {
-    if (values) {
-      incomeProductsStore.setStartDate(new Date(values[0]));
-      incomeProductsStore.setEndDate(new Date(values[1]));
-    } else {
+  const handleStartDateChange: DatePickerProps['onChange'] = (date, dateString) => {
+    if (!dateString) {
       incomeProductsStore.setStartDate(null);
+    }
+    incomeProductsStore.setStartDate(new Date(dateString));
+  };
+
+  const handleEndDateChange: DatePickerProps['onChange'] = (date, dateString) => {
+    if (!dateString) {
       incomeProductsStore.setEndDate(null);
     }
+    incomeProductsStore.setEndDate(new Date(dateString));
   };
 
   const handleDownloadExcel = () => {
@@ -110,11 +114,19 @@ export const IncomeProducts = observer(() => {
             onChange={handleSearch}
             className={cn('orders__search')}
           />
-          <DatePicker.RangePicker
+          <DatePicker
             className={cn('promotion__datePicker')}
-            onChange={handleDateChange}
-            placeholder={['Boshlanish sanasi', 'Tugash sanasi']}
-            defaultValue={[dayjs(incomeProductsStore.startDate), dayjs(incomeProductsStore.endDate)]}
+            onChange={handleStartDateChange}
+            placeholder={'Boshlanish sanasi'}
+            defaultValue={dayjs(incomeProductsStore.startDate)}
+            allowClear={false}
+          />
+          <DatePicker
+            className={cn('promotion__datePicker')}
+            onChange={handleEndDateChange}
+            placeholder={'Tugash sanasi'}
+            defaultValue={dayjs(incomeProductsStore.endDate)}
+            allowClear={false}
           />
           <Tooltip placement="top" title="Excelda yuklash">
             <Button

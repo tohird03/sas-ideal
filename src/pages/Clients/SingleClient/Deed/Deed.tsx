@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
 import { useQuery } from '@tanstack/react-query';
-import { Button, DatePicker, Table, Typography } from 'antd';
+import { Button, DatePicker, DatePickerProps, Table, Typography } from 'antd';
 import classNames from 'classnames';
 import { useMediaQuery } from '@/utils/mediaQuery';
 import { deedColumns } from './constants';
@@ -33,14 +33,18 @@ export const Deed = observer(() => {
       }),
   });
 
-  const handleDateChange = (values: any) => {
-    if (values) {
-      singleClientStore.setStartDate(new Date(values[0]));
-      singleClientStore.setEndDate(new Date(values[1]));
-    } else {
+  const handleStartDateChange: DatePickerProps['onChange'] = (date, dateString) => {
+    if (!dateString) {
       singleClientStore.setStartDate(null);
+    }
+    singleClientStore.setStartDate(new Date(dateString));
+  };
+
+  const handleEndDateChange: DatePickerProps['onChange'] = (date, dateString) => {
+    if (!dateString) {
       singleClientStore.setEndDate(null);
     }
+    singleClientStore.setEndDate(new Date(dateString));
   };
 
   const handleDownloadExcelDeed = () => {
@@ -94,11 +98,19 @@ export const Deed = observer(() => {
       <div className={cn('deed__head')}>
         <Typography.Title level={3}>Solishtiruv dalolatnomalari</Typography.Title>
         <div className={cn('deed__filter')}>
-          <DatePicker.RangePicker
+          <DatePicker
             className={cn('promotion__datePicker')}
-            onChange={handleDateChange}
-            placeholder={['Boshlanish sanasi', 'Tugash sanasi']}
-            defaultValue={[dayjs(singleClientStore.startDate), dayjs(singleClientStore.endDate)]}
+            onChange={handleStartDateChange}
+            placeholder={'Boshlanish sanasi'}
+            defaultValue={dayjs(singleClientStore.startDate)}
+            allowClear={false}
+          />
+          <DatePicker
+            className={cn('promotion__datePicker')}
+            onChange={handleEndDateChange}
+            placeholder={'Tugash sanasi'}
+            defaultValue={dayjs(singleClientStore.endDate)}
+            allowClear={false}
           />
           <Button
             onClick={handleDownloadExcelDeed}

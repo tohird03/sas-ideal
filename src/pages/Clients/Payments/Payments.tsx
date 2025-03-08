@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { observer } from 'mobx-react';
 import { DownloadOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
-import { Button, DatePicker, Input, Select, Table, Tooltip, Typography } from 'antd';
+import { Button, DatePicker, DatePickerProps, Input, Select, Table, Tooltip, Typography } from 'antd';
 import classNames from 'classnames';
 import { DataTable } from '@/components/Datatable/datatable';
 import { getPaginationParams } from '@/utils/getPaginationParams';
@@ -69,14 +69,18 @@ export const ClientsPayments = observer(() => {
     paymentsStore.setSellerId(null);
   };
 
-  const handleDateChange = (values: any) => {
-    if (values) {
-      paymentsStore.setStartDate(new Date(values[0]));
-      paymentsStore.setEndDate(new Date(values[1]));
-    } else {
+  const handleStartDateChange: DatePickerProps['onChange'] = (date, dateString) => {
+    if (!dateString) {
       paymentsStore.setStartDate(null);
+    }
+    paymentsStore.setStartDate(new Date(dateString));
+  };
+
+  const handleEndDateChange: DatePickerProps['onChange'] = (date, dateString) => {
+    if (!dateString) {
       paymentsStore.setEndDate(null);
     }
+    paymentsStore.setEndDate(new Date(dateString));
   };
 
   const handlePageChange = (page: number, pageSize: number | undefined) => {
@@ -139,11 +143,19 @@ export const ClientsPayments = observer(() => {
             loading={loadingSeller}
             allowClear
           />
-          <DatePicker.RangePicker
+          <DatePicker
             className={cn('promotion__datePicker')}
-            onChange={handleDateChange}
-            placeholder={['Boshlanish sanasi', 'Tugash sanasi']}
-            defaultValue={[dayjs(paymentsStore.startDate), dayjs(paymentsStore.endDate)]}
+            onChange={handleStartDateChange}
+            placeholder={'Boshlanish sanasi'}
+            defaultValue={dayjs(paymentsStore.startDate)}
+            allowClear={false}
+          />
+          <DatePicker
+            className={cn('promotion__datePicker')}
+            onChange={handleEndDateChange}
+            placeholder={'Tugash sanasi'}
+            defaultValue={dayjs(paymentsStore.endDate)}
+            allowClear={false}
           />
           <Button
             onClick={handleAddNewPayment}

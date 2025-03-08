@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
 import { DownloadOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
-import { Button, DatePicker, Input, Tooltip, Typography } from 'antd';
+import { Button, DatePicker, DatePickerProps, Input, Tooltip, Typography } from 'antd';
 import classNames from 'classnames';
 import { DataTable } from '@/components/Datatable/datatable';
 import { getPaginationParams } from '@/utils/getPaginationParams';
@@ -45,14 +45,18 @@ export const ReturnedOrders = observer(() => {
     returnedOrdersStore.setSearch(e.currentTarget?.value);
   };
 
-  const handleDateChange = (values: any) => {
-    if (values) {
-      returnedOrdersStore.setStartDate(new Date(values[0]));
-      returnedOrdersStore.setEndDate(new Date(values[1]));
-    } else {
+  const handleStartDateChange: DatePickerProps['onChange'] = (date, dateString) => {
+    if (!dateString) {
       returnedOrdersStore.setStartDate(null);
+    }
+    returnedOrdersStore.setStartDate(new Date(dateString));
+  };
+
+  const handleEndDateChange: DatePickerProps['onChange'] = (date, dateString) => {
+    if (!dateString) {
       returnedOrdersStore.setEndDate(null);
     }
+    returnedOrdersStore.setEndDate(new Date(dateString));
   };
 
   const handleAddNewReturnedOrder = () => {
@@ -103,11 +107,19 @@ export const ReturnedOrders = observer(() => {
             onChange={handleSearch}
             className={cn('returned-orders__search')}
           />
-          <DatePicker.RangePicker
+          <DatePicker
             className={cn('promotion__datePicker')}
-            onChange={handleDateChange}
-            placeholder={['Boshlanish sanasi', 'Tugash sanasi']}
-            defaultValue={[dayjs(returnedOrdersStore.startDate), dayjs(returnedOrdersStore.endDate)]}
+            onChange={handleStartDateChange}
+            placeholder={'Boshlanish sanasi'}
+            defaultValue={dayjs(returnedOrdersStore.startDate)}
+            allowClear={false}
+          />
+          <DatePicker
+            className={cn('promotion__datePicker')}
+            onChange={handleEndDateChange}
+            placeholder={'Tugash sanasi'}
+            defaultValue={dayjs(returnedOrdersStore.endDate)}
+            allowClear={false}
           />
           <Tooltip placement="top" title="Excelda yuklash">
             <Button
