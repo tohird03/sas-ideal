@@ -23,7 +23,7 @@ import { OrderStatus, OrderStatusColor } from '../constants';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
 import { useParams } from 'react-router-dom';
 import { IClientsInfo } from '@/api/clients';
-import { dateFormat, getDateFormat, getFullDateFormat } from '@/utils/getDateFormat';
+import { getFullDateFormat } from '@/utils/getDateFormat';
 
 const cn = classNames.bind(styles);
 

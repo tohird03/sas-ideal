@@ -308,6 +308,84 @@ export const AddEditModal = observer(() => {
     },
   ];
 
+  const handleChangePriceForm = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!form.getFieldValue('price')) {
+      form.setFields([
+        {
+          name: 'price',
+          errors: ['Mahsulot narxini kiriting!'],
+        },
+      ]);
+
+      return;
+    }
+
+    if (e.key === 'Enter') {
+      countInputRef?.current?.focus();
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLFormElement>) => {
+    if (e.key === 'Enter') {
+      if (!form.getFieldValue('count')) {
+        form.setFields([
+          {
+            name: 'count',
+            errors: ['Mahsulot sonini kiriting!'],
+          },
+        ]);
+
+        return;
+      }
+
+      e.preventDefault();
+
+      const fieldsValue = form.getFieldsValue();
+
+      const requiredFields = form
+        .getFieldsError()
+        .filter((field) => field.errors.length > 0);
+
+      const firstEmptyField = requiredFields.find(
+        (field) => !fieldsValue[field.name[0]]
+      );
+
+      if (firstEmptyField) {
+        const fieldInstance = form.getFieldInstance(firstEmptyField.name[0]);
+
+        fieldInstance?.focus();
+      } else {
+        form.submit();
+      }
+    }
+  };
+
+  const handleSelectChange = (value: any, name: string) => {
+    const nextFieldName = getNextFieldName(name);
+
+    if (nextFieldName) {
+      const nextField = form.getFieldInstance(nextFieldName);
+
+      nextField?.focus();
+    }
+  };
+
+  const getNextFieldName = (currentFieldName: string) => {
+    const fieldNames = [
+      'clientId',
+      'product_id',
+      'price',
+      'count',
+    ];
+
+    const currentIndex = fieldNames.indexOf(currentFieldName);
+
+    return fieldNames[currentIndex + 1];
+  };
+
+  const handleBlurProduct = () => {
+    setIsOpenProductSelect(false);
+  };
 
   const clientsOptions = useMemo(() => (
     clientsData?.data.map((supplier) => ({
@@ -364,6 +442,7 @@ export const AddEditModal = observer(() => {
         layout="vertical"
         autoComplete="off"
         className="order__add-products-form"
+        onKeyPress={handleKeyPress}
       >
         <Form.Item
           label="Mijoz"
@@ -381,6 +460,7 @@ export const AddEditModal = observer(() => {
             onClear={handleClearClient}
             options={clientsOptions}
             onChange={handleChangeClientSelect}
+            onSelect={(value) => handleSelectChange(value, 'clientId')}
             allowClear
           />
         </Form.Item>
@@ -413,6 +493,7 @@ export const AddEditModal = observer(() => {
             optionLabelProp="label"
             open={isOpenProductSelect}
             onFocus={handleFocusToProduct}
+            onBlur={handleBlurProduct}
           >
             {productsData?.data.map((product) => (
               <Select.Option
@@ -451,6 +532,7 @@ export const AddEditModal = observer(() => {
             placeholder="Sotib olingan narxi"
             style={{ width: '100%' }}
             formatter={(value) => priceFormat(value!)}
+            onKeyUp={handleChangePriceForm}
           />
         </Form.Item>
         <Form.Item

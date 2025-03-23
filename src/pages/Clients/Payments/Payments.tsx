@@ -15,6 +15,7 @@ import dayjs from 'dayjs';
 import { paymentApi } from '@/api/payment';
 import { addNotification } from '@/utils';
 import { staffsApi } from '@/api/staffs';
+import { priceFormat } from '@/utils/priceFormat';
 
 const cn = classNames.bind(styles);
 
@@ -194,22 +195,22 @@ export const ClientsPayments = observer(() => {
             <Table.Summary.Cell colSpan={2} index={1} />
             <Table.Summary.Cell index={2}>
               <div style={{ textAlign: 'center', fontWeight: 'bold' }}>
-                Jami: {paymentsData?.totalCalc?.totalCash}
+                Jami: {priceFormat(paymentsData?.totalCalc?.totalCash)}
               </div>
             </Table.Summary.Cell>
             <Table.Summary.Cell index={2}>
               <div style={{ textAlign: 'center', fontWeight: 'bold' }}>
-                Jami: {paymentsData?.totalCalc?.totalCard}
+                Jami: {priceFormat(paymentsData?.totalCalc?.totalCard)}
               </div>
             </Table.Summary.Cell>
             <Table.Summary.Cell index={2}>
               <div style={{ textAlign: 'center', fontWeight: 'bold' }}>
-                Jami: {paymentsData?.totalCalc?.totalTransfer}
+                Jami: {priceFormat(paymentsData?.totalCalc?.totalTransfer)}
               </div>
             </Table.Summary.Cell>
             <Table.Summary.Cell index={2}>
               <div style={{ textAlign: 'center', fontWeight: 'bold' }}>
-                Jami: {paymentsData?.totalCalc?.totalOther}
+                Jami: {priceFormat(paymentsData?.totalCalc?.totalOther)}
               </div>
             </Table.Summary.Cell>
           </Table.Summary.Row>
