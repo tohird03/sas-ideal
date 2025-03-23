@@ -565,6 +565,13 @@ export const AddEditModal = observer(() => {
         pagination={false}
         scroll={{ y: 300 }}
       />
+
+      <div>
+        <p style={{ textAlign: 'end', fontSize: '24px', fontWeight: 'bold' }}>Umumiy qiymati: {
+          priceFormat(returnedOrdersStore?.singleReturnedOrder?.products?.reduce((prev, current) => prev + (current?.price * current?.count), 0))
+        }
+        </p>
+      </div>
     </Modal>
   );
 });

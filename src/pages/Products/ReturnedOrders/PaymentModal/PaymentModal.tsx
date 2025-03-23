@@ -1,13 +1,10 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Form, InputNumber, Modal } from 'antd';
+import { useQueryClient } from '@tanstack/react-query';
+import { Button, Form, InputNumber, Modal } from 'antd';
 import { addNotification } from '@/utils';
 import { priceFormat } from '@/utils/priceFormat';
-import { supplierInfoStore, supplierPaymentsStore } from '@/stores/supplier';
-import { incomePaymentApi } from '@/api/payment-income';
 import { IIncomeAddEditPaymentParams } from '@/api/payment-income/types';
-import { useParams } from 'react-router-dom';
 import { returnedOrdersStore } from '@/stores/products';
 import { returnedOrderApi } from '@/api/returned-order/returned-order';
 
@@ -15,6 +12,7 @@ export const PaymentModal = observer(() => {
   const [form] = Form.useForm();
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
+  const [totalPrice, setTotalPrice] = useState(0);
 
   const handleSubmit = (values: IIncomeAddEditPaymentParams) => {
     setLoading(true);
@@ -49,11 +47,32 @@ export const PaymentModal = observer(() => {
     form.submit();
   };
 
+  const handleClickClientDebt = () => {
+    form.setFieldValue('cashPayment', 0);
+    form.setFieldValue('fromClient', totalPrice);
+  };
+
+  const handleClickCashDebt = () => {
+    form.setFieldValue('cashPayment', totalPrice);
+    form.setFieldValue('fromClient', 0);
+  };
+
   useEffect(() => {
     if (returnedOrdersStore.singlePayment) {
       form.setFieldsValue(returnedOrdersStore.singlePayment);
     }
   }, [returnedOrdersStore.singlePayment]);
+
+  useEffect(() => {
+    if (returnedOrdersStore?.singleReturnedOrder) {
+      const totalPriceCalc = returnedOrdersStore.singleReturnedOrder?.products?.reduce((prev, curr) => prev + (curr?.price * curr?.count), 0);
+
+      setTotalPrice(totalPriceCalc);
+      if (!returnedOrdersStore.singlePayment?.cashPayment && !returnedOrdersStore.singlePayment?.fromClient) {
+        form.setFieldValue('cashPayment', totalPriceCalc);
+      }
+    }
+  }, [returnedOrdersStore?.singleReturnedOrder]);
 
   return (
     <Modal
@@ -81,6 +100,14 @@ export const PaymentModal = observer(() => {
             placeholder="Mijozning hisobidan ayirish"
             style={{ width: '100%' }}
             formatter={(value) => priceFormat(value!)}
+            addonAfter={
+              <Button
+                type="primary"
+                onClick={handleClickClientDebt}
+              >
+                Umumiy miqdor
+              </Button>
+            }
           />
         </Form.Item>
         <Form.Item
@@ -92,9 +119,22 @@ export const PaymentModal = observer(() => {
             placeholder="Naqd to'lov"
             style={{ width: '100%' }}
             formatter={(value) => priceFormat(value!)}
+            addonAfter={
+              <Button
+                type="primary"
+                onClick={handleClickCashDebt}
+              >
+                Umumiy miqdor
+              </Button>
+            }
           />
         </Form.Item>
       </Form>
+      <div>
+        <p style={{ textAlign: 'end', fontSize: '16px', fontWeight: 'bold' }}>
+          Umumiy qiymati: {priceFormat(totalPrice)}
+        </p>
+      </div>
     </Modal>
   );
 });
