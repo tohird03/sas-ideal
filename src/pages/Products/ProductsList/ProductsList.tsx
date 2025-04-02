@@ -13,6 +13,7 @@ import { productsListColumn } from './constants';
 import { productsListStore } from '@/stores/products';
 import { IProducts } from '@/api/product/types';
 import { priceFormat } from '@/utils/priceFormat';
+import { authStore } from '@/stores/auth';
 
 const cn = classNames.bind(styles);
 
@@ -97,21 +98,32 @@ export const ProductsList = observer(() => {
             <Table.Summary.Cell index={2}>
               <div style={{ textAlign: 'center', fontWeight: 'bold' }}>
                 Umumiy:
-                <p style={{margin: '0', fontWeight: 'bold'}}>{productsData?.totalCalc?.totalProductCount}</p>
+                <p style={{ margin: '0', fontWeight: 'bold' }}>{productsData?.totalCalc?.totalProductCount}</p>
               </div>
             </Table.Summary.Cell>
             <Table.Summary.Cell index={2}>
               <div style={{ textAlign: 'center', fontWeight: 'bold', maxWidth: '150px', margin: '0 auto' }}>
                 Umumiy sotib olingan narxi:
-                <p style={{margin: '0', fontWeight: 'bold'}}>{priceFormat(productsData?.totalCalc?.totalProductCost)}</p>
+                <p style={{ margin: '0', fontWeight: 'bold' }}>{priceFormat(productsData?.totalCalc?.totalProductCost)}</p>
               </div>
             </Table.Summary.Cell>
             <Table.Summary.Cell index={3}>
               <div style={{ textAlign: 'center', fontWeight: 'bold', maxWidth: '150px', margin: '0 auto' }}>
                 Umumiy sotilish narxi:
-                <p style={{margin: '0', fontWeight: 'bold'}}>{priceFormat(productsData?.totalCalc?.totalProductPrice)}</p>
+                <p style={{ margin: '0', fontWeight: 'bold' }}>{priceFormat(productsData?.totalCalc?.totalProductPrice)}</p>
               </div>
             </Table.Summary.Cell>
+            {authStore?.staffInfo?.role === 'super_admin' && (
+              <Table.Summary.Cell index={3}>
+                <div style={{ textAlign: 'center', fontWeight: 'bold', maxWidth: '150px', margin: '0 auto' }}>
+                  Umumiy qiymati:
+                  <p style={{ margin: '0', fontWeight: 'bold' }}>
+                    {priceFormat(productsData?.data?.reduce((cur, prev) => cur + prev?.selling_price * prev?.count, 0))}
+                  </p>
+                </div>
+              </Table.Summary.Cell>
+            )
+            }
           </Table.Summary.Row>
         )}
       />
