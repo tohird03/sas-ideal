@@ -118,7 +118,7 @@ export const ProductsList = observer(() => {
                 <div style={{ textAlign: 'center', fontWeight: 'bold', maxWidth: '150px', margin: '0 auto' }}>
                   Umumiy qiymati:
                   <p style={{ margin: '0', fontWeight: 'bold' }}>
-                    {priceFormat(productsData?.data?.reduce((cur, prev) => cur + prev?.selling_price * prev?.count, 0))}
+                    {priceFormat(productsData?.data?.reduce((cur, prev) => cur + prev?.cost * prev?.count, 0))}
                   </p>
                 </div>
               </Table.Summary.Cell>
