@@ -16,6 +16,7 @@ import {
   SingleClient,
   SingleSupplier,
   Staffs,
+  StaffsPayments,
   Statistic,
   SupplierInfo,
   SupplierPayments,
@@ -46,6 +47,10 @@ export const Router = ({isAuth}: Props) => useRoutes([
           {
             element: <Suspense fallback={<Loading />}><Staffs /></Suspense>,
             path: ROUTES.workersStaffs,
+          },
+          {
+            element: <Suspense fallback={<Loading />}><StaffsPayments /></Suspense>,
+            path: ROUTES.workersStaffsPayments,
           },
           // CLIENTS
           {

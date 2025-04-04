@@ -11,6 +11,7 @@ export enum Endpoints {
 
   // STAFFS
   Staffs = '/admin',
+  StaffsPayments = '/employeePayment',
 
   // CLIENTS
   Users = '/user',

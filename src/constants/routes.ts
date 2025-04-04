@@ -6,6 +6,7 @@ export const ROUTES = {
   // STAFFS
   workers: '/workers',
   workersStaffs: '/workers/staffs',
+  workersStaffsPayments: '/workers/staffs-payments',
 
   // CLIENTS
   clients: '/clients',
