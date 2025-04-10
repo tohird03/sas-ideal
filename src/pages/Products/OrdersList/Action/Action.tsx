@@ -24,6 +24,10 @@ export const Action: FC<Props> = observer(({ orders }) => {
   const { clientId } = useParams();
   const [downloadLoading, setDownLoadLoading] = useState(false);
 
+  const today = new Date().toISOString().split('T')[0];
+  const checkDate = orders?.sellingDate.split('T')[0];
+  const isToday = checkDate === today;
+
   const { mutate: deleteOrder } =
     useMutation({
       mutationKey: ['deleteOrder'],
@@ -163,9 +167,12 @@ export const Action: FC<Props> = observer(({ orders }) => {
       <Dropdown placement="bottomRight" overlay={menuSaveOptions} trigger={['click']}>
         <Button icon={<DownloadOutlined />} />
       </Dropdown>
-      <Dropdown placement="bottomRight" overlay={menuOrderOptions} trigger={['click']}>
-        <Button icon={<MoreOutlined />} />
-      </Dropdown>
+      {isToday && (
+        <Dropdown placement="bottomRight" overlay={menuOrderOptions} trigger={['click']}>
+          <Button icon={<MoreOutlined />} />
+        </Dropdown>
+      )
+      }
     </div>
   );
 });
