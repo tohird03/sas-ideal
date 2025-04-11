@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   table: {
-    marginTop: -44,
+    marginTop: -30,
     width: '100%',
     borderWidth: 1,
     borderColor: 'black',
