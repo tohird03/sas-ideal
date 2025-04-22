@@ -144,7 +144,7 @@ export const AddEditModal = observer(() => {
       ordersApi.updateOrder({
         id: ordersStore?.order?.id,
         clientId: values?.clientId,
-        sendUser: ordersStore?.isSendUser,
+        sendUser: false,
       })
         .catch(addNotification);
 
