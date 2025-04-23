@@ -91,7 +91,7 @@ export const AddEditModal = observer(() => {
     ordersApi.updateOrder({
       accepted: true,
       id: ordersStore?.order?.id!,
-      sendUser: ordersStore?.isSendUser,
+      sendUser: ordersStore.isSendUser,
       clientId: form.getFieldValue('clientId'),
     })
       .then(() => {
@@ -202,6 +202,7 @@ export const AddEditModal = observer(() => {
   const handleModalClose = () => {
     ordersStore.setSingleOrder(null);
     ordersStore.setOrder(null);
+    ordersStore.setIsSendUser(false);
     ordersStore.setIsOpenAddEditNewOrderModal(false);
   };
 
@@ -224,7 +225,7 @@ export const AddEditModal = observer(() => {
     setIsOpenProductSelect(true);
   };
 
-  const handleChaneCheckbox = (event: CheckboxChangeEvent) => {
+  const handleChagneCheckbox = (event: CheckboxChangeEvent) => {
     ordersStore.setIsSendUser(event.target?.checked);
   };
 
@@ -751,7 +752,7 @@ export const AddEditModal = observer(() => {
         <Form.Item
           name="sendUser"
         >
-          <Checkbox onChange={handleChaneCheckbox}>Mijozga bu sotuv haqida yuborilsinmi?</Checkbox>
+          <Checkbox onChange={handleChagneCheckbox}>Mijozga bu sotuv haqida yuborilsinmi?</Checkbox>
         </Form.Item>
         <Button
           onClick={handleCreateOrUpdateOrder}
