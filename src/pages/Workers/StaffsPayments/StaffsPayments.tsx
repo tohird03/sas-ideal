@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { observer } from 'mobx-react';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
-import { Button, DatePicker, DatePickerProps, Input, Select, Typography } from 'antd';
+import { Button, DatePicker, DatePickerProps, Input, Select, Table, Typography } from 'antd';
 import classNames from 'classnames';
 import { DataTable } from '@/components/Datatable/datatable';
 import { getPaginationParams } from '@/utils/getPaginationParams';
@@ -13,6 +13,7 @@ import { clientsColumns } from './constants';
 import { staffsPaymentStore } from '@/stores/workers/staffs-payments';
 import dayjs from 'dayjs';
 import { staffsApi } from '@/api/staffs';
+import { priceFormat } from '@/utils/priceFormat';
 
 const cn = classNames.bind(styles);
 
@@ -128,11 +129,10 @@ export const StaffsPayments = observer(() => {
         </div>
       </div>
 
-      <DataTable
+      <Table
         columns={clientsColumns}
-        data={clientsInfoData?.data || []}
+        dataSource={clientsInfoData?.data || []}
         loading={loading}
-        isMobile={isMobile}
         pagination={{
           total: clientsInfoData?.totalCount,
           current: staffsPaymentStore?.pageNumber,
@@ -141,6 +141,16 @@ export const StaffsPayments = observer(() => {
           onChange: handlePageChange,
           ...getPaginationParams(clientsInfoData?.totalCount),
         }}
+        summary={() => (
+          <Table.Summary.Row>
+            <Table.Summary.Cell colSpan={2} index={1} />
+            <Table.Summary.Cell index={2}>
+              <div style={{ textAlign: 'center', fontWeight: 'bold' }}>
+                Jami: {priceFormat(clientsInfoData?.data?.reduce((cur, prev) => cur + Number(prev?.sum || 0), 0))}
+              </div>
+            </Table.Summary.Cell>
+          </Table.Summary.Row>
+        )}
       />
 
       {staffsPaymentStore.isOpenAddEditStaffPaymentsModal && <AddEditModal />}
