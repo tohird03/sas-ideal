@@ -7,7 +7,7 @@ class StaffsPayments {
   #today = new Date();
 
   pageNumber = 1;
-  pageSize = 20;
+  pageSize = 100;
   search: string | null = null;
   isOpenAddEditStaffPaymentsModal = false;
   singleStaffPayments: IStaffsPayments | null = null;

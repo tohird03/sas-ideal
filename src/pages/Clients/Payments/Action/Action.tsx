@@ -41,7 +41,7 @@ export const Action: FC<Props> = observer(({ clientPayment }) => {
 
   return (
     <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', alignItems: 'center' }}>
-      {isToday && (
+      {!isToday && (
         <>
           <Button onClick={handleEditPayment} type="primary" icon={<EditOutlined />} />
           <Popconfirm
