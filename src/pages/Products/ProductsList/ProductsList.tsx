@@ -104,13 +104,17 @@ export const ProductsList = observer(() => {
             <Table.Summary.Cell index={2}>
               <div style={{ textAlign: 'center', fontWeight: 'bold', maxWidth: '150px', margin: '0 auto' }}>
                 Umumiy sotib olingan narxi:
-                <p style={{ margin: '0', fontWeight: 'bold' }}>{priceFormat(productsData?.totalCalc?.totalProductCost)}</p>
+                <p style={{ margin: '0', fontWeight: 'bold' }}>
+                  {priceFormat(productsData?.data?.reduce((cur, prev) => cur + prev?.cost * prev?.count, 0))}
+                </p>
               </div>
             </Table.Summary.Cell>
             <Table.Summary.Cell index={3}>
               <div style={{ textAlign: 'center', fontWeight: 'bold', maxWidth: '150px', margin: '0 auto' }}>
                 Umumiy sotilish narxi:
-                <p style={{ margin: '0', fontWeight: 'bold' }}>{priceFormat(productsData?.totalCalc?.totalProductPrice)}</p>
+                <p style={{ margin: '0', fontWeight: 'bold' }}>
+                  {priceFormat(productsData?.data?.reduce((cur, prev) => cur + prev?.selling_price * prev?.count, 0))}
+                </p>
               </div>
             </Table.Summary.Cell>
             {authStore?.staffInfo?.role === 'super_admin' && (
